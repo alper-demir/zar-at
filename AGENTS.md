@@ -60,13 +60,17 @@ Uygulama kumar/bahis değildir ve gerçek para içermez ibaresi bulunmalı. Veri
 
 ## 9. Yol haritası
 
-0. Expo/TS/managed workflow, klasör yapısı, lint/format ve tek ekran iskeleti.
-1. Tek zar, kriptografik RNG, temel animasyon.
-2. Reanimated 3D + Skia gölge, ses, haptik, screen shake, hero moment.
-3. Çift zar ve tema sistemi.
-4. IAP, premium içerik, restore, ayarlar.
-5. Store hazırlığı, gizlilik, performans ve EAS internal testing.
-6. Kapalı/açık test ve yayın.
+Detaylı uygulama sırası, kabul kriterleri ve faz sonu test kapıları `IMPLEMENTATION_PLAN.md` dosyasında tutulur.
+
+0. `v0.1.0` — Çalışan alpha temel (tamamlandı).
+1. `v0.2.0` — Güvenilir ses, zamanlama, entitlement temeli ve test altyapısı.
+2. `v0.3.0` — Zar Atölyesi, kişiselleştirme modeli ve yerel presetler.
+3. `v0.4.0` — Premium malzemeler, ses/haptik profilleri ve hero efektleri.
+4. `v0.5.0` — Shake-to-roll, geçmiş/istatistik, paylaşım ve erişilebilirlik.
+5. `v0.9.0` — Client-only Play Billing ve mağaza adayı.
+6. `v1.0.0` — Kapalı test sonrası production yayın kapısı.
+
+Her faz kendi otomatik kontrolleri ve Android emülatör/cihaz kabul testleri geçmeden tamamlanmış sayılmaz, `main` branch'ine alınmaz ve sürüm etiketi oluşturulmaz.
 
 ## 10. İlerleme Günlüğü
 
@@ -84,6 +88,7 @@ Uygulama kumar/bahis değildir ve gerçek para içermez ibaresi bulunmalı. Veri
 - [2026-09-21] Görsel polish — Header/alt başlık, sonuç kartı, geçmiş chip'leri, safe-area kullanımı, buton gölgesi ve zarın pip tabanlı yüz tasarımı iyileştirildi. Reanimated animasyonu hafif tutuldu ve native gölge fallback'i korundu. TypeScript, ESLint, Prettier kontrolleri geçti; emülatörde tekli ve çiftli atış görsel olarak doğrulandı. Sıradaki adım: ANR oluşturmayan kalıcı ses player mimarisiyle ses efektlerini geri eklemek.
 - [2026-09-21] Sürümleme ve ürün yönü — Çalışan uygulama `0.1.0` alpha sürümü olarak tanımlandı; `main` kararlı sürümler, `develop` entegrasyon, `feature/*` kısa ömürlü geliştirme branch'leri olacak. Premium değer önerisi "kişisel zar deneyimi" olarak netleştirildi ve `PRODUCT_STRATEGY.md` içinde sürüm yol haritasına bağlandı. Sıradaki adım: `v0.2.0` için güvenli ses katmanı ve temel fonksiyonel polish.
 - [2026-09-21] Monetizasyon kararı — Abonelik ve uygulama verisi için özel bulut/backend kapsam dışı bırakıldı. Ücretsiz temel deneyim + tek seferlik non-consumable `Lifetime Premium` modeli kesinleştirildi; geri yükleme Google Play hesabı üzerinden yapılacak. Sıradaki adım değişmedi: `v0.2.0` güvenli ses ve fonksiyonel polish.
+- [2026-09-21] Faz ve kalite planı — `v0.2.0`–`v1.0.0` işleri, kabul kriterleri, branch düzeni ve faz sonu test kapıları `IMPLEMENTATION_PLAN.md` içinde tanımlandı. Her faz otomatik kontroller ve Android emülatör/cihaz regresyonu geçmeden sürümlenmeyecek. Sıradaki başlangıç: `fix/persistent-audio`.
 
 ## 11. Açık kararlar / varsayımlar
 

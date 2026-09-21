@@ -1,5 +1,7 @@
 # Ürün stratejisi — kişisel zar deneyimi
 
+Uygulama sırası ve her sürümün kabul/test kapıları için `IMPLEMENTATION_PLAN.md` esas alınır.
+
 ## Neden biri ödeme yapsın?
 
 Temel zar atma ücretsiz alternatiflerde zaten kolayca bulunuyor. Ücretli değer, daha fazla zar türü eklemekten değil, fiziksel bir aksesuar seçer gibi uygulamayı kişiye ait hale getirmekten gelmeli.

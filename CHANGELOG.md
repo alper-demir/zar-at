@@ -8,6 +8,7 @@ Bu proje semantik sürümleme kullanır.
 
 - Monetizasyon modeli ücretsiz temel sürüm + tek seferlik Lifetime Premium olarak kesinleştirildi.
 - Abonelik ve uygulama verileri için özel bulut/backend kapsam dışı bırakıldı.
+- `v0.2.0`–`v1.0.0` uygulama fazları ve zorunlu kalite kapıları tanımlandı.
 
 ## [0.1.0] - 2026-09-21
 
