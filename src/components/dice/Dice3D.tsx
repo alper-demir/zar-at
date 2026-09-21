@@ -9,7 +9,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { ThemeDefinition } from '../../assets/themes/themes';
-import { DiceAppearance } from '../../lib/personalization';
+import { DiceAppearance, getReadablePipColor } from '../../lib/personalization';
 import {
   DICE_FLIGHT_DURATION_MS,
   DICE_LIFT_DURATION_MS,
@@ -133,7 +133,14 @@ export function Dice3D({
         style={({ pressed }) => [styles.dice, diceStyle, pressed && styles.pressed]}
       >
         <View style={[styles.gloss, appearance?.finish === 'matte' && styles.matteGloss]} />
-        <DicePips color={appearance?.pipColor ?? '#FFFFFF'} size={size} value={value} />
+        <DicePips
+          color={getReadablePipColor(
+            appearance?.bodyColor ?? theme.face,
+            appearance?.pipColor ?? '#FFFFFF',
+          )}
+          size={size}
+          value={value}
+        />
       </Pressable>
     </Animated.View>
   );

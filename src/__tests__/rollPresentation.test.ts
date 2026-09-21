@@ -1,4 +1,5 @@
 import { formatRollAnnouncement, formatRollResult } from '../lib/rollPresentation';
+import { getReadablePipColor } from '../lib/personalization';
 
 describe('roll presentation', () => {
   it('formats a pair with its total', () => {
@@ -13,5 +14,10 @@ describe('roll presentation', () => {
 
     expect(formatRollResult(result)).toBe('5');
     expect(formatRollAnnouncement(result)).toBe('Zar sonucu: 5.');
+  });
+
+  it('keeps pips readable when body and pip colors are too similar', () => {
+    expect(getReadablePipColor('#FFFFFF', '#FFFFFF')).toBe('#101426');
+    expect(getReadablePipColor('#6978FF', '#FFFFFF')).toBe('#FFFFFF');
   });
 });

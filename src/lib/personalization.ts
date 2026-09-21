@@ -55,3 +55,23 @@ export const DICE_FINISH_OPTIONS: DiceFinishOption[] = [
 export function cloneAppearance(appearance: DiceAppearance): DiceAppearance {
   return { ...appearance };
 }
+
+function luminance(hexColor: string): number {
+  const value = hexColor.replace('#', '');
+  const red = Number.parseInt(value.slice(0, 2), 16) / 255;
+  const green = Number.parseInt(value.slice(2, 4), 16) / 255;
+  const blue = Number.parseInt(value.slice(4, 6), 16) / 255;
+  const linearize = (channel: number) =>
+    channel <= 0.03928 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
+  return 0.2126 * linearize(red) + 0.7152 * linearize(green) + 0.0722 * linearize(blue);
+}
+
+export function getReadablePipColor(bodyColor: string, pipColor: string): string {
+  const bodyLuminance = luminance(bodyColor);
+  const pipLuminance = luminance(pipColor);
+  const contrast =
+    (Math.max(bodyLuminance, pipLuminance) + 0.05) / (Math.min(bodyLuminance, pipLuminance) + 0.05);
+
+  if (contrast >= 3) return pipColor;
+  return bodyLuminance > 0.5 ? '#101426' : '#FFFFFF';
+}

@@ -28,6 +28,8 @@ Bu proje semantik sürümleme kullanır.
 - Android emülatörde ses açıkken 50 ardışık tekli atış: ANR, native crash, React hatası veya `expo-audio` hatası görülmedi.
 - Android emülatörde çift zar sonucu, toplam ve yeni geçmiş formatı doğrulandı.
 - Android emülatörde v0.3 hot-reload sonrası tekli atış ve sonuç görünümü doğrulandı; runtime hata görülmedi.
+- Ayarlar ekranında ses kapalıyken atış sonrası yeni playback log'u oluşmadı ve ayar yeniden açıldığında kapalı kaldı.
+- Açık renkli zar gövdelerinde pip okunabilirliği için otomatik kontrast fallback'i doğrulandı.
 
 ## [0.1.0] - 2026-09-21
 
