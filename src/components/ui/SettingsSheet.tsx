@@ -9,6 +9,7 @@ import { DiceTheme } from '../../store/settingsStore';
 
 interface SettingsSheetProps {
   firstDiceAppearance: DiceAppearance;
+  favoritePresetId: string | null;
   hapticProfile: HapticProfile;
   hapticsEnabled: boolean;
   reducedMotionEnabled: boolean;
@@ -31,6 +32,7 @@ interface SettingsSheetProps {
   onPurchase: () => void;
   onRestore: () => void;
   onSavePreset: (name: string) => void;
+  onSetFavoritePreset: (id: string | null) => void;
   onSecondDiceAppearanceChange: (appearance: Partial<DiceAppearance>) => void;
   onSoundProfileChange: (profile: SoundProfile) => void;
   onSelectTheme: (theme: DiceTheme) => void;
@@ -42,6 +44,7 @@ interface SettingsSheetProps {
 
 export function SettingsSheet({
   firstDiceAppearance,
+  favoritePresetId,
   hapticProfile,
   hapticsEnabled,
   reducedMotionEnabled,
@@ -64,6 +67,7 @@ export function SettingsSheet({
   onPurchase,
   onRestore,
   onSavePreset,
+  onSetFavoritePreset,
   onSecondDiceAppearanceChange,
   onSoundProfileChange,
   onSelectTheme,
@@ -106,12 +110,14 @@ export function SettingsSheet({
             />
             <DiceWorkshop
               firstDice={firstDiceAppearance}
+              favoritePresetId={favoritePresetId}
               isPremium={premiumUnlocked}
               onDeletePreset={onDeletePreset}
               onFirstChange={onFirstDiceAppearanceChange}
               onLoadPreset={onLoadPreset}
               onLockedPress={onLockedCustomizationPress}
               onSavePreset={onSavePreset}
+              onSetFavoritePreset={onSetFavoritePreset}
               onSecondChange={onSecondDiceAppearanceChange}
               presets={presets}
               secondDice={secondDiceAppearance}

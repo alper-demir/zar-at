@@ -12,11 +12,13 @@ import {
 interface DiceWorkshopProps {
   firstDice: DiceAppearance;
   isPremium: boolean;
+  favoritePresetId: string | null;
   onDeletePreset: (id: string) => void;
   onFirstChange: (appearance: Partial<DiceAppearance>) => void;
   onLoadPreset: (preset: DicePreset) => void;
   onLockedPress: () => void;
   onSavePreset: (name: string) => void;
+  onSetFavoritePreset: (id: string | null) => void;
   onSecondChange: (appearance: Partial<DiceAppearance>) => void;
   presets: DicePreset[];
   secondDice: DiceAppearance;
@@ -27,11 +29,13 @@ type DiceTarget = 'first' | 'second';
 export function DiceWorkshop({
   firstDice,
   isPremium,
+  favoritePresetId,
   onDeletePreset,
   onFirstChange,
   onLoadPreset,
   onLockedPress,
   onSavePreset,
+  onSetFavoritePreset,
   onSecondChange,
   presets,
   secondDice,
@@ -166,6 +170,12 @@ export function DiceWorkshop({
             <Text style={styles.presetName}>{preset.name}</Text>
           </Pressable>
           <Pressable
+            accessibilityLabel={`${preset.name} presetini ${favoritePresetId === preset.id ? 'favoriden çıkar' : 'favori yap'}`}
+            onPress={() => onSetFavoritePreset(favoritePresetId === preset.id ? null : preset.id)}
+          >
+            <Text style={styles.favorite}>{favoritePresetId === preset.id ? '★' : '☆'}</Text>
+          </Pressable>
+          <Pressable
             accessibilityLabel={`${preset.name} presetini sil`}
             onPress={() => onDeletePreset(preset.id)}
           >
@@ -189,6 +199,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 10,
   },
+  favorite: { color: '#F4C95D', fontSize: 18, marginHorizontal: 12 },
   finishRow: { flexDirection: 'row', gap: 8 },
   input: {
     backgroundColor: '#101426',
