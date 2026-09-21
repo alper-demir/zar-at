@@ -3,11 +3,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from './Button';
 import { ThemePicker } from './ThemePicker';
 import { DiceWorkshop } from '../workshop/DiceWorkshop';
-import { DiceAppearance, DicePreset } from '../../lib/personalization';
+import { FeedbackPicker } from '../workshop/feedback-picker';
+import { DiceAppearance, DicePreset, HapticProfile, SoundProfile } from '../../lib/personalization';
 import { DiceTheme } from '../../store/settingsStore';
 
 interface SettingsSheetProps {
   firstDiceAppearance: DiceAppearance;
+  hapticProfile: HapticProfile;
   hapticsEnabled: boolean;
   isEntitlementChecking: boolean;
   isPurchasing: boolean;
@@ -15,15 +17,18 @@ interface SettingsSheetProps {
   premiumUnlocked: boolean;
   selectedTheme: DiceTheme;
   soundEnabled: boolean;
+  soundProfile: SoundProfile;
   onClose: () => void;
   onDeletePreset: (id: string) => void;
   onFirstDiceAppearanceChange: (appearance: Partial<DiceAppearance>) => void;
+  onHapticProfileChange: (profile: HapticProfile) => void;
   onLoadPreset: (preset: DicePreset) => void;
   onLockedCustomizationPress: () => void;
   onPurchase: () => void;
   onRestore: () => void;
   onSavePreset: (name: string) => void;
   onSecondDiceAppearanceChange: (appearance: Partial<DiceAppearance>) => void;
+  onSoundProfileChange: (profile: SoundProfile) => void;
   onSelectTheme: (theme: DiceTheme) => void;
   presets: DicePreset[];
   secondDiceAppearance: DiceAppearance;
@@ -33,6 +38,7 @@ interface SettingsSheetProps {
 
 export function SettingsSheet({
   firstDiceAppearance,
+  hapticProfile,
   hapticsEnabled,
   isEntitlementChecking,
   isPurchasing,
@@ -40,15 +46,18 @@ export function SettingsSheet({
   premiumUnlocked,
   selectedTheme,
   soundEnabled,
+  soundProfile,
   onClose,
   onDeletePreset,
   onFirstDiceAppearanceChange,
+  onHapticProfileChange,
   onLoadPreset,
   onLockedCustomizationPress,
   onPurchase,
   onRestore,
   onSavePreset,
   onSecondDiceAppearanceChange,
+  onSoundProfileChange,
   onSelectTheme,
   presets,
   secondDiceAppearance,
@@ -90,6 +99,14 @@ export function SettingsSheet({
               onSecondChange={onSecondDiceAppearanceChange}
               presets={presets}
               secondDice={secondDiceAppearance}
+            />
+            <FeedbackPicker
+              hapticProfile={hapticProfile}
+              isPremium={premiumUnlocked}
+              onHapticChange={onHapticProfileChange}
+              onLockedPress={onLockedCustomizationPress}
+              onSoundChange={onSoundProfileChange}
+              soundProfile={soundProfile}
             />
             <View style={styles.premiumCard}>
               <Text style={styles.premiumTitle}>

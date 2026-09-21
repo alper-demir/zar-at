@@ -1,5 +1,6 @@
 import { formatRollAnnouncement, formatRollResult } from '../lib/rollPresentation';
 import { getReadablePipColor } from '../lib/personalization';
+import { isSoundAllowed } from '../lib/sounds';
 
 describe('roll presentation', () => {
   it('formats a pair with its total', () => {
@@ -19,5 +20,11 @@ describe('roll presentation', () => {
   it('keeps pips readable when body and pip colors are too similar', () => {
     expect(getReadablePipColor('#FFFFFF', '#FFFFFF')).toBe('#101426');
     expect(getReadablePipColor('#6978FF', '#FFFFFF')).toBe('#FFFFFF');
+  });
+
+  it('keeps minimal feedback from triggering premium cinematic sounds', () => {
+    expect(isSoundAllowed('minimal', 'roll')).toBe(true);
+    expect(isSoundAllowed('minimal', 'sparkle')).toBe(false);
+    expect(isSoundAllowed('cinematic', 'whoosh')).toBe(true);
   });
 });

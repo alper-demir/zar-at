@@ -4,6 +4,21 @@ Bu proje semantik sürümleme kullanır.
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-09-21
+
+### Eklendi
+
+- Premium malzeme görünümleri: ahşap, mermer ve cam.
+- Ses profilleri (Cinematic/Minimal) ve haptik profilleri (Soft/Standard/Strong).
+- Kritik sonuçlar için premium hero mesaj efekti.
+- Ayar store şeması v3 migration ve eski görünüm kayıtları için normalize katmanı.
+
+### Doğrulandı
+
+- 13 Jest testi, TypeScript, ESLint, Prettier ve Expo Doctor kontrolleri.
+- Android emülatörde mock premium açma, premium kilitlerinin kalkması, Ahşap zar/Minimal profil seçimi ve zar atışı.
+- Temiz logcat'te ANR, fatal exception, Metro çözümleme veya React runtime hatası görülmedi.
+
 ## [0.3.0] - 2026-09-21
 
 ### Değişti
