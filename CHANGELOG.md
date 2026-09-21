@@ -13,6 +13,11 @@ Bu proje semantik sürümleme kullanır.
 ### Düzeltildi
 
 - Ses efektleri için atış başına native player oluşturma kaldırıldı; Expo Go Android ANR'ını önlemek için kalıcı player'lar kullanılıyor.
+- Çift zarın gecikmeli animasyonu ile sonuç/buton kilidi senkronlandı; hızlı ardışık dokunuşlar engellendi.
+
+### Eklendi
+
+- Gelecekteki Google Play adapter'ından bağımsız `checking | free | premium` entitlement katmanı.
 
 ## [0.1.0] - 2026-09-21
 
