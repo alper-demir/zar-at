@@ -9,6 +9,12 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { ThemeDefinition } from '../../assets/themes/themes';
+import {
+  DICE_FLIGHT_DURATION_MS,
+  DICE_LIFT_DURATION_MS,
+  DICE_SCALE_DURATION_MS,
+  DICE_WIND_UP_DURATION_MS,
+} from '../../lib/rollAnimation';
 
 interface Dice3DProps {
   delayMs?: number;
@@ -64,11 +70,11 @@ export function Dice3D({
 
   useEffect(() => {
     if (rollId === 0) return;
-    const config = { duration: 700, easing: Easing.out(Easing.cubic) };
+    const config = { duration: DICE_FLIGHT_DURATION_MS, easing: Easing.out(Easing.cubic) };
     rotation.value = withDelay(
       delayMs,
       withSequence(
-        withTiming(rotation.value + 250, { duration: 220 }),
+        withTiming(rotation.value + 250, { duration: DICE_WIND_UP_DURATION_MS }),
         withTiming(rotation.value + 720, config),
       ),
     );
@@ -76,12 +82,18 @@ export function Dice3D({
       delayMs,
       withSequence(
         withTiming(-30, { duration: 280 }),
-        withTiming(0, { duration: 640, easing: Easing.out(Easing.quad) }),
+        withTiming(0, {
+          duration: DICE_LIFT_DURATION_MS - 280,
+          easing: Easing.out(Easing.quad),
+        }),
       ),
     );
     scale.value = withDelay(
       delayMs,
-      withSequence(withTiming(1.05, { duration: 320 }), withTiming(1, { duration: 660 })),
+      withSequence(
+        withTiming(1.05, { duration: 320 }),
+        withTiming(1, { duration: DICE_SCALE_DURATION_MS - 320 }),
+      ),
     );
   }, [delayMs, lift, rollId, rotation, scale]);
 

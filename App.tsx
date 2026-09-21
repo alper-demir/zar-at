@@ -9,6 +9,7 @@ import { SettingsSheet } from './src/components/ui/SettingsSheet';
 import { useDiceRoll, DiceMode, RollResult } from './src/hooks/useDiceRoll';
 import { useSoundEffects } from './src/hooks/useSoundEffects';
 import { usePurchase } from './src/hooks/usePurchase';
+import { DICE_PAIR_STAGGER_MS } from './src/lib/rollAnimation';
 import { useSettingsStore } from './src/store/settingsStore';
 
 const INITIAL_DICE = [1, 1];
@@ -105,7 +106,7 @@ export default function App() {
             <View style={styles.diceRow}>
               {displayedDice.map((value, index) => (
                 <Dice3D
-                  delayMs={index * 100}
+                  delayMs={index * DICE_PAIR_STAGGER_MS}
                   disabled={isRolling}
                   key={`${index}-${mode}`}
                   onPress={() => void handleRoll()}
