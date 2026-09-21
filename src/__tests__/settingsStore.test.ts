@@ -30,4 +30,24 @@ describe('settings store entitlement guards', () => {
 
     expect(useSettingsStore.getState().theme).toBe('classic');
   });
+
+  it('keeps two dice appearances independent and supports preset CRUD', () => {
+    useSettingsStore.getState().setFirstDiceAppearance({ bodyColor: '#FFFFFF' });
+    useSettingsStore.getState().setSecondDiceAppearance({ bodyColor: '#27B7D8' });
+    const preset = {
+      firstDice: useSettingsStore.getState().firstDiceAppearance,
+      id: 'preset-1',
+      name: 'Buz gecesi',
+      secondDice: useSettingsStore.getState().secondDiceAppearance,
+      table: useSettingsStore.getState().tableAppearance,
+    };
+    useSettingsStore.getState().addPreset(preset);
+
+    expect(useSettingsStore.getState().firstDiceAppearance.bodyColor).toBe('#FFFFFF');
+    expect(useSettingsStore.getState().secondDiceAppearance.bodyColor).toBe('#27B7D8');
+    expect(useSettingsStore.getState().presets).toHaveLength(1);
+
+    useSettingsStore.getState().deletePreset('preset-1');
+    expect(useSettingsStore.getState().presets).toHaveLength(0);
+  });
 });

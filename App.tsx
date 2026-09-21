@@ -12,6 +12,7 @@ import { useSoundEffects } from './src/hooks/useSoundEffects';
 import { usePurchase } from './src/hooks/usePurchase';
 import { DICE_PAIR_STAGGER_MS } from './src/lib/rollAnimation';
 import { formatRollAnnouncement, formatRollResult } from './src/lib/rollPresentation';
+import { DicePreset } from './src/lib/personalization';
 import { useSettingsStore } from './src/store/settingsStore';
 
 const INITIAL_DICE = [1, 1];
@@ -24,15 +25,26 @@ export default function App() {
   const [lastSettled, setLastSettled] = useState<RollResult | null>(null);
 
   const hapticsEnabled = useSettingsStore((state) => state.hapticsEnabled);
+  const firstDiceAppearance = useSettingsStore((state) => state.firstDiceAppearance);
+  const secondDiceAppearance = useSettingsStore((state) => state.secondDiceAppearance);
+  const presets = useSettingsStore((state) => state.presets);
+  const tableAppearance = useSettingsStore((state) => state.tableAppearance);
   const selectedTheme = useSettingsStore((state) => state.theme);
   const soundEnabled = useSettingsStore((state) => state.soundEnabled);
   const setHapticsEnabled = useSettingsStore((state) => state.setHapticsEnabled);
   const setSoundEnabled = useSettingsStore((state) => state.setSoundEnabled);
   const setTheme = useSettingsStore((state) => state.setTheme);
+  const addPreset = useSettingsStore((state) => state.addPreset);
+  const deletePreset = useSettingsStore((state) => state.deletePreset);
+  const setFirstDiceAppearance = useSettingsStore((state) => state.setFirstDiceAppearance);
+  const setSecondDiceAppearance = useSettingsStore((state) => state.setSecondDiceAppearance);
+  const setTableAppearance = useSettingsStore((state) => state.setTableAppearance);
   const { isPremium, status: entitlementStatus } = useEntitlement();
   const selectedThemeDefinition = getTheme(selectedTheme);
   const theme =
-    selectedThemeDefinition.premium && !isPremium ? getTheme('classic') : selectedThemeDefinition;
+    selectedThemeDefinition.premium && !isPremium
+      ? getTheme('classic')
+      : { ...selectedThemeDefinition, ...tableAppearance };
   const playSound = useSoundEffects(soundEnabled);
   const { isRolling, roll } = useDiceRoll(hapticsEnabled, playSound);
   const { isPurchasing, purchasePremium, restorePurchases } = usePurchase();
@@ -58,6 +70,32 @@ export default function App() {
     if (lastSettled && lastSettled.dice.length !== (nextMode === 'pair' ? 2 : 1)) {
       setLastSettled(null);
     }
+  };
+
+  const handleThemeChange = (nextTheme: typeof selectedTheme) => {
+    const nextThemeDefinition = getTheme(nextTheme);
+    setTheme(nextTheme);
+    setTableAppearance({
+      accentColor: nextThemeDefinition.accent,
+      backgroundColor: nextThemeDefinition.background,
+    });
+  };
+
+  const handleSavePreset = (name: string) => {
+    const preset: DicePreset = {
+      firstDice: firstDiceAppearance,
+      id: `${Date.now()}`,
+      name,
+      secondDice: secondDiceAppearance,
+      table: tableAppearance,
+    };
+    addPreset(preset);
+  };
+
+  const handleLoadPreset = (preset: DicePreset) => {
+    setFirstDiceAppearance(preset.firstDice);
+    setSecondDiceAppearance(preset.secondDice);
+    setTableAppearance(preset.table);
   };
 
   const statusText = isRolling
@@ -111,6 +149,7 @@ export default function App() {
             <View style={styles.diceRow}>
               {displayedDice.map((value, index) => (
                 <Dice3D
+                  appearance={index === 0 ? firstDiceAppearance : secondDiceAppearance}
                   delayMs={index * DICE_PAIR_STAGGER_MS}
                   disabled={isRolling}
                   key={`${index}-${mode}`}
@@ -165,15 +204,24 @@ export default function App() {
 
         <SettingsSheet
           hapticsEnabled={hapticsEnabled}
+          firstDiceAppearance={firstDiceAppearance}
           isPurchasing={isPurchasing}
           isEntitlementChecking={entitlementStatus === 'checking'}
           isVisible={isSettingsVisible}
           onClose={() => setSettingsVisible(false)}
+          onDeletePreset={deletePreset}
+          onFirstDiceAppearanceChange={setFirstDiceAppearance}
+          onLoadPreset={handleLoadPreset}
+          onLockedCustomizationPress={() => void purchasePremium()}
           onPurchase={() => void purchasePremium()}
           onRestore={() => void restorePurchases()}
-          onSelectTheme={setTheme}
+          onSavePreset={handleSavePreset}
+          onSecondDiceAppearanceChange={setSecondDiceAppearance}
+          onSelectTheme={handleThemeChange}
           premiumUnlocked={isPremium}
+          presets={presets}
           selectedTheme={selectedTheme}
+          secondDiceAppearance={secondDiceAppearance}
           setHapticsEnabled={setHapticsEnabled}
           setSoundEnabled={setSoundEnabled}
           soundEnabled={soundEnabled}
