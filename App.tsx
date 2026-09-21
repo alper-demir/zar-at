@@ -65,7 +65,7 @@ export default function App() {
       ? getTheme('classic')
       : { ...selectedThemeDefinition, ...tableAppearance };
   const playSound = useSoundEffects(soundEnabled, soundProfile);
-  const { isRolling, roll } = useDiceRoll(
+  const { isRolling, pendingDice, roll } = useDiceRoll(
     hapticsEnabled,
     hapticProfile,
     reducedMotionEnabled,
@@ -203,17 +203,19 @@ export default function App() {
                 heroDismissedRollId !== lastSettled.id
               }
             />
-            <View style={[styles.shadow, isRolling && styles.shadowInFlight]} />
             <View style={styles.diceRow}>
               {displayedDice.map((value, index) => (
                 <Dice3D
                   appearance={index === 0 ? firstDiceAppearance : secondDiceAppearance}
-                  delayMs={index * DICE_PAIR_STAGGER_MS}
+                  delayMs={reducedMotionEnabled ? 0 : index * DICE_PAIR_STAGGER_MS}
+                  diceIndex={index}
                   disabled={isRolling}
                   key={`${index}-${mode}`}
                   onPress={() => void handleRoll()}
+                  reducedMotion={reducedMotionEnabled}
                   rollId={rollId}
                   size={mode === 'pair' ? 132 : 160}
+                  targetValue={pendingDice?.[index]}
                   theme={theme}
                   value={value}
                 />
@@ -386,19 +388,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 18,
     justifyContent: 'center',
-  },
-  shadow: {
-    backgroundColor: '#000000',
-    borderRadius: 60,
-    bottom: 44,
-    height: 20,
-    opacity: 0.3,
-    position: 'absolute',
-    width: 200,
-  },
-  shadowInFlight: {
-    opacity: 0.14,
-    transform: [{ scaleX: 0.72 }],
   },
   status: {
     fontSize: 20,

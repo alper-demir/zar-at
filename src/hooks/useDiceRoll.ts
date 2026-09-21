@@ -21,10 +21,12 @@ export function useDiceRoll(
 ): {
   isRolling: boolean;
   lastRoll: RollResult | null;
+  pendingDice: number[] | null;
   roll: (mode: DiceMode) => Promise<RollResult | null>;
 } {
   const [isRolling, setIsRolling] = useState(false);
   const [lastRoll, setLastRoll] = useState<RollResult | null>(null);
+  const [pendingDice, setPendingDice] = useState<number[] | null>(null);
   const rollingRef = useRef(false);
 
   const roll = useCallback(
@@ -43,6 +45,7 @@ export function useDiceRoll(
           id: Date.now(),
           total: dice.reduce((sum, die) => sum + die, 0),
         };
+        setPendingDice(dice);
 
         const rollDurationMs = reducedMotionEnabled
           ? 120
@@ -63,6 +66,7 @@ export function useDiceRoll(
       } catch {
         return null;
       } finally {
+        setPendingDice(null);
         rollingRef.current = false;
         setIsRolling(false);
       }
@@ -70,5 +74,5 @@ export function useDiceRoll(
     [hapticProfile, hapticsEnabled, playSound, reducedMotionEnabled],
   );
 
-  return { isRolling, lastRoll, roll };
+  return { isRolling, lastRoll, pendingDice, roll };
 }
