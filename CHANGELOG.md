@@ -4,6 +4,8 @@ Bu proje semantik sürümleme kullanır.
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-09-21
+
 ### Değişti
 
 - Monetizasyon modeli ücretsiz temel sürüm + tek seferlik Lifetime Premium olarak kesinleştirildi.
@@ -30,6 +32,7 @@ Bu proje semantik sürümleme kullanır.
 - Android emülatörde v0.3 hot-reload sonrası tekli atış ve sonuç görünümü doğrulandı; runtime hata görülmedi.
 - Ayarlar ekranında ses kapalıyken atış sonrası yeni playback log'u oluşmadı ve ayar yeniden açıldığında kapalı kaldı.
 - Açık renkli zar gövdelerinde pip okunabilirliği için otomatik kontrast fallback'i doğrulandı.
+- Emülatörde preset kaydetme, preset satırını görüntüleme ve preset silme akışı doğrulandı.
 
 ## [0.1.0] - 2026-09-21
 
