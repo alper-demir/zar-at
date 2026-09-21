@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { AccessibilityInfo, Pressable, Share, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { getTheme } from './src/assets/themes/themes';
@@ -7,6 +7,7 @@ import { Dice3D } from './src/components/dice/Dice3D';
 import { CriticalHeroEffect } from './src/components/dice/CriticalHeroEffect';
 import { Button } from './src/components/ui/Button';
 import { SettingsSheet } from './src/components/ui/SettingsSheet';
+import { HistorySheet } from './src/components/ui/HistorySheet';
 import { useDiceRoll, DiceMode, RollResult } from './src/hooks/useDiceRoll';
 import { useEntitlement } from './src/hooks/useEntitlement';
 import { useSoundEffects } from './src/hooks/useSoundEffects';
@@ -17,17 +18,20 @@ import { formatRollAnnouncement, formatRollResult } from './src/lib/rollPresenta
 import { DicePreset } from './src/lib/personalization';
 import { calculateRollStats } from './src/lib/rollStats';
 import { useSettingsStore } from './src/store/settingsStore';
+import { useHistoryStore } from './src/store/historyStore';
 
 const INITIAL_DICE = [1, 1];
 
 export default function App() {
   const [mode, setMode] = useState<DiceMode>('single');
   const [isSettingsVisible, setSettingsVisible] = useState(false);
+  const [isHistoryVisible, setHistoryVisible] = useState(false);
   const [rollId, setRollId] = useState(0);
-  const [history, setHistory] = useState<RollResult[]>([]);
   const [lastSettled, setLastSettled] = useState<RollResult | null>(null);
+  const appliedFavoriteRef = useRef(false);
 
   const hapticsEnabled = useSettingsStore((state) => state.hapticsEnabled);
+  const favoritePresetId = useSettingsStore((state) => state.favoritePresetId);
   const firstDiceAppearance = useSettingsStore((state) => state.firstDiceAppearance);
   const hapticProfile = useSettingsStore((state) => state.hapticProfile);
   const reducedMotionEnabled = useSettingsStore((state) => state.reducedMotionEnabled);
@@ -39,6 +43,7 @@ export default function App() {
   const soundEnabled = useSettingsStore((state) => state.soundEnabled);
   const soundProfile = useSettingsStore((state) => state.soundProfile);
   const setHapticsEnabled = useSettingsStore((state) => state.setHapticsEnabled);
+  const setFavoritePreset = useSettingsStore((state) => state.setFavoritePreset);
   const setSoundEnabled = useSettingsStore((state) => state.setSoundEnabled);
   const setTheme = useSettingsStore((state) => state.setTheme);
   const addPreset = useSettingsStore((state) => state.addPreset);
@@ -51,6 +56,9 @@ export default function App() {
   const setSoundProfile = useSettingsStore((state) => state.setSoundProfile);
   const setTableAppearance = useSettingsStore((state) => state.setTableAppearance);
   const { isPremium, status: entitlementStatus } = useEntitlement();
+  const history = useHistoryStore((state) => state.history);
+  const addRoll = useHistoryStore((state) => state.addRoll);
+  const clearHistory = useHistoryStore((state) => state.clearHistory);
   const selectedThemeDefinition = getTheme(selectedTheme);
   const theme =
     selectedThemeDefinition.premium && !isPremium
@@ -72,6 +80,22 @@ export default function App() {
   const stats = calculateRollStats(history);
 
   useEffect(() => {
+    if (appliedFavoriteRef.current || !favoritePresetId) return;
+    const favorite = presets.find((preset) => preset.id === favoritePresetId);
+    if (!favorite) return;
+    setFirstDiceAppearance(favorite.firstDice);
+    setSecondDiceAppearance(favorite.secondDice);
+    setTableAppearance(favorite.table);
+    appliedFavoriteRef.current = true;
+  }, [
+    favoritePresetId,
+    presets,
+    setFirstDiceAppearance,
+    setSecondDiceAppearance,
+    setTableAppearance,
+  ]);
+
+  useEffect(() => {
     if (!isPremium || !isCritical || !lastSettled) return;
     const timeout = setTimeout(() => setHeroDismissedRollId(lastSettled.id), 1300);
     return () => clearTimeout(timeout);
@@ -83,10 +107,10 @@ export default function App() {
     const result = await roll(mode);
     if (result) {
       setLastSettled(result);
-      setHistory((current) => [result, ...current].slice(0, 5));
+      addRoll(result);
       AccessibilityInfo.announceForAccessibility(formatRollAnnouncement(result));
     }
-  }, [isRolling, mode, roll]);
+  }, [addRoll, isRolling, mode, roll]);
 
   useShakeToRoll(shakeToRollEnabled, () => void handleRoll());
 
@@ -239,7 +263,7 @@ export default function App() {
             <Text style={styles.historyTitle}>Son atışlar</Text>
             {history.length ? (
               <View style={styles.historyRow}>
-                {history.map((item) => (
+                {history.slice(0, 5).map((item) => (
                   <View key={item.id} style={styles.historyChip}>
                     <Text style={styles.historyChipText}>{formatRollResult(item)}</Text>
                   </View>
@@ -252,8 +276,8 @@ export default function App() {
               <View style={styles.statsRow}>
                 <Text style={styles.statsText}>{stats.totalRolls} atış</Text>
                 <Text style={styles.statsText}>Ort. {stats.average.toFixed(1)}</Text>
-                <Pressable accessibilityLabel="Geçmişi temizle" onPress={() => setHistory([])}>
-                  <Text style={styles.clearLabel}>Temizle</Text>
+                <Pressable accessibilityLabel="Geçmişi aç" onPress={() => setHistoryVisible(true)}>
+                  <Text style={styles.clearLabel}>Tümünü aç</Text>
                 </Pressable>
               </View>
             )}
@@ -262,6 +286,7 @@ export default function App() {
 
         <SettingsSheet
           hapticsEnabled={hapticsEnabled}
+          favoritePresetId={favoritePresetId}
           reducedMotionEnabled={reducedMotionEnabled}
           shakeToRollEnabled={shakeToRollEnabled}
           firstDiceAppearance={firstDiceAppearance}
@@ -280,6 +305,7 @@ export default function App() {
           onPurchase={() => void purchasePremium()}
           onRestore={() => void restorePurchases()}
           onSavePreset={handleSavePreset}
+          onSetFavoritePreset={setFavoritePreset}
           onSecondDiceAppearanceChange={setSecondDiceAppearance}
           onSoundProfileChange={setSoundProfile}
           onSelectTheme={handleThemeChange}
@@ -291,6 +317,13 @@ export default function App() {
           setHapticsEnabled={setHapticsEnabled}
           setSoundEnabled={setSoundEnabled}
           soundEnabled={soundEnabled}
+        />
+        <HistorySheet
+          history={history}
+          isPremium={isPremium}
+          isVisible={isHistoryVisible}
+          onClear={clearHistory}
+          onClose={() => setHistoryVisible(false)}
         />
       </SafeAreaView>
     </SafeAreaProvider>

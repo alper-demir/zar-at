@@ -19,6 +19,7 @@ const PREMIUM_THEMES: DiceTheme[] = ['neon', 'sunset', 'midnight'];
 export interface SettingsState {
   firstDiceAppearance: DiceAppearance;
   entitlementStatus: EntitlementStatus;
+  favoritePresetId: string | null;
   hapticProfile: HapticProfile;
   hapticsEnabled: boolean;
   reducedMotionEnabled: boolean;
@@ -41,6 +42,7 @@ interface SettingsActions {
   setSecondDiceAppearance: (appearance: Partial<DiceAppearance>) => void;
   setTableAppearance: (appearance: TableAppearance) => void;
   setEntitlementStatus: (status: EntitlementStatus) => void;
+  setFavoritePreset: (id: string | null) => void;
   setHapticsEnabled: (enabled: boolean) => void;
   setReducedMotionEnabled: (enabled: boolean) => void;
   setShakeToRollEnabled: (enabled: boolean) => void;
@@ -55,6 +57,7 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
     (set) => ({
       firstDiceAppearance: DEFAULT_DICE_APPEARANCE,
       entitlementStatus: 'checking',
+      favoritePresetId: null,
       hapticProfile: 'standard',
       hapticsEnabled: true,
       reducedMotionEnabled: false,
@@ -90,6 +93,7 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
         })),
       setTableAppearance: (tableAppearance) => set({ tableAppearance }),
       setEntitlementStatus: (entitlementStatus) => set({ entitlementStatus }),
+      setFavoritePreset: (favoritePresetId) => set({ favoritePresetId }),
       setHapticsEnabled: (hapticsEnabled) => set({ hapticsEnabled }),
       setReducedMotionEnabled: (reducedMotionEnabled) => set({ reducedMotionEnabled }),
       setShakeToRollEnabled: (shakeToRollEnabled) => set({ shakeToRollEnabled }),
@@ -117,6 +121,7 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
         return {
           ...state,
           firstDiceAppearance: normalizeDiceAppearance(state.firstDiceAppearance),
+          favoritePresetId: state.favoritePresetId ?? null,
           hapticProfile: state.hapticProfile ?? 'standard',
           reducedMotionEnabled: state.reducedMotionEnabled ?? false,
           shakeToRollEnabled: state.shakeToRollEnabled ?? false,
@@ -132,6 +137,7 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
       },
       partialize: (state) => ({
         firstDiceAppearance: state.firstDiceAppearance,
+        favoritePresetId: state.favoritePresetId,
         hapticProfile: state.hapticProfile,
         hapticsEnabled: state.hapticsEnabled,
         reducedMotionEnabled: state.reducedMotionEnabled,
