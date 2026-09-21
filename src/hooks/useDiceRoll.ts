@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import { playRollSettle, playRollStart } from '../lib/haptics';
 import { rollD6 } from '../lib/rng';
-import { playSound } from '../lib/sounds';
+import { SoundEffect } from '../lib/sounds';
 
 export type DiceMode = 'single' | 'pair';
 
@@ -15,7 +15,7 @@ const ROLL_DURATION_MS = 980;
 
 export function useDiceRoll(
   hapticsEnabled: boolean,
-  soundEnabled: boolean,
+  playSound: (effect: SoundEffect) => void,
 ): {
   isRolling: boolean;
   lastRoll: RollResult | null;
@@ -31,7 +31,7 @@ export function useDiceRoll(
 
       setIsRolling(true);
       void playRollStart(hapticsEnabled);
-      void playSound('roll', soundEnabled);
+      playSound('roll');
 
       const dice = await Promise.all([rollD6(), ...(mode === 'pair' ? [rollD6()] : [])]);
       const result: RollResult = {
@@ -47,13 +47,13 @@ export function useDiceRoll(
         hapticsEnabled,
         dice.every((die) => die === 6),
       );
-      void playSound('impact', soundEnabled);
+      playSound('impact');
       if (dice.every((die) => die === 6)) {
-        setTimeout(() => void playSound('sparkle', soundEnabled), 140);
+        setTimeout(() => playSound('sparkle'), 140);
       }
       return result;
     },
-    [hapticsEnabled, isRolling, soundEnabled],
+    [hapticsEnabled, isRolling, playSound],
   );
 
   return { isRolling, lastRoll, roll, rollDurationMs: ROLL_DURATION_MS };

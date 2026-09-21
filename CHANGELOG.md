@@ -10,6 +10,10 @@ Bu proje semantik sürümleme kullanır.
 - Abonelik ve uygulama verileri için özel bulut/backend kapsam dışı bırakıldı.
 - `v0.2.0`–`v1.0.0` uygulama fazları ve zorunlu kalite kapıları tanımlandı.
 
+### Düzeltildi
+
+- Ses efektleri için atış başına native player oluşturma kaldırıldı; Expo Go Android ANR'ını önlemek için kalıcı player'lar kullanılıyor.
+
 ## [0.1.0] - 2026-09-21
 
 ### Eklendi
