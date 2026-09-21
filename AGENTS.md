@@ -29,9 +29,11 @@ Ana ekranda ortada zar/zarlar, üstte tek/çift modu, zar veya büyük butonla a
 
 ## 5. Monetizasyon
 
-Ücretsiz sürüm tam temel işlev + 1 tema içerir ve reklamsızdır. Premium; ek temalar, gelişmiş kritik sonuç efektleri ve opsiyonel geçmiş/istatistik açar. Ürün ID placeholder: `dice_premium_unlock`.
+Karar: uygulama ücretsiz temel sürüm + tek seferlik, non-consumable "Lifetime Premium" kilidiyle sunulacak. Abonelik kullanılmayacak. Ücretsiz sürüm tam temel işlev + 1 tema içerir ve reklamsızdır. Premium; ek temalar, gelişmiş kritik sonuç efektleri ve opsiyonel geçmiş/istatistik açar. Ürün ID placeholder: `dice_premium_unlock`.
 
 Ürün yönü "kişisel zar deneyimi" olarak netleştirildi. Premium değeri temel zar atma işlevini kısıtlamak yerine kullanıcının kendi zarını ve masasını oluşturmasına dayanacak: özel renk paletleri, iki zar için ayrı stiller, masa/arka plan temaları, ses-haptik profilleri, atış efektleri ve kaydedilebilir görünüm presetleri. Hesap veya bulut zorunluluğu olmayacak; kişiselleştirme cihazda saklanacak.
+
+Uygulama ayarları, presetler, geçmiş ve kişiselleştirme verileri için özel backend/bulut kurulmayacak. Satın alma doğrulama ve geri yükleme işlemleri mağaza altyapısı üzerinden yürütülecek; bu karar uygulama verisini buluta taşıma gerektirmez.
 
 ## 6. Klasör yapısı
 
@@ -81,10 +83,11 @@ Uygulama kumar/bahis değildir ve gerçek para içermez ibaresi bulunmalı. Veri
 - [2026-09-21] Emülatör ANR teşhisi — Tek/çift zar animasyonları yerel gölgeyle emülatörde başarıyla test edildi. `expo-audio` ile her atışta dinamik player oluşturma, Expo Go Android'de ANR üretiyor; ses tetikleme geçici olarak devre dışı bırakıldı. Bir sonraki ses çalışmasında player'lar mount sırasında kalıcı oluşturulup gerçek cihaz/dev build üzerinde test edilmeli.
 - [2026-09-21] Görsel polish — Header/alt başlık, sonuç kartı, geçmiş chip'leri, safe-area kullanımı, buton gölgesi ve zarın pip tabanlı yüz tasarımı iyileştirildi. Reanimated animasyonu hafif tutuldu ve native gölge fallback'i korundu. TypeScript, ESLint, Prettier kontrolleri geçti; emülatörde tekli ve çiftli atış görsel olarak doğrulandı. Sıradaki adım: ANR oluşturmayan kalıcı ses player mimarisiyle ses efektlerini geri eklemek.
 - [2026-09-21] Sürümleme ve ürün yönü — Çalışan uygulama `0.1.0` alpha sürümü olarak tanımlandı; `main` kararlı sürümler, `develop` entegrasyon, `feature/*` kısa ömürlü geliştirme branch'leri olacak. Premium değer önerisi "kişisel zar deneyimi" olarak netleştirildi ve `PRODUCT_STRATEGY.md` içinde sürüm yol haritasına bağlandı. Sıradaki adım: `v0.2.0` için güvenli ses katmanı ve temel fonksiyonel polish.
+- [2026-09-21] Monetizasyon kararı — Abonelik ve uygulama verisi için özel bulut/backend kapsam dışı bırakıldı. Ücretsiz temel deneyim + tek seferlik non-consumable `Lifetime Premium` modeli kesinleştirildi; geri yükleme Google Play hesabı üzerinden yapılacak. Sıradaki adım değişmedi: `v0.2.0` güvenli ses ve fonksiyonel polish.
 
 ## 11. Açık kararlar / varsayımlar
 
 - V1 görsel yönü minimal/modern flat + gradient/glow; gerçekçi dokular premiumda değerlendirilecek.
 - Uygulama adı/marka kimliği netleşene kadar placeholder `Zar`.
 - Koyu tonlu, hafif gradient arka plan; zar öne çıkacak.
-- Mağazada ücretlendirme biçimi henüz kesin değil: mevcut teknik varsayım ücretsiz temel sürüm + tek seferlik Premium kilit açmadır. Baştan ücretli indirme alternatifi mağaza testi öncesinde ayrıca değerlendirilecek.
+- Ücretsiz temel sürüm + tek seferlik Lifetime Premium kararı kesinleşti. Abonelik ve uygulama verileri için özel bulut/backend kullanılmayacak.
