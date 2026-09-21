@@ -9,6 +9,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { ThemeDefinition } from '../../assets/themes/themes';
+import { DiceAppearance, getReadablePipColor } from '../../lib/personalization';
 import {
   DICE_FLIGHT_DURATION_MS,
   DICE_LIFT_DURATION_MS,
@@ -17,6 +18,7 @@ import {
 } from '../../lib/rollAnimation';
 
 interface Dice3DProps {
+  appearance?: DiceAppearance;
   delayMs?: number;
   disabled?: boolean;
   onPress?: () => void;
@@ -35,7 +37,7 @@ const PIP_POSITIONS: Record<number, number[]> = {
   6: [0, 2, 3, 5, 6, 8],
 };
 
-function DicePips({ size, value }: { size: number; value: number }) {
+function DicePips({ color, size, value }: { color: string; size: number; value: number }) {
   const activePips = PIP_POSITIONS[value] ?? PIP_POSITIONS[1];
   return (
     <View style={[styles.pipGrid, { height: size * 0.56, width: size * 0.56 }]}>
@@ -45,7 +47,12 @@ function DicePips({ size, value }: { size: number; value: number }) {
             <View
               style={[
                 styles.pip,
-                { borderRadius: size * 0.06, height: size * 0.12, width: size * 0.12 },
+                {
+                  backgroundColor: color,
+                  borderRadius: size * 0.06,
+                  height: size * 0.12,
+                  width: size * 0.12,
+                },
               ]}
             />
           )}
@@ -56,6 +63,7 @@ function DicePips({ size, value }: { size: number; value: number }) {
 }
 
 export function Dice3D({
+  appearance,
   delayMs = 0,
   disabled = false,
   onPress,
@@ -106,9 +114,12 @@ export function Dice3D({
   }));
 
   const diceStyle: ViewStyle = {
-    backgroundColor: theme.face,
+    backgroundColor: appearance?.bodyColor ?? theme.face,
     borderRadius: size * 0.18,
     height: size,
+    shadowColor: appearance?.finish === 'neon' ? appearance.bodyColor : '#000000',
+    shadowOpacity: appearance?.finish === 'neon' ? 0.7 : 0.32,
+    shadowRadius: appearance?.finish === 'neon' ? 24 : 18,
     width: size,
   };
 
@@ -121,8 +132,15 @@ export function Dice3D({
         onPress={onPress}
         style={({ pressed }) => [styles.dice, diceStyle, pressed && styles.pressed]}
       >
-        <View style={styles.gloss} />
-        <DicePips size={size} value={value} />
+        <View style={[styles.gloss, appearance?.finish === 'matte' && styles.matteGloss]} />
+        <DicePips
+          color={getReadablePipColor(
+            appearance?.bodyColor ?? theme.face,
+            appearance?.pipColor ?? '#FFFFFF',
+          )}
+          size={size}
+          value={value}
+        />
       </Pressable>
     </Animated.View>
   );
@@ -138,10 +156,7 @@ const styles = StyleSheet.create({
     elevation: 10,
     justifyContent: 'center',
     overflow: 'hidden',
-    shadowColor: '#000000',
     shadowOffset: { width: 0, height: 16 },
-    shadowOpacity: 0.32,
-    shadowRadius: 18,
   },
   gloss: {
     backgroundColor: 'rgba(255, 255, 255, 0.14)',
@@ -152,6 +167,9 @@ const styles = StyleSheet.create({
     top: 14,
     transform: [{ rotate: '-28deg' }],
     width: 92,
+  },
+  matteGloss: {
+    opacity: 0.04,
   },
   pipGrid: {
     flexDirection: 'row',

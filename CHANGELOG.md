@@ -20,11 +20,16 @@ Bu proje semantik sürümleme kullanır.
 - Gelecekteki Google Play adapter'ından bağımsız `checking | free | premium` entitlement katmanı.
 - `jest-expo` tabanlı otomatik test altyapısı ve RNG, animasyon zamanlaması, entitlement ve sonuç sunumu testleri.
 - Çift zar geçmişinde işlem gösterimi (`4 + 2 = 6`) ve Android erişilebilirlik sonuç duyurusu.
+- Zar Atölyesi veri modelleri: bağımsız zar görünümleri, masa görünümü ve yerel preset yapısı.
+- Zar 1/Zar 2 için gövde rengi, pip rengi ve mat/parlak/neon yüzey seçenekleri.
 
 ### Doğrulandı
 
 - Android emülatörde ses açıkken 50 ardışık tekli atış: ANR, native crash, React hatası veya `expo-audio` hatası görülmedi.
 - Android emülatörde çift zar sonucu, toplam ve yeni geçmiş formatı doğrulandı.
+- Android emülatörde v0.3 hot-reload sonrası tekli atış ve sonuç görünümü doğrulandı; runtime hata görülmedi.
+- Ayarlar ekranında ses kapalıyken atış sonrası yeni playback log'u oluşmadı ve ayar yeniden açıldığında kapalı kaldı.
+- Açık renkli zar gövdelerinde pip okunabilirliği için otomatik kontrast fallback'i doğrulandı.
 
 ## [0.1.0] - 2026-09-21
 
