@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
-import { useEffect, useState } from 'react';
-import { AccessibilityInfo, Pressable, StyleSheet, Text, View } from 'react-native';
+import { useCallback, useEffect, useState } from 'react';
+import { AccessibilityInfo, Pressable, Share, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { getTheme } from './src/assets/themes/themes';
 import { Dice3D } from './src/components/dice/Dice3D';
@@ -10,10 +10,12 @@ import { SettingsSheet } from './src/components/ui/SettingsSheet';
 import { useDiceRoll, DiceMode, RollResult } from './src/hooks/useDiceRoll';
 import { useEntitlement } from './src/hooks/useEntitlement';
 import { useSoundEffects } from './src/hooks/useSoundEffects';
+import { useShakeToRoll } from './src/hooks/useShakeToRoll';
 import { usePurchase } from './src/hooks/usePurchase';
 import { DICE_PAIR_STAGGER_MS } from './src/lib/rollAnimation';
 import { formatRollAnnouncement, formatRollResult } from './src/lib/rollPresentation';
 import { DicePreset } from './src/lib/personalization';
+import { calculateRollStats } from './src/lib/rollStats';
 import { useSettingsStore } from './src/store/settingsStore';
 
 const INITIAL_DICE = [1, 1];
@@ -28,6 +30,8 @@ export default function App() {
   const hapticsEnabled = useSettingsStore((state) => state.hapticsEnabled);
   const firstDiceAppearance = useSettingsStore((state) => state.firstDiceAppearance);
   const hapticProfile = useSettingsStore((state) => state.hapticProfile);
+  const reducedMotionEnabled = useSettingsStore((state) => state.reducedMotionEnabled);
+  const shakeToRollEnabled = useSettingsStore((state) => state.shakeToRollEnabled);
   const secondDiceAppearance = useSettingsStore((state) => state.secondDiceAppearance);
   const presets = useSettingsStore((state) => state.presets);
   const tableAppearance = useSettingsStore((state) => state.tableAppearance);
@@ -41,6 +45,8 @@ export default function App() {
   const deletePreset = useSettingsStore((state) => state.deletePreset);
   const setFirstDiceAppearance = useSettingsStore((state) => state.setFirstDiceAppearance);
   const setHapticProfile = useSettingsStore((state) => state.setHapticProfile);
+  const setReducedMotionEnabled = useSettingsStore((state) => state.setReducedMotionEnabled);
+  const setShakeToRollEnabled = useSettingsStore((state) => state.setShakeToRollEnabled);
   const setSecondDiceAppearance = useSettingsStore((state) => state.setSecondDiceAppearance);
   const setSoundProfile = useSettingsStore((state) => state.setSoundProfile);
   const setTableAppearance = useSettingsStore((state) => state.setTableAppearance);
@@ -51,13 +57,19 @@ export default function App() {
       ? getTheme('classic')
       : { ...selectedThemeDefinition, ...tableAppearance };
   const playSound = useSoundEffects(soundEnabled, soundProfile);
-  const { isRolling, roll } = useDiceRoll(hapticsEnabled, hapticProfile, playSound);
+  const { isRolling, roll } = useDiceRoll(
+    hapticsEnabled,
+    hapticProfile,
+    reducedMotionEnabled,
+    playSound,
+  );
   const { isPurchasing, purchasePremium, restorePurchases } = usePurchase();
   const [heroDismissedRollId, setHeroDismissedRollId] = useState<number | null>(null);
 
   const displayedDice = lastSettled?.dice ?? INITIAL_DICE.slice(0, mode === 'pair' ? 2 : 1);
   const total = lastSettled?.total ?? null;
   const isCritical = lastSettled?.dice.every((die) => die === 6) ?? false;
+  const stats = calculateRollStats(history);
 
   useEffect(() => {
     if (!isPremium || !isCritical || !lastSettled) return;
@@ -65,7 +77,7 @@ export default function App() {
     return () => clearTimeout(timeout);
   }, [isCritical, isPremium, lastSettled]);
 
-  const handleRoll = async () => {
+  const handleRoll = useCallback(async () => {
     if (isRolling) return;
     setRollId((current) => current + 1);
     const result = await roll(mode);
@@ -74,6 +86,16 @@ export default function App() {
       setHistory((current) => [result, ...current].slice(0, 5));
       AccessibilityInfo.announceForAccessibility(formatRollAnnouncement(result));
     }
+  }, [isRolling, mode, roll]);
+
+  useShakeToRoll(shakeToRollEnabled, () => void handleRoll());
+
+  const handleShare = async () => {
+    if (!lastSettled) return;
+    await Share.share({
+      message: `Zar sonucu: ${formatRollResult(lastSettled)}\nZar • Fair RNG`,
+      title: 'Zar sonucu',
+    });
   };
 
   const handleModeChange = (nextMode: DiceMode) => {
@@ -207,6 +229,12 @@ export default function App() {
             style={styles.rollButton}
           />
 
+          {lastSettled && (
+            <Pressable accessibilityLabel="Sonucu paylaş" onPress={() => void handleShare()}>
+              <Text style={styles.shareLabel}>Sonucu paylaş</Text>
+            </Pressable>
+          )}
+
           <View style={styles.history}>
             <Text style={styles.historyTitle}>Son atışlar</Text>
             {history.length ? (
@@ -220,11 +248,22 @@ export default function App() {
             ) : (
               <Text style={styles.historyValues}>Henüz kayıt yok</Text>
             )}
+            {history.length > 0 && (
+              <View style={styles.statsRow}>
+                <Text style={styles.statsText}>{stats.totalRolls} atış</Text>
+                <Text style={styles.statsText}>Ort. {stats.average.toFixed(1)}</Text>
+                <Pressable accessibilityLabel="Geçmişi temizle" onPress={() => setHistory([])}>
+                  <Text style={styles.clearLabel}>Temizle</Text>
+                </Pressable>
+              </View>
+            )}
           </View>
         </View>
 
         <SettingsSheet
           hapticsEnabled={hapticsEnabled}
+          reducedMotionEnabled={reducedMotionEnabled}
+          shakeToRollEnabled={shakeToRollEnabled}
           firstDiceAppearance={firstDiceAppearance}
           hapticProfile={hapticProfile}
           isPurchasing={isPurchasing}
@@ -234,6 +273,8 @@ export default function App() {
           onDeletePreset={deletePreset}
           onFirstDiceAppearanceChange={setFirstDiceAppearance}
           onHapticProfileChange={setHapticProfile}
+          onReducedMotionChange={setReducedMotionEnabled}
+          onShakeToRollChange={setShakeToRollEnabled}
           onLoadPreset={handleLoadPreset}
           onLockedCustomizationPress={() => void purchasePremium()}
           onPurchase={() => void purchasePremium()}
@@ -379,6 +420,12 @@ const styles = StyleSheet.create({
     marginTop: 22,
     minWidth: 220,
   },
+  shareLabel: {
+    color: '#AEB8FF',
+    fontSize: 13,
+    fontWeight: '700',
+    marginTop: 12,
+  },
   history: {
     alignItems: 'center',
     minHeight: 72,
@@ -397,6 +444,21 @@ const styles = StyleSheet.create({
   historyRow: {
     flexDirection: 'row',
     gap: 7,
+  },
+  statsRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 16,
+    marginTop: 12,
+  },
+  statsText: {
+    color: '#858CA8',
+    fontSize: 11,
+  },
+  clearLabel: {
+    color: '#AEB8FF',
+    fontSize: 11,
+    fontWeight: '700',
   },
   historyChip: {
     alignItems: 'center',

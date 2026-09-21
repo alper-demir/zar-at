@@ -16,6 +16,7 @@ export interface RollResult {
 export function useDiceRoll(
   hapticsEnabled: boolean,
   hapticProfile: HapticProfile,
+  reducedMotionEnabled: boolean,
   playSound: (effect: SoundEffect) => void,
 ): {
   isRolling: boolean;
@@ -43,7 +44,9 @@ export function useDiceRoll(
           total: dice.reduce((sum, die) => sum + die, 0),
         };
 
-        const rollDurationMs = getRollDurationMs(mode === 'pair' ? 2 : 1);
+        const rollDurationMs = reducedMotionEnabled
+          ? 120
+          : getRollDurationMs(mode === 'pair' ? 2 : 1);
         await new Promise<void>((resolve) => setTimeout(resolve, rollDurationMs));
 
         setLastRoll(result);
@@ -64,7 +67,7 @@ export function useDiceRoll(
         setIsRolling(false);
       }
     },
-    [hapticProfile, hapticsEnabled, playSound],
+    [hapticProfile, hapticsEnabled, playSound, reducedMotionEnabled],
   );
 
   return { isRolling, lastRoll, roll };
