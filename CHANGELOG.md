@@ -2,6 +2,13 @@
 
 Bu proje semantik sürümleme kullanır.
 
+## [Unreleased]
+
+### Değişti
+
+- Monetizasyon modeli ücretsiz temel sürüm + tek seferlik Lifetime Premium olarak kesinleştirildi.
+- Abonelik ve uygulama verileri için özel bulut/backend kapsam dışı bırakıldı.
+
 ## [0.1.0] - 2026-09-21
 
 ### Eklendi
