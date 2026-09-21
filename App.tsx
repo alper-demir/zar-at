@@ -71,7 +71,7 @@ export default function App() {
     reducedMotionEnabled,
     playSound,
   );
-  const { isPurchasing, purchasePremium, restorePurchases } = usePurchase();
+  const { isPurchasing, purchaseError, purchasePremium, restorePurchases } = usePurchase();
   const [heroDismissedRollId, setHeroDismissedRollId] = useState<number | null>(null);
 
   const displayedDice = lastSettled?.dice ?? INITIAL_DICE.slice(0, mode === 'pair' ? 2 : 1);
@@ -277,6 +277,7 @@ export default function App() {
           firstDiceAppearance={firstDiceAppearance}
           hapticProfile={hapticProfile}
           isPurchasing={isPurchasing}
+          purchaseError={purchaseError}
           isEntitlementChecking={entitlementStatus === 'checking'}
           isVisible={isSettingsVisible}
           onClose={() => setSettingsVisible(false)}

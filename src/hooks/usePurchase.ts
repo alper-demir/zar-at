@@ -1,37 +1,151 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { isOwnedPremiumPurchase, PREMIUM_PRODUCT_ID } from '../lib/purchaseEntitlement';
 import { useSettingsStore } from '../store/settingsStore';
 
-export const PREMIUM_PRODUCT_ID = 'dice_premium_unlock';
+type IapModule = typeof import('expo-iap');
+
+function getPurchaseErrorMessage(error: unknown): string {
+  if (error instanceof Error && error.message) return error.message;
+  return 'Satın alma şu anda tamamlanamadı. Lütfen tekrar deneyin.';
+}
 
 /**
- * Store boundary for the non-consumable product. Real Play Billing is wired
- * here once the Play Console product and EAS production credentials exist.
+ * Store boundary for the non-consumable product.
+ *
+ * Expo Go and development mode use the local mock so the rest of the product
+ * can be tested without a Play Console product. Release builds use expo-iap;
+ * the Play Store remains the source of truth for ownership.
  */
 export function usePurchase(): {
   isPurchasing: boolean;
+  purchaseError: string | null;
   purchasePremium: () => Promise<void>;
   restorePurchases: () => Promise<void>;
 } {
   const [isPurchasing, setIsPurchasing] = useState(false);
+  const [purchaseError, setPurchaseError] = useState<string | null>(null);
+  const iapModuleRef = useRef<Promise<IapModule> | null>(null);
   const setEntitlementStatus = useSettingsStore((state) => state.setEntitlementStatus);
   const setPremiumUnlocked = useSettingsStore((state) => state.setPremiumUnlocked);
 
-  const purchasePremium = useCallback(async () => {
-    setIsPurchasing(true);
-    await new Promise<void>((resolve) => setTimeout(resolve, 450));
-    if (__DEV__) {
+  const loadIap = useCallback(() => {
+    if (!iapModuleRef.current) {
+      iapModuleRef.current = import('expo-iap');
+    }
+    return iapModuleRef.current;
+  }, []);
+
+  const grantPurchase = useCallback(
+    async (iap: IapModule, purchase: import('expo-iap').Purchase) => {
+      if (!isOwnedPremiumPurchase(purchase)) return false;
+
       setPremiumUnlocked(true);
       setEntitlementStatus('premium');
+      await iap.finishTransaction({ purchase, isConsumable: false });
+      return true;
+    },
+    [setEntitlementStatus, setPremiumUnlocked],
+  );
+
+  useEffect(() => {
+    if (__DEV__) return;
+
+    let cancelled = false;
+    let purchaseSubscription: { remove: () => void } | undefined;
+    let iap: IapModule | undefined;
+
+    const initializeStore = async () => {
+      try {
+        iap = await loadIap();
+        setEntitlementStatus('checking');
+        purchaseSubscription = iap.purchaseUpdatedListener((purchase) => {
+          void grantPurchase(iap as IapModule, purchase).catch((error: unknown) => {
+            if (!cancelled) setPurchaseError(getPurchaseErrorMessage(error));
+          });
+        });
+        await iap.initConnection();
+        const purchases = await iap.getAvailablePurchases();
+        const owned = purchases.some(isOwnedPremiumPurchase);
+        if (!cancelled) {
+          setPremiumUnlocked(owned);
+          setEntitlementStatus(owned ? 'premium' : 'free');
+        }
+      } catch (error) {
+        if (!cancelled) {
+          setPremiumUnlocked(false);
+          setEntitlementStatus('free');
+          setPurchaseError(getPurchaseErrorMessage(error));
+        }
+      }
+    };
+
+    void initializeStore();
+    return () => {
+      cancelled = true;
+      purchaseSubscription?.remove();
+      if (iap) void iap.endConnection().catch(() => undefined);
+    };
+  }, [grantPurchase, loadIap, setEntitlementStatus, setPremiumUnlocked]);
+
+  const purchasePremium = useCallback(async () => {
+    setIsPurchasing(true);
+    setPurchaseError(null);
+    try {
+      if (__DEV__) {
+        await new Promise<void>((resolve) => setTimeout(resolve, 450));
+        setPremiumUnlocked(true);
+        setEntitlementStatus('premium');
+        return;
+      }
+
+      const iap = await loadIap();
+      await iap.initConnection();
+      const products = await iap.fetchProducts({
+        skus: [PREMIUM_PRODUCT_ID],
+        type: 'in-app',
+      });
+      if (!products?.length) {
+        throw new Error('Premium ürünü Google Play üzerinde henüz bulunamadı.');
+      }
+      await iap.requestPurchase({
+        request: {
+          google: { skus: [PREMIUM_PRODUCT_ID] },
+          apple: { sku: PREMIUM_PRODUCT_ID },
+        },
+        type: 'in-app',
+      });
+    } catch (error) {
+      setPurchaseError(getPurchaseErrorMessage(error));
+    } finally {
+      setIsPurchasing(false);
     }
-    setIsPurchasing(false);
-    // Deliberately does not unlock locally: entitlement must come from Play Billing.
-  }, [setEntitlementStatus, setPremiumUnlocked]);
+  }, [loadIap, setEntitlementStatus, setPremiumUnlocked]);
 
   const restorePurchases = useCallback(async () => {
     setIsPurchasing(true);
-    await new Promise<void>((resolve) => setTimeout(resolve, 450));
-    setIsPurchasing(false);
-  }, []);
+    setPurchaseError(null);
+    try {
+      if (__DEV__) {
+        await new Promise<void>((resolve) => setTimeout(resolve, 450));
+        return;
+      }
 
-  return { isPurchasing, purchasePremium, restorePurchases };
+      const iap = await loadIap();
+      await iap.initConnection();
+      const purchases = await iap.getAvailablePurchases();
+      const ownedPurchase = purchases.find(isOwnedPremiumPurchase);
+      if (ownedPurchase) {
+        await grantPurchase(iap, ownedPurchase);
+      } else {
+        setPremiumUnlocked(false);
+        setEntitlementStatus('free');
+      }
+    } catch (error) {
+      setPurchaseError(getPurchaseErrorMessage(error));
+    } finally {
+      setIsPurchasing(false);
+    }
+  }, [grantPurchase, loadIap, setEntitlementStatus, setPremiumUnlocked]);
+
+  return { isPurchasing, purchaseError, purchasePremium, restorePurchases };
 }
