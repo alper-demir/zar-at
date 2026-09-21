@@ -1,6 +1,7 @@
 import { AudioPlayer, setAudioModeAsync, useAudioPlayer } from 'expo-audio';
 import { useCallback, useEffect, useMemo } from 'react';
-import { SOUND_SOURCES, SoundEffect } from '../lib/sounds';
+import { isSoundAllowed, SOUND_SOURCES, SoundEffect } from '../lib/sounds';
+import { SoundProfile } from '../lib/personalization';
 
 type SoundPlayers = Record<SoundEffect, AudioPlayer>;
 
@@ -13,7 +14,10 @@ const PLAYER_OPTIONS = {
  * Keeps the small sound-effect players alive for the whole app session.
  * Creating a native player for every roll caused ANRs in Expo Go on Android.
  */
-export function useSoundEffects(enabled: boolean): (effect: SoundEffect) => void {
+export function useSoundEffects(
+  enabled: boolean,
+  profile: SoundProfile = 'cinematic',
+): (effect: SoundEffect) => void {
   const impactPlayer = useAudioPlayer(SOUND_SOURCES.impact, PLAYER_OPTIONS);
   const rollPlayer = useAudioPlayer(SOUND_SOURCES.roll, PLAYER_OPTIONS);
   const sparklePlayer = useAudioPlayer(SOUND_SOURCES.sparkle, PLAYER_OPTIONS);
@@ -42,6 +46,7 @@ export function useSoundEffects(enabled: boolean): (effect: SoundEffect) => void
   return useCallback(
     (effect: SoundEffect) => {
       if (!enabled) return;
+      if (!isSoundAllowed(profile, effect)) return;
 
       const player = players[effect];
       if (!player.isLoaded) return;
@@ -56,6 +61,6 @@ export function useSoundEffects(enabled: boolean): (effect: SoundEffect) => void
         // Native audio errors are isolated from the roll state machine.
       }
     },
-    [enabled, players],
+    [enabled, players, profile],
   );
 }

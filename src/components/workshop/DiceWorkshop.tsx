@@ -3,6 +3,7 @@ import { useState } from 'react';
 import {
   DICE_BODY_OPTIONS,
   DICE_FINISH_OPTIONS,
+  DICE_MATERIAL_OPTIONS,
   DICE_PIP_OPTIONS,
   DiceAppearance,
   DicePreset,
@@ -108,6 +109,23 @@ export function DiceWorkshop({
             key={option.id}
             onPress={() => select(option.premium, { finish: option.id })}
             style={[styles.finish, selected.finish === option.id && styles.selected]}
+          >
+            <Text style={styles.optionLabel}>
+              {option.premium && !isPremium ? '🔒 ' : ''}
+              {option.label}
+            </Text>
+          </Pressable>
+        ))}
+      </View>
+
+      <Text style={styles.sectionLabel}>Malzeme</Text>
+      <View style={styles.finishRow}>
+        {DICE_MATERIAL_OPTIONS.map((option) => (
+          <Pressable
+            accessibilityLabel={`${option.label}${option.premium && !isPremium ? ', premium' : ''}`}
+            key={option.id}
+            onPress={() => select(option.premium, { material: option.id })}
+            style={[styles.finish, selected.material === option.id && styles.selected]}
           >
             <Text style={styles.optionLabel}>
               {option.premium && !isPremium ? '🔒 ' : ''}

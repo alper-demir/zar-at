@@ -1,9 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AccessibilityInfo, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { getTheme } from './src/assets/themes/themes';
 import { Dice3D } from './src/components/dice/Dice3D';
+import { CriticalHeroEffect } from './src/components/dice/CriticalHeroEffect';
 import { Button } from './src/components/ui/Button';
 import { SettingsSheet } from './src/components/ui/SettingsSheet';
 import { useDiceRoll, DiceMode, RollResult } from './src/hooks/useDiceRoll';
@@ -26,18 +27,22 @@ export default function App() {
 
   const hapticsEnabled = useSettingsStore((state) => state.hapticsEnabled);
   const firstDiceAppearance = useSettingsStore((state) => state.firstDiceAppearance);
+  const hapticProfile = useSettingsStore((state) => state.hapticProfile);
   const secondDiceAppearance = useSettingsStore((state) => state.secondDiceAppearance);
   const presets = useSettingsStore((state) => state.presets);
   const tableAppearance = useSettingsStore((state) => state.tableAppearance);
   const selectedTheme = useSettingsStore((state) => state.theme);
   const soundEnabled = useSettingsStore((state) => state.soundEnabled);
+  const soundProfile = useSettingsStore((state) => state.soundProfile);
   const setHapticsEnabled = useSettingsStore((state) => state.setHapticsEnabled);
   const setSoundEnabled = useSettingsStore((state) => state.setSoundEnabled);
   const setTheme = useSettingsStore((state) => state.setTheme);
   const addPreset = useSettingsStore((state) => state.addPreset);
   const deletePreset = useSettingsStore((state) => state.deletePreset);
   const setFirstDiceAppearance = useSettingsStore((state) => state.setFirstDiceAppearance);
+  const setHapticProfile = useSettingsStore((state) => state.setHapticProfile);
   const setSecondDiceAppearance = useSettingsStore((state) => state.setSecondDiceAppearance);
+  const setSoundProfile = useSettingsStore((state) => state.setSoundProfile);
   const setTableAppearance = useSettingsStore((state) => state.setTableAppearance);
   const { isPremium, status: entitlementStatus } = useEntitlement();
   const selectedThemeDefinition = getTheme(selectedTheme);
@@ -45,13 +50,20 @@ export default function App() {
     selectedThemeDefinition.premium && !isPremium
       ? getTheme('classic')
       : { ...selectedThemeDefinition, ...tableAppearance };
-  const playSound = useSoundEffects(soundEnabled);
-  const { isRolling, roll } = useDiceRoll(hapticsEnabled, playSound);
+  const playSound = useSoundEffects(soundEnabled, soundProfile);
+  const { isRolling, roll } = useDiceRoll(hapticsEnabled, hapticProfile, playSound);
   const { isPurchasing, purchasePremium, restorePurchases } = usePurchase();
+  const [heroDismissedRollId, setHeroDismissedRollId] = useState<number | null>(null);
 
   const displayedDice = lastSettled?.dice ?? INITIAL_DICE.slice(0, mode === 'pair' ? 2 : 1);
   const total = lastSettled?.total ?? null;
   const isCritical = lastSettled?.dice.every((die) => die === 6) ?? false;
+
+  useEffect(() => {
+    if (!isPremium || !isCritical || !lastSettled) return;
+    const timeout = setTimeout(() => setHeroDismissedRollId(lastSettled.id), 1300);
+    return () => clearTimeout(timeout);
+  }, [isCritical, isPremium, lastSettled]);
 
   const handleRoll = async () => {
     if (isRolling) return;
@@ -145,6 +157,15 @@ export default function App() {
           </View>
 
           <View style={styles.diceArea}>
+            <CriticalHeroEffect
+              accentColor={theme.accent}
+              visible={
+                isPremium &&
+                isCritical &&
+                lastSettled !== null &&
+                heroDismissedRollId !== lastSettled.id
+              }
+            />
             <View style={[styles.shadow, isRolling && styles.shadowInFlight]} />
             <View style={styles.diceRow}>
               {displayedDice.map((value, index) => (
@@ -205,23 +226,27 @@ export default function App() {
         <SettingsSheet
           hapticsEnabled={hapticsEnabled}
           firstDiceAppearance={firstDiceAppearance}
+          hapticProfile={hapticProfile}
           isPurchasing={isPurchasing}
           isEntitlementChecking={entitlementStatus === 'checking'}
           isVisible={isSettingsVisible}
           onClose={() => setSettingsVisible(false)}
           onDeletePreset={deletePreset}
           onFirstDiceAppearanceChange={setFirstDiceAppearance}
+          onHapticProfileChange={setHapticProfile}
           onLoadPreset={handleLoadPreset}
           onLockedCustomizationPress={() => void purchasePremium()}
           onPurchase={() => void purchasePremium()}
           onRestore={() => void restorePurchases()}
           onSavePreset={handleSavePreset}
           onSecondDiceAppearanceChange={setSecondDiceAppearance}
+          onSoundProfileChange={setSoundProfile}
           onSelectTheme={handleThemeChange}
           premiumUnlocked={isPremium}
           presets={presets}
           selectedTheme={selectedTheme}
           secondDiceAppearance={secondDiceAppearance}
+          soundProfile={soundProfile}
           setHapticsEnabled={setHapticsEnabled}
           setSoundEnabled={setSoundEnabled}
           soundEnabled={soundEnabled}
