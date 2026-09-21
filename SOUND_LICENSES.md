@@ -4,7 +4,7 @@ Ses dosyaları Envato Elements üzerindeki dice rolling arama sayfasından indir
 
 - Kaynak: https://elements.envato.com/sound-effects/dice+rolling
 - Proje: Zar At (`com.zarat.app`)
-- Dosyalar: `arrow-whoosh.wav`, `dice-rolling.mp3`, `impact.wav`, `sparkle.wav`
+- Dosyalar: `arrow-whoosh.wav`, `dice-rolling-sound.mp3`, `impact.wav`, `sparkle.wav`
 - İndirme tarihi: _(doldurulacak)_
 - Envato item adı ve item URL'si: _(doldurulacak)_
 - Envato lisans/proje kayıt ID'si: _(doldurulacak)_
