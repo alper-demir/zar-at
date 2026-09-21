@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { Pressable, StyleSheet, View, ViewStyle } from 'react-native';
 import Animated, {
   Easing,
@@ -75,9 +75,20 @@ export function Dice3D({
   const rotation = useSharedValue(0);
   const lift = useSharedValue(0);
   const scale = useSharedValue(1);
+  const previousRollId = useRef(rollId);
+  const hasMounted = useRef(false);
 
   useEffect(() => {
-    if (rollId === 0) return;
+    // A die can be mounted after the first roll when the user switches from
+    // single to pair mode. It should appear settled instead of replaying the
+    // whole entrance animation just because it was added to the tree.
+    if (!hasMounted.current) {
+      hasMounted.current = true;
+      previousRollId.current = rollId;
+      return;
+    }
+    if (rollId === 0 || rollId === previousRollId.current) return;
+    previousRollId.current = rollId;
     const config = { duration: DICE_FLIGHT_DURATION_MS, easing: Easing.out(Easing.cubic) };
     rotation.value = withDelay(
       delayMs,
