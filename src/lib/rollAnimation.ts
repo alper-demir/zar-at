@@ -31,9 +31,11 @@ export function getDiceMotionProfile(rollId: number, diceIndex: number): DiceMot
     driftX: direction * (18 + (seed % 9)),
     landingTiltX: direction * (2 + (seed % 3)),
     landingTiltY: -direction * (2 + (seed % 2)),
-    rotationX: (2 + (seed % 2)) * 360,
-    rotationY: direction * (2 + ((seed + 1) % 2)) * 360,
-    rotationZ: direction * 360,
+    // X/Y stay within a visible tilt because this is a layered 2.5D die;
+    // the full tumble is carried by Z so the face never collapses edge-on.
+    rotationX: direction * (18 + (seed % 8)),
+    rotationY: -direction * (22 + (seed % 10)),
+    rotationZ: direction * 720,
     windUpX: -direction * (10 + (seed % 5)),
     windUpY: direction * (12 + (seed % 6)),
   };

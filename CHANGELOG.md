@@ -7,6 +7,7 @@ Bu proje semantik sürümleme kullanır.
 - Atış başlangıcındaki rolling sound, kullanıcı tarafından sağlanan `dice-rolling-sound.mp3` ile değiştirildi.
 - `expo-iap` production adapter'ı eklendi: non-consumable satın alma, pending/error yönetimi, acknowledge ve restore akışı hazır. Play Console ürünü olmadan development mock akışı korunuyor.
 - Ayrı `feature/realistic-dice-variation` varyasyonunda üç eksenli dönüş, yatay savrulma, iniş sekmesi, zar başına dinamik gölge ve atış sırasında değişen yüzler eklendi. Kriptografik sonuç, zar inişe geçerken görsel yüze kilitleniyor ancak sonuç kartı animasyon bitene kadar açıklanmıyor.
+- Emülatör ara kare kontrolünde düz yüzeyin kenar-on görünmesini azaltmak için X/Y eğimleri sınırlandı; fiziksel küp hissini Z ekseni taklası ve sınırlı perspektif eğimi taşıyor.
 
 ## [0.5.2] - 2026-09-21
 

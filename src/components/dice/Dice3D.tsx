@@ -126,7 +126,7 @@ export function Dice3D({
       delayMs,
       withSequence(
         withTiming(startX + profile.windUpX, { duration: DICE_WIND_UP_DURATION_MS }),
-        withTiming(startX + profile.rotationX * 0.62, {
+        withTiming(startX + profile.rotationX * 2 * 0.62, {
           duration: DICE_TAKEOFF_DURATION_MS,
           easing: flightEase,
         }),
@@ -144,7 +144,7 @@ export function Dice3D({
       delayMs,
       withSequence(
         withTiming(startY + profile.windUpY, { duration: DICE_WIND_UP_DURATION_MS }),
-        withTiming(startY + profile.rotationY * 0.62, {
+        withTiming(startY + profile.rotationY * 2 * 0.62, {
           duration: DICE_TAKEOFF_DURATION_MS,
           easing: flightEase,
         }),
