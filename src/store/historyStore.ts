@@ -3,7 +3,7 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import type { RollResult } from '../hooks/useDiceRoll';
 
-const MAX_HISTORY = 50;
+const MAX_HISTORY = 20;
 
 interface HistoryState {
   history: RollResult[];
