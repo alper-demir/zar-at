@@ -165,9 +165,8 @@ export default function App() {
         <View style={styles.container}>
           <View style={styles.header}>
             <View style={styles.brandBlock}>
-              <Text style={[styles.eyebrow, { color: theme.accent }]}>ZAR • FAIR RNG</Text>
-              <Text style={[styles.title, { color: theme.text }]}>Şansını dene</Text>
-              <Text style={styles.subtitle}>Reklamsız, hızlı ve adil.</Text>
+              <Text style={[styles.title, { color: theme.text }]}>Zar At</Text>
+              <Text style={styles.subtitle}>Tek veya çift zar seç.</Text>
             </View>
             <Pressable
               accessibilityLabel="Ayarları aç"
@@ -332,12 +331,6 @@ const styles = StyleSheet.create({
   },
   brandBlock: {
     flex: 1,
-  },
-  eyebrow: {
-    fontSize: 11,
-    fontWeight: '800',
-    letterSpacing: 4,
-    marginBottom: 5,
   },
   title: {
     fontSize: 30,
