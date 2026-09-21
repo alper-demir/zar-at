@@ -116,7 +116,17 @@ export function Dice3D({
   const diceStyle: ViewStyle = {
     backgroundColor: appearance?.bodyColor ?? theme.face,
     borderRadius: size * 0.18,
+    borderColor:
+      appearance?.material === 'wood'
+        ? '#8C5A35'
+        : appearance?.material === 'marble'
+          ? '#E8E8F2'
+          : appearance?.material === 'glass'
+            ? 'rgba(255, 255, 255, 0.7)'
+            : 'transparent',
+    borderWidth: appearance?.material === 'solid' || !appearance?.material ? 0 : 2,
     height: size,
+    opacity: appearance?.material === 'glass' ? 0.86 : 1,
     shadowColor: appearance?.finish === 'neon' ? appearance.bodyColor : '#000000',
     shadowOpacity: appearance?.finish === 'neon' ? 0.7 : 0.32,
     shadowRadius: appearance?.finish === 'neon' ? 24 : 18,
@@ -133,6 +143,10 @@ export function Dice3D({
         style={({ pressed }) => [styles.dice, diceStyle, pressed && styles.pressed]}
       >
         <View style={[styles.gloss, appearance?.finish === 'matte' && styles.matteGloss]} />
+        {appearance?.material === 'wood' && <View pointerEvents="none" style={styles.woodGrain} />}
+        {appearance?.material === 'marble' && (
+          <View pointerEvents="none" style={styles.marbleVein} />
+        )}
         <DicePips
           color={getReadablePipColor(
             appearance?.bodyColor ?? theme.face,
@@ -171,6 +185,15 @@ const styles = StyleSheet.create({
   matteGloss: {
     opacity: 0.04,
   },
+  marbleVein: {
+    backgroundColor: 'rgba(255, 255, 255, 0.16)',
+    height: 12,
+    left: -10,
+    position: 'absolute',
+    top: 76,
+    transform: [{ rotate: '-24deg' }],
+    width: 190,
+  },
   pipGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -190,5 +213,14 @@ const styles = StyleSheet.create({
   },
   pressed: {
     opacity: 0.84,
+  },
+  woodGrain: {
+    backgroundColor: 'rgba(72, 36, 18, 0.18)',
+    height: 8,
+    left: -10,
+    position: 'absolute',
+    top: 56,
+    transform: [{ rotate: '18deg' }],
+    width: 190,
   },
 });

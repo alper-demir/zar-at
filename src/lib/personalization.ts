@@ -1,8 +1,12 @@
 export type DiceFinish = 'matte' | 'glossy' | 'neon';
+export type DiceMaterial = 'solid' | 'wood' | 'marble' | 'glass';
+export type HapticProfile = 'soft' | 'standard' | 'strong';
+export type SoundProfile = 'cinematic' | 'minimal';
 
 export interface DiceAppearance {
   bodyColor: string;
   finish: DiceFinish;
+  material: DiceMaterial;
   pipColor: string;
 }
 
@@ -22,6 +26,7 @@ export interface DicePreset {
 export const DEFAULT_DICE_APPEARANCE: DiceAppearance = {
   bodyColor: '#6978FF',
   finish: 'glossy',
+  material: 'solid',
   pipColor: '#FFFFFF',
 };
 
@@ -52,8 +57,25 @@ export const DICE_FINISH_OPTIONS: DiceFinishOption[] = [
   { id: 'neon', label: 'Neon glow', premium: true },
 ];
 
+interface DiceMaterialOption {
+  id: DiceMaterial;
+  label: string;
+  premium: boolean;
+}
+
+export const DICE_MATERIAL_OPTIONS: DiceMaterialOption[] = [
+  { id: 'solid', label: 'Düz', premium: false },
+  { id: 'wood', label: 'Ahşap', premium: true },
+  { id: 'marble', label: 'Mermer', premium: true },
+  { id: 'glass', label: 'Cam', premium: true },
+];
+
 export function cloneAppearance(appearance: DiceAppearance): DiceAppearance {
   return { ...appearance };
+}
+
+export function normalizeDiceAppearance(appearance?: Partial<DiceAppearance>): DiceAppearance {
+  return { ...DEFAULT_DICE_APPEARANCE, ...appearance };
 }
 
 function luminance(hexColor: string): number {

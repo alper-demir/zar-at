@@ -3,6 +3,7 @@ import { playRollSettle, playRollStart } from '../lib/haptics';
 import { rollD6 } from '../lib/rng';
 import { getRollDurationMs } from '../lib/rollAnimation';
 import { SoundEffect } from '../lib/sounds';
+import { HapticProfile } from '../lib/personalization';
 
 export type DiceMode = 'single' | 'pair';
 
@@ -14,6 +15,7 @@ export interface RollResult {
 
 export function useDiceRoll(
   hapticsEnabled: boolean,
+  hapticProfile: HapticProfile,
   playSound: (effect: SoundEffect) => void,
 ): {
   isRolling: boolean;
@@ -31,7 +33,7 @@ export function useDiceRoll(
       rollingRef.current = true;
       setIsRolling(true);
       try {
-        void playRollStart(hapticsEnabled);
+        void playRollStart(hapticsEnabled, hapticProfile);
         playSound('roll');
 
         const dice = await Promise.all([rollD6(), ...(mode === 'pair' ? [rollD6()] : [])]);
@@ -48,6 +50,7 @@ export function useDiceRoll(
         void playRollSettle(
           hapticsEnabled,
           dice.every((die) => die === 6),
+          hapticProfile,
         );
         playSound('impact');
         if (dice.every((die) => die === 6)) {
@@ -61,7 +64,7 @@ export function useDiceRoll(
         setIsRolling(false);
       }
     },
-    [hapticsEnabled, playSound],
+    [hapticProfile, hapticsEnabled, playSound],
   );
 
   return { isRolling, lastRoll, roll };

@@ -50,4 +50,13 @@ describe('settings store entitlement guards', () => {
     useSettingsStore.getState().deletePreset('preset-1');
     expect(useSettingsStore.getState().presets).toHaveLength(0);
   });
+
+  it('stores premium feedback profiles without changing core settings', () => {
+    useSettingsStore.getState().setSoundProfile('minimal');
+    useSettingsStore.getState().setHapticProfile('soft');
+
+    expect(useSettingsStore.getState().soundProfile).toBe('minimal');
+    expect(useSettingsStore.getState().hapticProfile).toBe('soft');
+    expect(useSettingsStore.getState().soundEnabled).toBe(true);
+  });
 });

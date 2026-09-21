@@ -1,3 +1,5 @@
+import { SoundProfile } from './personalization';
+
 export const SOUND_SOURCES = {
   impact: require('../assets/sounds/impact.wav'),
   roll: require('../assets/sounds/dice-rolling.mp3'),
@@ -6,3 +8,7 @@ export const SOUND_SOURCES = {
 } as const;
 
 export type SoundEffect = keyof typeof SOUND_SOURCES;
+
+export function isSoundAllowed(profile: SoundProfile, effect: SoundEffect): boolean {
+  return profile !== 'minimal' || (effect !== 'sparkle' && effect !== 'whoosh');
+}
