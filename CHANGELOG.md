@@ -5,6 +5,7 @@ Bu proje semantik sürümleme kullanır.
 ## [Unreleased]
 
 - Atış başlangıcındaki rolling sound, kullanıcı tarafından sağlanan `dice-rolling-sound.mp3` ile değiştirildi.
+- `expo-iap` production adapter'ı eklendi: non-consumable satın alma, pending/error yönetimi, acknowledge ve restore akışı hazır. Play Console ürünü olmadan development mock akışı korunuyor.
 
 ## [0.5.2] - 2026-09-21
 

@@ -24,6 +24,6 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["expo-audio", "expo-asset"]
+    "plugins": ["expo-audio", "expo-asset", "expo-iap"]
   }
 }

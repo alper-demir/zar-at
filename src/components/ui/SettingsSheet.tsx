@@ -16,6 +16,7 @@ interface SettingsSheetProps {
   shakeToRollEnabled: boolean;
   isEntitlementChecking: boolean;
   isPurchasing: boolean;
+  purchaseError: string | null;
   isVisible: boolean;
   premiumUnlocked: boolean;
   selectedTheme: DiceTheme;
@@ -51,6 +52,7 @@ export function SettingsSheet({
   shakeToRollEnabled,
   isEntitlementChecking,
   isPurchasing,
+  purchaseError,
   isVisible,
   premiumUnlocked,
   selectedTheme,
@@ -150,6 +152,7 @@ export function SettingsSheet({
                   />
                 )
               )}
+              {purchaseError && <Text style={styles.error}>{purchaseError}</Text>}
               <Pressable
                 disabled={isPurchasing || isEntitlementChecking}
                 onPress={onRestore}
@@ -199,6 +202,12 @@ const styles = StyleSheet.create({
     color: '#AEB8FF',
     fontSize: 15,
     fontWeight: '700',
+  },
+  error: {
+    color: '#FFB4B4',
+    fontSize: 12,
+    lineHeight: 18,
+    marginTop: 12,
   },
   content: {
     paddingBottom: 30,
