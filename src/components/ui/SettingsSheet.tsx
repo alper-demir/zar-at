@@ -6,6 +6,7 @@ import { DiceTheme } from '../../store/settingsStore';
 
 interface SettingsSheetProps {
   hapticsEnabled: boolean;
+  isEntitlementChecking: boolean;
   isPurchasing: boolean;
   isVisible: boolean;
   premiumUnlocked: boolean;
@@ -21,6 +22,7 @@ interface SettingsSheetProps {
 
 export function SettingsSheet({
   hapticsEnabled,
+  isEntitlementChecking,
   isPurchasing,
   isVisible,
   premiumUnlocked,
@@ -66,14 +68,22 @@ export function SettingsSheet({
                   ? 'Tüm temalar ve gelişmiş efektler kullanılabilir.'
                   : 'Neon, gün batımı ve gece temalarının kilidini aç.'}
               </Text>
-              {!premiumUnlocked && (
-                <Button
-                  disabled={isPurchasing}
-                  label={isPurchasing ? 'Kontrol ediliyor…' : 'Premium’u Satın Al'}
-                  onPress={onPurchase}
-                />
+              {isEntitlementChecking ? (
+                <Text style={styles.premiumText}>Premium durumu kontrol ediliyor…</Text>
+              ) : (
+                !premiumUnlocked && (
+                  <Button
+                    disabled={isPurchasing}
+                    label={isPurchasing ? 'Kontrol ediliyor…' : 'Premium’u Satın Al'}
+                    onPress={onPurchase}
+                  />
+                )
               )}
-              <Pressable disabled={isPurchasing} onPress={onRestore} style={styles.restore}>
+              <Pressable
+                disabled={isPurchasing || isEntitlementChecking}
+                onPress={onRestore}
+                style={styles.restore}
+              >
                 <Text style={styles.restoreLabel}>Satın alımları geri yükle</Text>
               </Pressable>
             </View>

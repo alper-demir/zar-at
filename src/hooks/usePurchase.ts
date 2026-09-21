@@ -13,6 +13,7 @@ export function usePurchase(): {
   restorePurchases: () => Promise<void>;
 } {
   const [isPurchasing, setIsPurchasing] = useState(false);
+  const setEntitlementStatus = useSettingsStore((state) => state.setEntitlementStatus);
   const setPremiumUnlocked = useSettingsStore((state) => state.setPremiumUnlocked);
 
   const purchasePremium = useCallback(async () => {
@@ -20,10 +21,11 @@ export function usePurchase(): {
     await new Promise<void>((resolve) => setTimeout(resolve, 450));
     if (__DEV__) {
       setPremiumUnlocked(true);
+      setEntitlementStatus('premium');
     }
     setIsPurchasing(false);
     // Deliberately does not unlock locally: entitlement must come from Play Billing.
-  }, [setPremiumUnlocked]);
+  }, [setEntitlementStatus, setPremiumUnlocked]);
 
   const restorePurchases = useCallback(async () => {
     setIsPurchasing(true);
