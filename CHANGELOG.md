@@ -4,6 +4,8 @@ Bu proje semantik sürümleme kullanır.
 
 ## [Unreleased]
 
+- Atış başlangıcındaki rolling sound, kullanıcı tarafından sağlanan `dice-rolling-sound.mp3` ile değiştirildi.
+
 ## [0.5.2] - 2026-09-21
 
 - Expo Audio player yüklenme zamanlaması düzeltildi; atış başlangıcı ve iniş sesleri artık player hazır görünmeden de oynatılmayı deniyor.

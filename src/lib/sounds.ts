@@ -2,7 +2,7 @@ import { SoundProfile } from './personalization';
 
 export const SOUND_SOURCES = {
   impact: require('../assets/sounds/impact.wav'),
-  roll: require('../assets/sounds/dice-rolling.mp3'),
+  roll: require('../assets/sounds/dice-rolling-sound.mp3'),
   sparkle: require('../assets/sounds/sparkle.wav'),
   whoosh: require('../assets/sounds/arrow-whoosh.wav'),
 } as const;
