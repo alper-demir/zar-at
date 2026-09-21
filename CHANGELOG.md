@@ -18,6 +18,13 @@ Bu proje semantik sürümleme kullanır.
 ### Eklendi
 
 - Gelecekteki Google Play adapter'ından bağımsız `checking | free | premium` entitlement katmanı.
+- `jest-expo` tabanlı otomatik test altyapısı ve RNG, animasyon zamanlaması, entitlement ve sonuç sunumu testleri.
+- Çift zar geçmişinde işlem gösterimi (`4 + 2 = 6`) ve Android erişilebilirlik sonuç duyurusu.
+
+### Doğrulandı
+
+- Android emülatörde ses açıkken 50 ardışık tekli atış: ANR, native crash, React hatası veya `expo-audio` hatası görülmedi.
+- Android emülatörde çift zar sonucu, toplam ve yeni geçmiş formatı doğrulandı.
 
 ## [0.1.0] - 2026-09-21
 

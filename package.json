@@ -19,11 +19,13 @@
     "zustand": "^5.0.15"
   },
   "devDependencies": {
+    "@types/jest": "29.5.14",
     "@types/react": "~19.2.2",
     "eslint": "^9.39.5",
     "eslint-config-expo": "^57.0.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.6",
+    "jest-expo": "~57.0.5",
     "prettier": "^3.9.8",
     "typescript": "~6.0.3"
   },
@@ -35,7 +37,19 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "jest --runInBand"
+  },
+  "jest": {
+    "preset": "jest-expo",
+    "testMatch": [
+      "**/__tests__/**/*.test.ts",
+      "**/?(*.)+(spec|test).ts"
+    ],
+    "testPathIgnorePatterns": [
+      "<rootDir>/node_modules/",
+      "<rootDir>/expo-scaffold/"
+    ]
   },
   "private": true
 }

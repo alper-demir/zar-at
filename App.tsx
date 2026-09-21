@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { AccessibilityInfo, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { getTheme } from './src/assets/themes/themes';
 import { Dice3D } from './src/components/dice/Dice3D';
@@ -11,6 +11,7 @@ import { useEntitlement } from './src/hooks/useEntitlement';
 import { useSoundEffects } from './src/hooks/useSoundEffects';
 import { usePurchase } from './src/hooks/usePurchase';
 import { DICE_PAIR_STAGGER_MS } from './src/lib/rollAnimation';
+import { formatRollAnnouncement, formatRollResult } from './src/lib/rollPresentation';
 import { useSettingsStore } from './src/store/settingsStore';
 
 const INITIAL_DICE = [1, 1];
@@ -47,6 +48,7 @@ export default function App() {
     if (result) {
       setLastSettled(result);
       setHistory((current) => [result, ...current].slice(0, 5));
+      AccessibilityInfo.announceForAccessibility(formatRollAnnouncement(result));
     }
   };
 
@@ -126,7 +128,13 @@ export default function App() {
             <Text style={[styles.resultLabel, { color: theme.accent }]}>
               {isRolling ? 'ATIŞ SÜRÜYOR' : total ? 'SONUÇ' : 'HAZIR'}
             </Text>
-            <Text style={[styles.status, { color: theme.text }]}>{statusText}</Text>
+            <Text
+              accessibilityLiveRegion="polite"
+              accessibilityRole="text"
+              style={[styles.status, { color: theme.text }]}
+            >
+              {statusText}
+            </Text>
             {mode === 'pair' && (
               <Text style={styles.helper}>İki zarın toplamı burada gösterilir</Text>
             )}
@@ -145,9 +153,7 @@ export default function App() {
               <View style={styles.historyRow}>
                 {history.map((item) => (
                   <View key={item.id} style={styles.historyChip}>
-                    <Text style={styles.historyChipText}>
-                      {item.dice.length === 2 ? `${item.dice[0]} + ${item.dice[1]}` : item.total}
-                    </Text>
+                    <Text style={styles.historyChipText}>{formatRollResult(item)}</Text>
                   </View>
                 ))}
               </View>
