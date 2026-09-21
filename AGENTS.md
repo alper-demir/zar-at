@@ -66,7 +66,7 @@ Detaylı uygulama sırası, kabul kriterleri ve faz sonu test kapıları `IMPLEM
 1. `v0.2.0` — Güvenilir ses, zamanlama, entitlement temeli ve test altyapısı.
 2. `v0.3.0` — Zar Atölyesi, kişiselleştirme modeli ve yerel presetler.
 3. `v0.4.0` — Premium malzemeler, ses/haptik profilleri ve hero efektleri.
-4. `v0.5.0` — Shake-to-roll, geçmiş/istatistik, paylaşım ve erişilebilirlik.
+4. `v0.5.0` — Shake-to-roll, geçmiş/istatistik ve erişilebilirlik.
 5. `v0.9.0` — Client-only Play Billing ve mağaza adayı.
 6. `v1.0.0` — Kapalı test sonrası production yayın kapısı.
 
@@ -99,6 +99,7 @@ Her faz kendi otomatik kontrolleri ve Android emülatör/cihaz kabul testleri ge
 - [2026-09-21] Faz 4 / v0.4.0 — Premium malzeme seçenekleri (ahşap, mermer, cam), ses/haptik profilleri ve kritik sonuç hero efekti eklendi. Store şeması v3'e yükseltildi; eski görünüm kayıtları normalize ediliyor. Metro import/cache sorunu dosya yolunun küçük harfe standardize edilmesi ve temiz bundler ile çözüldü. TypeScript, ESLint, Prettier, Jest (13 test) ve Expo Go Android emülatör kabul testi geçti; mock premium açıldı, Ahşap ve Minimal profiller seçildi, zar atışı ANR'siz doğrulandı. Sıradaki adım: bu fazı `develop` üzerine birleştirip v0.4.0 etiketlemek; sonra v0.5 shake-to-roll, geçmiş/istatistik, paylaşım ve erişilebilirlik polish'ine geçmek.
 - [2026-09-21] Faz 5 başlangıç / v0.5.0 — `expo-sensors` ile 2.2 eşik ve 1200 ms cooldown kullanan shake-to-roll, temel atış istatistiği, geçmiş temizleme, native sonuç paylaşımı ve shake/reduced-motion ayarları eklendi. Store şeması v4'e yükseltildi; 15 otomatik test geçti. Emülatörde sensör olayı, sonuç/paylaşım/geçmiş görünümü ve ayar kontrolleri doğrulandı; temiz logcat'te ANR veya React runtime hatası yok. Sıradaki adım: Expo Doctor/final kalite kapısı, paylaşım iptal regresyonu ve v0.5.0 release merge/tag.
 - [2026-09-21] v0.5.0 devamı — Atış geçmişi AsyncStorage üzerinden son 50 kayıtla kalıcı hale getirildi; Premium geçmiş modalı, ücretsiz sürüm için son 5 kayıt görünümü, geçmiş temizleme ve ortalama istatistiği eklendi. Presetler favorilenebiliyor ve favori preset uygulama açılışında otomatik yükleniyor. Otomatik kontroller ve emülatör yeniden başlatma/persist testi geçti. Sıradaki adım: görsel paylaşım kartı kararını netleştirmek ve billing/mağaza adayı hazırlığına geçmek.
+- [2026-09-21] Kapsam sadeleştirme — Native sonuç paylaşımı kaldırıldı; uygulamanın tek amaçlı zar deneyimine katkısı düşük olduğu için paylaşım butonu ve ilgili plan maddeleri kapsam dışına alındı. Geçmiş, istatistik, favori preset, shake-to-roll ve erişilebilirlik korunuyor. Sıradaki adım billing/mağaza adayı hazırlığı; entegrasyon kullanıcı kararıyla başlatılacak.
 
 ## 11. Açık kararlar / varsayımlar
 
