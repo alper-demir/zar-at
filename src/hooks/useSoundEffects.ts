@@ -36,7 +36,7 @@ export function useSoundEffects(
   useEffect(() => {
     void setAudioModeAsync({
       interruptionMode: 'mixWithOthers',
-      playsInSilentMode: false,
+      playsInSilentMode: true,
       shouldPlayInBackground: false,
     }).catch(() => {
       // A sound failure must never prevent the dice interaction.
@@ -49,13 +49,11 @@ export function useSoundEffects(
       if (!isSoundAllowed(profile, effect)) return;
 
       const player = players[effect];
-      if (!player.isLoaded) return;
-
       try {
         player.pause();
         void player.seekTo(0).then(
           () => player.play(),
-          () => undefined,
+          () => player.play(),
         );
       } catch {
         // Native audio errors are isolated from the roll state machine.
