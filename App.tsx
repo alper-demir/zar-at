@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { getTheme } from './src/assets/themes/themes';
@@ -7,7 +7,7 @@ import { Dice3D } from './src/components/dice/Dice3D';
 import { Button } from './src/components/ui/Button';
 import { SettingsSheet } from './src/components/ui/SettingsSheet';
 import { useDiceRoll, DiceMode, RollResult } from './src/hooks/useDiceRoll';
-import { prepareSounds } from './src/lib/sounds';
+import { useSoundEffects } from './src/hooks/useSoundEffects';
 import { usePurchase } from './src/hooks/usePurchase';
 import { useSettingsStore } from './src/store/settingsStore';
 
@@ -28,18 +28,13 @@ export default function App() {
   const setSoundEnabled = useSettingsStore((state) => state.setSoundEnabled);
   const setTheme = useSettingsStore((state) => state.setTheme);
   const theme = getTheme(selectedTheme);
-  // Dynamic Expo Audio players trigger an ANR in the current Expo Go Android runtime.
-  // Keep the main gameplay responsive until the sound layer is rebuilt with persistent players.
-  const { isRolling, roll } = useDiceRoll(hapticsEnabled, false);
+  const playSound = useSoundEffects(soundEnabled);
+  const { isRolling, roll } = useDiceRoll(hapticsEnabled, playSound);
   const { isPurchasing, purchasePremium, restorePurchases } = usePurchase();
 
   const displayedDice = lastSettled?.dice ?? INITIAL_DICE.slice(0, mode === 'pair' ? 2 : 1);
   const total = lastSettled?.total ?? null;
   const isCritical = lastSettled?.dice.every((die) => die === 6) ?? false;
-
-  useEffect(() => {
-    void prepareSounds();
-  }, []);
 
   const handleRoll = async () => {
     if (isRolling) return;
