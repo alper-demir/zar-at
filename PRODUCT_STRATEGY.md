@@ -1,5 +1,7 @@
 # Ürün stratejisi — kişisel zar deneyimi
 
+Uygulama sırası ve her sürümün kabul/test kapıları için `IMPLEMENTATION_PLAN.md` esas alınır.
+
 ## Neden biri ödeme yapsın?
 
 Temel zar atma ücretsiz alternatiflerde zaten kolayca bulunuyor. Ücretli değer, daha fazla zar türü eklemekten değil, fiziksel bir aksesuar seçer gibi uygulamayı kişiye ait hale getirmekten gelmeli.
@@ -47,7 +49,7 @@ Temel zar atma ücretsiz alternatiflerde zaten kolayca bulunuyor. Ücretli değe
 ## Ürün sınırları
 
 - V1'de yalnızca standart D6 ve en fazla iki zar korunur.
-- Reklam, abonelik, hesap, sosyal akış ve oyunlaştırılmış para birimi eklenmez.
+- Reklam, abonelik, hesap, özel bulut/backend, sosyal akış ve oyunlaştırılmış para birimi eklenmez.
 - Özel yüz metinleri veya ağırlıklı zar gibi adalet algısını bozan seçenekler eklenmez.
 - Kişiselleştirme okunabilirliği ve düşük segment Android performansını bozamaz.
 
@@ -81,6 +83,8 @@ Temel zar atma ücretsiz alternatiflerde zaten kolayca bulunuyor. Ücretli değe
 - Gerçek tek seferlik satın alma ve restore.
 - Lisans, gizlilik, mağaza metinleri ve kapalı test.
 
-## Fiyatlandırma varsayımı
+## Monetizasyon kararı
 
-İlk tercih ücretsiz çalışan temel uygulama + tek seferlik Premium kilit açmadır. Kullanıcı kaliteyi satın almadan deneyebilir; ödeme, kişiselleştirme ve uzun vadeli kullanım içindir. Baştan ücretli indirme modeli ancak mağaza sayfası dönüşüm testi ve kullanıcı geri bildirimiyle seçilmelidir.
+Uygulama ücretsiz çalışan temel deneyim + tek seferlik non-consumable Lifetime Premium kilidiyle sunulacaktır. Abonelik kullanılmayacaktır. Kullanıcı kaliteyi satın almadan deneyebilir; ödeme, kişiselleştirme ve uzun vadeli kullanım içindir.
+
+Ayarlar, presetler ve geçmiş cihazda saklanır. Uygulama verileri için hesap veya özel bulut/backend kurulmaz. Satın alma hakkının doğrulanması ve geri yüklenmesi Google Play altyapısı üzerinden yapılır.

@@ -1,14 +1,18 @@
 import { StatusBar } from 'expo-status-bar';
-import { useEffect, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useState } from 'react';
+import { AccessibilityInfo, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { getTheme } from './src/assets/themes/themes';
 import { Dice3D } from './src/components/dice/Dice3D';
 import { Button } from './src/components/ui/Button';
 import { SettingsSheet } from './src/components/ui/SettingsSheet';
 import { useDiceRoll, DiceMode, RollResult } from './src/hooks/useDiceRoll';
-import { prepareSounds } from './src/lib/sounds';
+import { useEntitlement } from './src/hooks/useEntitlement';
+import { useSoundEffects } from './src/hooks/useSoundEffects';
 import { usePurchase } from './src/hooks/usePurchase';
+import { DICE_PAIR_STAGGER_MS } from './src/lib/rollAnimation';
+import { formatRollAnnouncement, formatRollResult } from './src/lib/rollPresentation';
+import { DicePreset } from './src/lib/personalization';
 import { useSettingsStore } from './src/store/settingsStore';
 
 const INITIAL_DICE = [1, 1];
@@ -21,25 +25,33 @@ export default function App() {
   const [lastSettled, setLastSettled] = useState<RollResult | null>(null);
 
   const hapticsEnabled = useSettingsStore((state) => state.hapticsEnabled);
-  const premiumUnlocked = useSettingsStore((state) => state.premiumUnlocked);
+  const firstDiceAppearance = useSettingsStore((state) => state.firstDiceAppearance);
+  const secondDiceAppearance = useSettingsStore((state) => state.secondDiceAppearance);
+  const presets = useSettingsStore((state) => state.presets);
+  const tableAppearance = useSettingsStore((state) => state.tableAppearance);
   const selectedTheme = useSettingsStore((state) => state.theme);
   const soundEnabled = useSettingsStore((state) => state.soundEnabled);
   const setHapticsEnabled = useSettingsStore((state) => state.setHapticsEnabled);
   const setSoundEnabled = useSettingsStore((state) => state.setSoundEnabled);
   const setTheme = useSettingsStore((state) => state.setTheme);
-  const theme = getTheme(selectedTheme);
-  // Dynamic Expo Audio players trigger an ANR in the current Expo Go Android runtime.
-  // Keep the main gameplay responsive until the sound layer is rebuilt with persistent players.
-  const { isRolling, roll } = useDiceRoll(hapticsEnabled, false);
+  const addPreset = useSettingsStore((state) => state.addPreset);
+  const deletePreset = useSettingsStore((state) => state.deletePreset);
+  const setFirstDiceAppearance = useSettingsStore((state) => state.setFirstDiceAppearance);
+  const setSecondDiceAppearance = useSettingsStore((state) => state.setSecondDiceAppearance);
+  const setTableAppearance = useSettingsStore((state) => state.setTableAppearance);
+  const { isPremium, status: entitlementStatus } = useEntitlement();
+  const selectedThemeDefinition = getTheme(selectedTheme);
+  const theme =
+    selectedThemeDefinition.premium && !isPremium
+      ? getTheme('classic')
+      : { ...selectedThemeDefinition, ...tableAppearance };
+  const playSound = useSoundEffects(soundEnabled);
+  const { isRolling, roll } = useDiceRoll(hapticsEnabled, playSound);
   const { isPurchasing, purchasePremium, restorePurchases } = usePurchase();
 
   const displayedDice = lastSettled?.dice ?? INITIAL_DICE.slice(0, mode === 'pair' ? 2 : 1);
   const total = lastSettled?.total ?? null;
   const isCritical = lastSettled?.dice.every((die) => die === 6) ?? false;
-
-  useEffect(() => {
-    void prepareSounds();
-  }, []);
 
   const handleRoll = async () => {
     if (isRolling) return;
@@ -48,6 +60,7 @@ export default function App() {
     if (result) {
       setLastSettled(result);
       setHistory((current) => [result, ...current].slice(0, 5));
+      AccessibilityInfo.announceForAccessibility(formatRollAnnouncement(result));
     }
   };
 
@@ -57,6 +70,32 @@ export default function App() {
     if (lastSettled && lastSettled.dice.length !== (nextMode === 'pair' ? 2 : 1)) {
       setLastSettled(null);
     }
+  };
+
+  const handleThemeChange = (nextTheme: typeof selectedTheme) => {
+    const nextThemeDefinition = getTheme(nextTheme);
+    setTheme(nextTheme);
+    setTableAppearance({
+      accentColor: nextThemeDefinition.accent,
+      backgroundColor: nextThemeDefinition.background,
+    });
+  };
+
+  const handleSavePreset = (name: string) => {
+    const preset: DicePreset = {
+      firstDice: firstDiceAppearance,
+      id: `${Date.now()}`,
+      name,
+      secondDice: secondDiceAppearance,
+      table: tableAppearance,
+    };
+    addPreset(preset);
+  };
+
+  const handleLoadPreset = (preset: DicePreset) => {
+    setFirstDiceAppearance(preset.firstDice);
+    setSecondDiceAppearance(preset.secondDice);
+    setTableAppearance(preset.table);
   };
 
   const statusText = isRolling
@@ -110,7 +149,8 @@ export default function App() {
             <View style={styles.diceRow}>
               {displayedDice.map((value, index) => (
                 <Dice3D
-                  delayMs={index * 100}
+                  appearance={index === 0 ? firstDiceAppearance : secondDiceAppearance}
+                  delayMs={index * DICE_PAIR_STAGGER_MS}
                   disabled={isRolling}
                   key={`${index}-${mode}`}
                   onPress={() => void handleRoll()}
@@ -127,7 +167,13 @@ export default function App() {
             <Text style={[styles.resultLabel, { color: theme.accent }]}>
               {isRolling ? 'ATIŞ SÜRÜYOR' : total ? 'SONUÇ' : 'HAZIR'}
             </Text>
-            <Text style={[styles.status, { color: theme.text }]}>{statusText}</Text>
+            <Text
+              accessibilityLiveRegion="polite"
+              accessibilityRole="text"
+              style={[styles.status, { color: theme.text }]}
+            >
+              {statusText}
+            </Text>
             {mode === 'pair' && (
               <Text style={styles.helper}>İki zarın toplamı burada gösterilir</Text>
             )}
@@ -146,9 +192,7 @@ export default function App() {
               <View style={styles.historyRow}>
                 {history.map((item) => (
                   <View key={item.id} style={styles.historyChip}>
-                    <Text style={styles.historyChipText}>
-                      {item.dice.length === 2 ? `${item.dice[0]} + ${item.dice[1]}` : item.total}
-                    </Text>
+                    <Text style={styles.historyChipText}>{formatRollResult(item)}</Text>
                   </View>
                 ))}
               </View>
@@ -160,14 +204,24 @@ export default function App() {
 
         <SettingsSheet
           hapticsEnabled={hapticsEnabled}
+          firstDiceAppearance={firstDiceAppearance}
           isPurchasing={isPurchasing}
+          isEntitlementChecking={entitlementStatus === 'checking'}
           isVisible={isSettingsVisible}
           onClose={() => setSettingsVisible(false)}
+          onDeletePreset={deletePreset}
+          onFirstDiceAppearanceChange={setFirstDiceAppearance}
+          onLoadPreset={handleLoadPreset}
+          onLockedCustomizationPress={() => void purchasePremium()}
           onPurchase={() => void purchasePremium()}
           onRestore={() => void restorePurchases()}
-          onSelectTheme={setTheme}
-          premiumUnlocked={premiumUnlocked}
+          onSavePreset={handleSavePreset}
+          onSecondDiceAppearanceChange={setSecondDiceAppearance}
+          onSelectTheme={handleThemeChange}
+          premiumUnlocked={isPremium}
+          presets={presets}
           selectedTheme={selectedTheme}
+          secondDiceAppearance={secondDiceAppearance}
           setHapticsEnabled={setHapticsEnabled}
           setSoundEnabled={setSoundEnabled}
           soundEnabled={soundEnabled}

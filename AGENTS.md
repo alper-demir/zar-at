@@ -29,9 +29,11 @@ Ana ekranda ortada zar/zarlar, üstte tek/çift modu, zar veya büyük butonla a
 
 ## 5. Monetizasyon
 
-Ücretsiz sürüm tam temel işlev + 1 tema içerir ve reklamsızdır. Premium; ek temalar, gelişmiş kritik sonuç efektleri ve opsiyonel geçmiş/istatistik açar. Ürün ID placeholder: `dice_premium_unlock`.
+Karar: uygulama ücretsiz temel sürüm + tek seferlik, non-consumable "Lifetime Premium" kilidiyle sunulacak. Abonelik kullanılmayacak. Ücretsiz sürüm tam temel işlev + 1 tema içerir ve reklamsızdır. Premium; ek temalar, gelişmiş kritik sonuç efektleri ve opsiyonel geçmiş/istatistik açar. Ürün ID placeholder: `dice_premium_unlock`.
 
 Ürün yönü "kişisel zar deneyimi" olarak netleştirildi. Premium değeri temel zar atma işlevini kısıtlamak yerine kullanıcının kendi zarını ve masasını oluşturmasına dayanacak: özel renk paletleri, iki zar için ayrı stiller, masa/arka plan temaları, ses-haptik profilleri, atış efektleri ve kaydedilebilir görünüm presetleri. Hesap veya bulut zorunluluğu olmayacak; kişiselleştirme cihazda saklanacak.
+
+Uygulama ayarları, presetler, geçmiş ve kişiselleştirme verileri için özel backend/bulut kurulmayacak. Satın alma doğrulama ve geri yükleme işlemleri mağaza altyapısı üzerinden yürütülecek; bu karar uygulama verisini buluta taşıma gerektirmez.
 
 ## 6. Klasör yapısı
 
@@ -58,13 +60,17 @@ Uygulama kumar/bahis değildir ve gerçek para içermez ibaresi bulunmalı. Veri
 
 ## 9. Yol haritası
 
-0. Expo/TS/managed workflow, klasör yapısı, lint/format ve tek ekran iskeleti.
-1. Tek zar, kriptografik RNG, temel animasyon.
-2. Reanimated 3D + Skia gölge, ses, haptik, screen shake, hero moment.
-3. Çift zar ve tema sistemi.
-4. IAP, premium içerik, restore, ayarlar.
-5. Store hazırlığı, gizlilik, performans ve EAS internal testing.
-6. Kapalı/açık test ve yayın.
+Detaylı uygulama sırası, kabul kriterleri ve faz sonu test kapıları `IMPLEMENTATION_PLAN.md` dosyasında tutulur.
+
+0. `v0.1.0` — Çalışan alpha temel (tamamlandı).
+1. `v0.2.0` — Güvenilir ses, zamanlama, entitlement temeli ve test altyapısı.
+2. `v0.3.0` — Zar Atölyesi, kişiselleştirme modeli ve yerel presetler.
+3. `v0.4.0` — Premium malzemeler, ses/haptik profilleri ve hero efektleri.
+4. `v0.5.0` — Shake-to-roll, geçmiş/istatistik, paylaşım ve erişilebilirlik.
+5. `v0.9.0` — Client-only Play Billing ve mağaza adayı.
+6. `v1.0.0` — Kapalı test sonrası production yayın kapısı.
+
+Her faz kendi otomatik kontrolleri ve Android emülatör/cihaz kabul testleri geçmeden tamamlanmış sayılmaz, `main` branch'ine alınmaz ve sürüm etiketi oluşturulmaz.
 
 ## 10. İlerleme Günlüğü
 
@@ -81,10 +87,19 @@ Uygulama kumar/bahis değildir ve gerçek para içermez ibaresi bulunmalı. Veri
 - [2026-09-21] Emülatör ANR teşhisi — Tek/çift zar animasyonları yerel gölgeyle emülatörde başarıyla test edildi. `expo-audio` ile her atışta dinamik player oluşturma, Expo Go Android'de ANR üretiyor; ses tetikleme geçici olarak devre dışı bırakıldı. Bir sonraki ses çalışmasında player'lar mount sırasında kalıcı oluşturulup gerçek cihaz/dev build üzerinde test edilmeli.
 - [2026-09-21] Görsel polish — Header/alt başlık, sonuç kartı, geçmiş chip'leri, safe-area kullanımı, buton gölgesi ve zarın pip tabanlı yüz tasarımı iyileştirildi. Reanimated animasyonu hafif tutuldu ve native gölge fallback'i korundu. TypeScript, ESLint, Prettier kontrolleri geçti; emülatörde tekli ve çiftli atış görsel olarak doğrulandı. Sıradaki adım: ANR oluşturmayan kalıcı ses player mimarisiyle ses efektlerini geri eklemek.
 - [2026-09-21] Sürümleme ve ürün yönü — Çalışan uygulama `0.1.0` alpha sürümü olarak tanımlandı; `main` kararlı sürümler, `develop` entegrasyon, `feature/*` kısa ömürlü geliştirme branch'leri olacak. Premium değer önerisi "kişisel zar deneyimi" olarak netleştirildi ve `PRODUCT_STRATEGY.md` içinde sürüm yol haritasına bağlandı. Sıradaki adım: `v0.2.0` için güvenli ses katmanı ve temel fonksiyonel polish.
+- [2026-09-21] Monetizasyon kararı — Abonelik ve uygulama verisi için özel bulut/backend kapsam dışı bırakıldı. Ücretsiz temel deneyim + tek seferlik non-consumable `Lifetime Premium` modeli kesinleştirildi; geri yükleme Google Play hesabı üzerinden yapılacak. Sıradaki adım değişmedi: `v0.2.0` güvenli ses ve fonksiyonel polish.
+- [2026-09-21] Faz ve kalite planı — `v0.2.0`–`v1.0.0` işleri, kabul kriterleri, branch düzeni ve faz sonu test kapıları `IMPLEMENTATION_PLAN.md` içinde tanımlandı. Her faz otomatik kontroller ve Android emülatör/cihaz regresyonu geçmeden sürümlenmeyecek. Sıradaki başlangıç: `fix/persistent-audio`.
+- [2026-09-21] v0.2.0 ses stabilizasyonu — Atış başına dinamik `expo-audio` player oluşturma kaldırıldı; dört asset uygulama yaşam döngüsünde kalıcı player olarak hazırlanıyor ve ses anahtarı gerçek tetiklemeyi kontrol ediyor. Expo Go Android emülatöründe ses açıkken tek zar 25 + çift zar en az 25 tekrar atış yapıldı; ANR, native crash ve React hatası görülmedi. Sıradaki adım: çift zar animasyon/sonuç zamanlamasını senkronlamak.
+- [2026-09-21] v0.2.0 çekirdek ilerleme — Çift zar gecikmesi ortak animasyon süresine bağlandı ve ref tabanlı kilit spam-tap yarışını engelliyor. `checking | free | premium` entitlement katmanı eklendi; ücretsiz kullanıcı Premium tema seçerse klasik temaya güvenli fallback uygulanıyor. TypeScript, ESLint, Prettier ve Expo Doctor geçti. Fazı kapatmak için otomatik test altyapısı, geçmiş/erişilebilirlik polish'i ve final emülatör regresyonu kaldı.
+- [2026-09-21] v0.2.0 kalite turu — Jest/`jest-expo` test altyapısı eklendi; RNG sınırları, animasyon süresi, entitlement tema korumaları ve sonuç sunumu için 9 otomatik test yazıldı. Çift zar geçmişi `4 + 2 = 6` formatına alındı; sonuç kartı Android erişilebilirlik duyurusu ve `polite` canlı bölge desteği kazandı. Emülatörde 50 tekli atış sonrası ANR/crash/React/audio log hatası görülmedi; çiftli atışta toplam ve geçmiş formatı doğrulandı. Ayarlar fiziksel toggle testi Expo Go araç overlay'i nedeniyle ertelendi. Sıradaki adım: kalite kapısını tamamlayıp `develop` üzerinde v0.2.0 temelini etiketlemek, sonra v0.3 Zar Atölyesi modellerine geçmek.
+- [2026-09-21] Oturum kapanışı — `test/v020-core`, `develop` içine `97a035b` merge commit'iyle alındı. Otomatik kalite kapısı ve emülatör 50-atış regresyonu geçti; `v0.2.0` etiketi yalnızca Expo Go overlay'i nedeniyle manuel ses aç/kapat kabul testi kaldığı için henüz oluşturulmadı. Bir sonraki oturumda temiz bir dev build/Expo Go ekranında ses toggle'ı kontrol edilip etiketleme kararı verilecek; ardından v0.3 Zar Atölyesi veri modelleri ve yerel preset akışına başlanacak.
+- [2026-09-21] Faz 2 başlangıcı — `feature/dice-workshop` üzerinde `DiceAppearance`, `TableAppearance` ve `DicePreset` modelleri eklendi. Ayar store'u şema v2 migration, yerel preset CRUD'u ve iki zar için bağımsız görünüm saklamayı destekliyor. Ayarlar içine Zar Atölyesi; gövde/pip rengi, mat/parlak/neon yüzey, Zar 1/Zar 2 ayrımı ve preset kaydetme/uygulama/silme akışları eklendi. Premium seçenekler ücretsiz kullanıcıda kilitli kalıyor ve satın alma akışına yönleniyor. TypeScript, lint, format, 10 Jest testi ve Expo Doctor 21/21 geçti; emülatörde hot-reload sonrası atış sonucu görünür ve runtime hata yok. Sıradaki adım: ayarlar ekranını overlay olmayan dev build'de manuel kabul testi, migration/preset kalıcılığı testi ve faz merge kararı.
+- [2026-09-21] v0.3 manuel kontrol — Expo Go overlay'inin alt kenarından Ayarlar açıldı. Ses anahtarı kapatıldı, atış sonrası yeni ses playback log'u oluşmadı ve ekran yeniden açıldığında kapalı kaldı. Ücretsiz Fildişi gövde rengi seçildi; emülatör ekranında beyaz zar ve otomatik koyu pip kontrastı doğrulandı. Kontrast fallback'i eklendi; 11 otomatik test geçti. `TestPreset` emülatörde kaydedildi, preset satırı/silme erişilebilirliği görüldü ve silme işlemiyle kaldırıldı. v0.3’ün ana manuel akışları geçti; sıradaki adım faz sürüm notu ve v0.4 premium deneyim planlaması.
+- [2026-09-21] v0.3.0 release — Expo/package sürümü `0.3.0` olarak güncellendi; `develop` kalite kapısından sonra `main` için release adayı hazırlandı. v0.3.0 etiketi oluşturulacak. Sonraki faz: premium malzemeler, ses/haptik profilleri ve kritik sonuç hero efektleri.
 
 ## 11. Açık kararlar / varsayımlar
 
 - V1 görsel yönü minimal/modern flat + gradient/glow; gerçekçi dokular premiumda değerlendirilecek.
 - Uygulama adı/marka kimliği netleşene kadar placeholder `Zar`.
 - Koyu tonlu, hafif gradient arka plan; zar öne çıkacak.
-- Mağazada ücretlendirme biçimi henüz kesin değil: mevcut teknik varsayım ücretsiz temel sürüm + tek seferlik Premium kilit açmadır. Baştan ücretli indirme alternatifi mağaza testi öncesinde ayrıca değerlendirilecek.
+- Ücretsiz temel sürüm + tek seferlik Lifetime Premium kararı kesinleşti. Abonelik ve uygulama verileri için özel bulut/backend kullanılmayacak.

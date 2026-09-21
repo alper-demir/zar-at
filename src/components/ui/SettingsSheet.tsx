@@ -2,34 +2,56 @@ import { Modal, Pressable, ScrollView, StyleSheet, Switch, Text, View } from 're
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from './Button';
 import { ThemePicker } from './ThemePicker';
+import { DiceWorkshop } from '../workshop/DiceWorkshop';
+import { DiceAppearance, DicePreset } from '../../lib/personalization';
 import { DiceTheme } from '../../store/settingsStore';
 
 interface SettingsSheetProps {
+  firstDiceAppearance: DiceAppearance;
   hapticsEnabled: boolean;
+  isEntitlementChecking: boolean;
   isPurchasing: boolean;
   isVisible: boolean;
   premiumUnlocked: boolean;
   selectedTheme: DiceTheme;
   soundEnabled: boolean;
   onClose: () => void;
+  onDeletePreset: (id: string) => void;
+  onFirstDiceAppearanceChange: (appearance: Partial<DiceAppearance>) => void;
+  onLoadPreset: (preset: DicePreset) => void;
+  onLockedCustomizationPress: () => void;
   onPurchase: () => void;
   onRestore: () => void;
+  onSavePreset: (name: string) => void;
+  onSecondDiceAppearanceChange: (appearance: Partial<DiceAppearance>) => void;
   onSelectTheme: (theme: DiceTheme) => void;
+  presets: DicePreset[];
+  secondDiceAppearance: DiceAppearance;
   setHapticsEnabled: (value: boolean) => void;
   setSoundEnabled: (value: boolean) => void;
 }
 
 export function SettingsSheet({
+  firstDiceAppearance,
   hapticsEnabled,
+  isEntitlementChecking,
   isPurchasing,
   isVisible,
   premiumUnlocked,
   selectedTheme,
   soundEnabled,
   onClose,
+  onDeletePreset,
+  onFirstDiceAppearanceChange,
+  onLoadPreset,
+  onLockedCustomizationPress,
   onPurchase,
   onRestore,
+  onSavePreset,
+  onSecondDiceAppearanceChange,
   onSelectTheme,
+  presets,
+  secondDiceAppearance,
   setHapticsEnabled,
   setSoundEnabled,
 }: SettingsSheetProps) {
@@ -57,6 +79,18 @@ export function SettingsSheet({
               onSelect={onSelectTheme}
               selectedTheme={selectedTheme}
             />
+            <DiceWorkshop
+              firstDice={firstDiceAppearance}
+              isPremium={premiumUnlocked}
+              onDeletePreset={onDeletePreset}
+              onFirstChange={onFirstDiceAppearanceChange}
+              onLoadPreset={onLoadPreset}
+              onLockedPress={onLockedCustomizationPress}
+              onSavePreset={onSavePreset}
+              onSecondChange={onSecondDiceAppearanceChange}
+              presets={presets}
+              secondDice={secondDiceAppearance}
+            />
             <View style={styles.premiumCard}>
               <Text style={styles.premiumTitle}>
                 {premiumUnlocked ? 'Premium açık' : 'Zar Premium'}
@@ -66,14 +100,22 @@ export function SettingsSheet({
                   ? 'Tüm temalar ve gelişmiş efektler kullanılabilir.'
                   : 'Neon, gün batımı ve gece temalarının kilidini aç.'}
               </Text>
-              {!premiumUnlocked && (
-                <Button
-                  disabled={isPurchasing}
-                  label={isPurchasing ? 'Kontrol ediliyor…' : 'Premium’u Satın Al'}
-                  onPress={onPurchase}
-                />
+              {isEntitlementChecking ? (
+                <Text style={styles.premiumText}>Premium durumu kontrol ediliyor…</Text>
+              ) : (
+                !premiumUnlocked && (
+                  <Button
+                    disabled={isPurchasing}
+                    label={isPurchasing ? 'Kontrol ediliyor…' : 'Premium’u Satın Al'}
+                    onPress={onPurchase}
+                  />
+                )
               )}
-              <Pressable disabled={isPurchasing} onPress={onRestore} style={styles.restore}>
+              <Pressable
+                disabled={isPurchasing || isEntitlementChecking}
+                onPress={onRestore}
+                style={styles.restore}
+              >
                 <Text style={styles.restoreLabel}>Satın alımları geri yükle</Text>
               </Pressable>
             </View>
