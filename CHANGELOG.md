@@ -4,6 +4,11 @@ Bu proje semantik sürümleme kullanır.
 
 ## [Unreleased]
 
+## [0.5.2] - 2026-09-21
+
+- Expo Audio player yüklenme zamanlaması düzeltildi; atış başlangıcı ve iniş sesleri artık player hazır görünmeden de oynatılmayı deniyor.
+- Android sessiz mod uyumluluğu için ses oturumu güncellendi.
+
 ## [0.5.1] - 2026-09-21
 
 - `Zar At` marka adı ve `com.zarat.app` Android paket kimliği sabitlendi.
