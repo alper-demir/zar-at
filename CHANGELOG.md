@@ -4,6 +4,22 @@ Bu proje semantik sürümleme kullanır.
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-09-21
+
+### Eklendi
+
+- Shake-to-roll: yanlış tetiklemeye karşı eşik ve cooldown.
+- Geçmiş temizleme, temel atış sayısı ve ortalama istatistikleri.
+- Sonucu cihazın native paylaşım menüsüyle paylaşma.
+- Shake-to-roll ve azaltılmış hareket ayarları.
+- Ayar store şeması v4 migration.
+
+### Doğrulandı
+
+- 15 Jest testi, TypeScript, ESLint ve Prettier kontrolleri.
+- Android emülatörde sonuç, paylaşım etiketi, geçmiş istatistiği ve yeni ayarlar.
+- Emülatör ivme olayı sonrası uygulama açık kaldı; temiz logcat'te ANR/fatal/React hatası yok.
+
 ## [0.4.0] - 2026-09-21
 
 ### Eklendi

@@ -11,6 +11,8 @@ interface SettingsSheetProps {
   firstDiceAppearance: DiceAppearance;
   hapticProfile: HapticProfile;
   hapticsEnabled: boolean;
+  reducedMotionEnabled: boolean;
+  shakeToRollEnabled: boolean;
   isEntitlementChecking: boolean;
   isPurchasing: boolean;
   isVisible: boolean;
@@ -22,6 +24,8 @@ interface SettingsSheetProps {
   onDeletePreset: (id: string) => void;
   onFirstDiceAppearanceChange: (appearance: Partial<DiceAppearance>) => void;
   onHapticProfileChange: (profile: HapticProfile) => void;
+  onReducedMotionChange: (enabled: boolean) => void;
+  onShakeToRollChange: (enabled: boolean) => void;
   onLoadPreset: (preset: DicePreset) => void;
   onLockedCustomizationPress: () => void;
   onPurchase: () => void;
@@ -40,6 +44,8 @@ export function SettingsSheet({
   firstDiceAppearance,
   hapticProfile,
   hapticsEnabled,
+  reducedMotionEnabled,
+  shakeToRollEnabled,
   isEntitlementChecking,
   isPurchasing,
   isVisible,
@@ -51,6 +57,8 @@ export function SettingsSheet({
   onDeletePreset,
   onFirstDiceAppearanceChange,
   onHapticProfileChange,
+  onReducedMotionChange,
+  onShakeToRollChange,
   onLoadPreset,
   onLockedCustomizationPress,
   onPurchase,
@@ -82,6 +90,14 @@ export function SettingsSheet({
             <View style={styles.option}>
               <Text style={styles.optionLabel}>Haptik</Text>
               <Switch value={hapticsEnabled} onValueChange={setHapticsEnabled} />
+            </View>
+            <View style={styles.option}>
+              <Text style={styles.optionLabel}>Telefonu sallayarak at</Text>
+              <Switch value={shakeToRollEnabled} onValueChange={onShakeToRollChange} />
+            </View>
+            <View style={styles.option}>
+              <Text style={styles.optionLabel}>Azaltılmış hareket</Text>
+              <Switch value={reducedMotionEnabled} onValueChange={onReducedMotionChange} />
             </View>
             <ThemePicker
               isPremium={premiumUnlocked}

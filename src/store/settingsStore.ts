@@ -21,6 +21,8 @@ export interface SettingsState {
   entitlementStatus: EntitlementStatus;
   hapticProfile: HapticProfile;
   hapticsEnabled: boolean;
+  reducedMotionEnabled: boolean;
+  shakeToRollEnabled: boolean;
   premiumUnlocked: boolean;
   presets: DicePreset[];
   secondDiceAppearance: DiceAppearance;
@@ -40,6 +42,8 @@ interface SettingsActions {
   setTableAppearance: (appearance: TableAppearance) => void;
   setEntitlementStatus: (status: EntitlementStatus) => void;
   setHapticsEnabled: (enabled: boolean) => void;
+  setReducedMotionEnabled: (enabled: boolean) => void;
+  setShakeToRollEnabled: (enabled: boolean) => void;
   setPremiumUnlocked: (unlocked: boolean) => void;
   setSoundEnabled: (enabled: boolean) => void;
   setSoundProfile: (profile: SoundProfile) => void;
@@ -53,10 +57,12 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
       entitlementStatus: 'checking',
       hapticProfile: 'standard',
       hapticsEnabled: true,
+      reducedMotionEnabled: false,
+      shakeToRollEnabled: false,
       premiumUnlocked: false,
       presets: [],
       secondDiceAppearance: DEFAULT_DICE_APPEARANCE,
-      schemaVersion: 3,
+      schemaVersion: 4,
       soundEnabled: true,
       soundProfile: 'cinematic',
       tableAppearance: {
@@ -85,6 +91,8 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
       setTableAppearance: (tableAppearance) => set({ tableAppearance }),
       setEntitlementStatus: (entitlementStatus) => set({ entitlementStatus }),
       setHapticsEnabled: (hapticsEnabled) => set({ hapticsEnabled }),
+      setReducedMotionEnabled: (reducedMotionEnabled) => set({ reducedMotionEnabled }),
+      setShakeToRollEnabled: (shakeToRollEnabled) => set({ shakeToRollEnabled }),
       setPremiumUnlocked: (premiumUnlocked) =>
         set((state) => ({
           premiumUnlocked,
@@ -103,16 +111,18 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
     {
       name: 'zar-settings',
       storage: createJSONStorage(() => AsyncStorage),
-      version: 3,
+      version: 4,
       migrate: (persistedState) => {
         const state = persistedState as Partial<SettingsState>;
         return {
           ...state,
           firstDiceAppearance: normalizeDiceAppearance(state.firstDiceAppearance),
           hapticProfile: state.hapticProfile ?? 'standard',
+          reducedMotionEnabled: state.reducedMotionEnabled ?? false,
+          shakeToRollEnabled: state.shakeToRollEnabled ?? false,
           presets: state.presets ?? [],
           secondDiceAppearance: normalizeDiceAppearance(state.secondDiceAppearance),
-          schemaVersion: 3,
+          schemaVersion: 4,
           soundProfile: state.soundProfile ?? 'cinematic',
           tableAppearance: state.tableAppearance ?? {
             accentColor: '#F4C95D',
@@ -124,6 +134,8 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
         firstDiceAppearance: state.firstDiceAppearance,
         hapticProfile: state.hapticProfile,
         hapticsEnabled: state.hapticsEnabled,
+        reducedMotionEnabled: state.reducedMotionEnabled,
+        shakeToRollEnabled: state.shakeToRollEnabled,
         premiumUnlocked: state.premiumUnlocked,
         presets: state.presets,
         secondDiceAppearance: state.secondDiceAppearance,
