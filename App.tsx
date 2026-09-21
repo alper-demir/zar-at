@@ -7,6 +7,7 @@ import { Dice3D } from './src/components/dice/Dice3D';
 import { Button } from './src/components/ui/Button';
 import { SettingsSheet } from './src/components/ui/SettingsSheet';
 import { useDiceRoll, DiceMode, RollResult } from './src/hooks/useDiceRoll';
+import { useEntitlement } from './src/hooks/useEntitlement';
 import { useSoundEffects } from './src/hooks/useSoundEffects';
 import { usePurchase } from './src/hooks/usePurchase';
 import { DICE_PAIR_STAGGER_MS } from './src/lib/rollAnimation';
@@ -22,13 +23,15 @@ export default function App() {
   const [lastSettled, setLastSettled] = useState<RollResult | null>(null);
 
   const hapticsEnabled = useSettingsStore((state) => state.hapticsEnabled);
-  const premiumUnlocked = useSettingsStore((state) => state.premiumUnlocked);
   const selectedTheme = useSettingsStore((state) => state.theme);
   const soundEnabled = useSettingsStore((state) => state.soundEnabled);
   const setHapticsEnabled = useSettingsStore((state) => state.setHapticsEnabled);
   const setSoundEnabled = useSettingsStore((state) => state.setSoundEnabled);
   const setTheme = useSettingsStore((state) => state.setTheme);
-  const theme = getTheme(selectedTheme);
+  const { isPremium, status: entitlementStatus } = useEntitlement();
+  const selectedThemeDefinition = getTheme(selectedTheme);
+  const theme =
+    selectedThemeDefinition.premium && !isPremium ? getTheme('classic') : selectedThemeDefinition;
   const playSound = useSoundEffects(soundEnabled);
   const { isRolling, roll } = useDiceRoll(hapticsEnabled, playSound);
   const { isPurchasing, purchasePremium, restorePurchases } = usePurchase();
@@ -157,12 +160,13 @@ export default function App() {
         <SettingsSheet
           hapticsEnabled={hapticsEnabled}
           isPurchasing={isPurchasing}
+          isEntitlementChecking={entitlementStatus === 'checking'}
           isVisible={isSettingsVisible}
           onClose={() => setSettingsVisible(false)}
           onPurchase={() => void purchasePremium()}
           onRestore={() => void restorePurchases()}
           onSelectTheme={setTheme}
-          premiumUnlocked={premiumUnlocked}
+          premiumUnlocked={isPremium}
           selectedTheme={selectedTheme}
           setHapticsEnabled={setHapticsEnabled}
           setSoundEnabled={setSoundEnabled}

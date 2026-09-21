@@ -3,8 +3,12 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 export type DiceTheme = 'classic' | 'neon' | 'sunset' | 'midnight';
+export type EntitlementStatus = 'checking' | 'free' | 'premium';
+
+const PREMIUM_THEMES: DiceTheme[] = ['neon', 'sunset', 'midnight'];
 
 export interface SettingsState {
+  entitlementStatus: EntitlementStatus;
   hapticsEnabled: boolean;
   premiumUnlocked: boolean;
   soundEnabled: boolean;
@@ -12,6 +16,7 @@ export interface SettingsState {
 }
 
 interface SettingsActions {
+  setEntitlementStatus: (status: EntitlementStatus) => void;
   setHapticsEnabled: (enabled: boolean) => void;
   setPremiumUnlocked: (unlocked: boolean) => void;
   setSoundEnabled: (enabled: boolean) => void;
@@ -21,14 +26,26 @@ interface SettingsActions {
 export const useSettingsStore = create<SettingsState & SettingsActions>()(
   persist(
     (set) => ({
+      entitlementStatus: 'checking',
       hapticsEnabled: true,
       premiumUnlocked: false,
       soundEnabled: true,
       theme: 'classic',
+      setEntitlementStatus: (entitlementStatus) => set({ entitlementStatus }),
       setHapticsEnabled: (hapticsEnabled) => set({ hapticsEnabled }),
-      setPremiumUnlocked: (premiumUnlocked) => set({ premiumUnlocked }),
+      setPremiumUnlocked: (premiumUnlocked) =>
+        set((state) => ({
+          premiumUnlocked,
+          theme: !premiumUnlocked && PREMIUM_THEMES.includes(state.theme) ? 'classic' : state.theme,
+        })),
       setSoundEnabled: (soundEnabled) => set({ soundEnabled }),
-      setTheme: (theme) => set({ theme }),
+      setTheme: (theme) =>
+        set((state) => {
+          if (PREMIUM_THEMES.includes(theme) && !state.premiumUnlocked) {
+            return state;
+          }
+          return { theme };
+        }),
     }),
     {
       name: 'zar-settings',
