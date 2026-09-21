@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { AccessibilityInfo, Pressable, Share, StyleSheet, Text, View } from 'react-native';
+import { AccessibilityInfo, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { getTheme } from './src/assets/themes/themes';
 import { Dice3D } from './src/components/dice/Dice3D';
@@ -113,14 +113,6 @@ export default function App() {
   }, [addRoll, isRolling, mode, roll]);
 
   useShakeToRoll(shakeToRollEnabled, () => void handleRoll());
-
-  const handleShare = async () => {
-    if (!lastSettled) return;
-    await Share.share({
-      message: `Zar sonucu: ${formatRollResult(lastSettled)}\nZar • Fair RNG`,
-      title: 'Zar sonucu',
-    });
-  };
 
   const handleModeChange = (nextMode: DiceMode) => {
     if (isRolling) return;
@@ -252,12 +244,6 @@ export default function App() {
             onPress={() => void handleRoll()}
             style={styles.rollButton}
           />
-
-          {lastSettled && (
-            <Pressable accessibilityLabel="Sonucu paylaş" onPress={() => void handleShare()}>
-              <Text style={styles.shareLabel}>Sonucu paylaş</Text>
-            </Pressable>
-          )}
 
           <View style={styles.history}>
             <Text style={styles.historyTitle}>Son atışlar</Text>
@@ -452,12 +438,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: 22,
     minWidth: 220,
-  },
-  shareLabel: {
-    color: '#AEB8FF',
-    fontSize: 13,
-    fontWeight: '700',
-    marginTop: 12,
   },
   history: {
     alignItems: 'center',
