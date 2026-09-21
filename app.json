@@ -1,17 +1,17 @@
 {
   "expo": {
-    "name": "Zar",
-    "slug": "zar",
+    "name": "Zar At",
+    "slug": "zar-at",
     "version": "0.5.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
-    "scheme": "zar",
+    "scheme": "zarat",
     "ios": {
       "supportsTablet": true
     },
     "android": {
-      "package": "com.alper.zar",
+      "package": "com.zarat.app",
       "versionCode": 1,
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
