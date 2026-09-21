@@ -30,7 +30,7 @@ export function HistorySheet({
             <View>
               <Text style={styles.title}>Atış geçmişi</Text>
               <Text style={styles.subtitle}>
-                {isPremium ? 'Son 50 atış cihazında saklanır.' : 'Ücretsiz sürümde son 5 atış.'}
+                {isPremium ? 'Son 20 atış cihazında saklanır.' : 'Ücretsiz sürümde son 5 atış.'}
               </Text>
             </View>
             <Pressable accessibilityLabel="Geçmişi kapat" onPress={onClose}>

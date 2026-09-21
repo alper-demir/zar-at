@@ -29,6 +29,8 @@ Bu proje semantik sürümleme kullanır.
 ### Kapsam kararı
 
 - Sonuç paylaşımı kaldırıldı; uygulamanın tek amaçlı zar deneyimine katkısı düşük bulundu.
+- Geçmiş kapasitesi Premium için 20, ücretsiz görünüm için 5 kayıt olarak sınırlandı.
+- Uygulama adı `Zar At`, paket adı `com.zarat.app` olarak sabitlendi.
 
 ## [0.4.0] - 2026-09-21
 

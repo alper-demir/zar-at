@@ -1,6 +1,6 @@
 # Play Store yayın kontrol listesi
 
-- [ ] Play Console uygulaması oluşturulmalı ve `com.alper.zar` paket adı rezerve edilmeli.
+- [ ] Play Console uygulaması oluşturulmalı ve `com.zarat.app` paket adı rezerve edilmeli.
 - [ ] `dice_premium_unlock` non-consumable ürünü oluşturulmalı.
 - [ ] IAP sağlayıcısının production adapter'ı `src/hooks/usePurchase.ts` içine bağlanmalı.
 - [ ] Gizlilik politikası herkese açık bir URL'de yayınlanmalı.
