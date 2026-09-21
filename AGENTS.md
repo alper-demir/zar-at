@@ -1,3 +1,90 @@
-# Expo HAS CHANGED
+# AGENTS.md — "Zar" (Dice Roller) Mobil Uygulaması
 
-Read the exact versioned docs at https://docs.expo.dev/versions/v57.0.0/ before writing any code.
+## Kullanım kuralı
+
+Bu dosyayı her görevden önce oku. Mimari kararlara, klasör yapısına ve isimlendirmelere uy. Büyük mimari kararları (ör. fizik motoru veya IAP sağlayıcısı değişikliği) kullanıcıya sormadan değiştirme. Belirsiz varsayımları Bölüm 11'e yaz. Her oturum sonunda Bölüm 10'u güncelle.
+
+## 1. Ürün özeti
+
+Tek amaçlı, reklamsız bir mobil uygulama: kullanıcı tek dokunuşla 1 veya 2 standart 6 yüzlü zar atar. V1'de yalnızca D6, tek/çift zar modu vardır; RPG zar setleri, 3+ zar, çoklu oyuncu, hesap sistemi, online senkronizasyon ve reklam yoktur. Farkımız yüksek kaliteli animasyon/ses/his ve tek seferlik premium modelidir.
+
+## 2. Platform ve teknoloji
+
+- React Native + Expo managed workflow + EAS Build; Expo'nun güncel stabil sürümünü kullan.
+- TypeScript strict; ilk hedef Android, kod platform bağımsız kalmalı.
+- Tek ekran yeterli; gerekirse hafif modal/bottom-sheet.
+- Zustand state yönetimi.
+- Reanimated 3+ animasyon; Skia görsel efektler için.
+- Expo'nun güncel önerisiyle uyumlu ses API'si ve `expo-haptics`.
+- IAP non-consumable tek seferlik ürün olarak soyutlanmalı ve mock'lanabilir olmalı.
+- Yerel ayarlar için SecureStore veya AsyncStorage; satın alma durumu yalnızca yerelde tutulmamalı.
+
+## 3. Animasyon ve adalet kararı
+
+V1'de gerçek 3D fizik motoru kullanılmayacak. Stilize sahte-3D yaklaşım: Reanimated perspective/rotateX/Y/Z, üç fazlı wind-up/flight/settle, küçük bounce ve screen shake. Skia ile dinamik gölge kullanılacak. Rastgelelik Faz 1'den itibaren kriptografik RNG (`expo-crypto` `getRandomBytesAsync`) ile yapılacak. Çift zar staggered oynayacak. Gerçek fizik için `expo-gl` + R3F/Rapier yolu yalnızca v2 değerlendirmesidir.
+
+## 4. Ekran akışı
+
+Ana ekranda ortada zar/zarlar, üstte tek/çift modu, zar veya büyük butonla atış, atış sırasında kilit, sonuç ve çift zarda toplam bulunur. Ayarlar küçük modal/bottom-sheet olabilir; ses/haptik, tema, premium satın alma/restore ve gizlilik/kumar değildir ibaresi içerir.
+
+## 5. Monetizasyon
+
+Ücretsiz sürüm tam temel işlev + 1 tema içerir ve reklamsızdır. Premium; ek temalar, gelişmiş kritik sonuç efektleri ve opsiyonel geçmiş/istatistik açar. Ürün ID placeholder: `dice_premium_unlock`.
+
+Ürün yönü "kişisel zar deneyimi" olarak netleştirildi. Premium değeri temel zar atma işlevini kısıtlamak yerine kullanıcının kendi zarını ve masasını oluşturmasına dayanacak: özel renk paletleri, iki zar için ayrı stiller, masa/arka plan temaları, ses-haptik profilleri, atış efektleri ve kaydedilebilir görünüm presetleri. Hesap veya bulut zorunluluğu olmayacak; kişiselleştirme cihazda saklanacak.
+
+## 6. Klasör yapısı
+
+```text
+/app veya /src
+  /components/dice -> Dice3D.tsx, DiceShadow.tsx, DicePair.tsx
+  /components/ui -> Button.tsx, SettingsSheet.tsx, ThemePicker.tsx
+  /hooks -> useDiceRoll.ts, usePurchase.ts, useSettings.ts
+  /store -> settingsStore.ts
+  /assets/sounds
+  /assets/themes
+  /lib -> rng.ts, haptics.ts, sounds.ts
+  App.tsx
+AGENTS.md
+```
+
+## 7. Kod standartları
+
+Fonksiyonel bileşenler/hooks; class component ve gereksiz `any` yok. Reanimated UI thread'de çalışmalı. Yeni bağımlılıkların Expo managed uyumluluğunu kontrol et. Android düşük/orta segmentte 60 FPS hedefle. Her faz sonunda bu dosyayı güncelle.
+
+## 8. Mağaza ve yasal notlar
+
+Uygulama kumar/bahis değildir ve gerçek para içermez ibaresi bulunmalı. Veri toplama minimum tutulmalı; gizlilik politikası hazırlanmalı. Reklam ve üçüncü taraf veri paylaşımı yoktur.
+
+## 9. Yol haritası
+
+0. Expo/TS/managed workflow, klasör yapısı, lint/format ve tek ekran iskeleti.
+1. Tek zar, kriptografik RNG, temel animasyon.
+2. Reanimated 3D + Skia gölge, ses, haptik, screen shake, hero moment.
+3. Çift zar ve tema sistemi.
+4. IAP, premium içerik, restore, ayarlar.
+5. Store hazırlığı, gizlilik, performans ve EAS internal testing.
+6. Kapalı/açık test ve yayın.
+
+## 10. İlerleme Günlüğü
+
+> Format: `[Tarih] Faz X — Ne yapıldı / hangi kararlar alındı / sıradaki adım`
+
+- [2026-09-21] Faz 0 — Expo SDK 57 + TypeScript managed workflow iskeleti kuruldu; `zustand`, ESLint ve Prettier eklendi. Tek ekran ve çalışan placeholder `Zar At` butonu oluşturuldu.
+- [2026-09-21] Faz 1–2 — `expo-crypto` ile bias azaltılmış kriptografik D6 RNG, atış state machine'i, Reanimated 3D dönüş/uçuş/iniş animasyonu, staggered zar hareketi, haptik geri bildirim, screen shake ve Skia gölgesi eklendi. Sonuç yalnızca animasyon tamamlanınca kesinleşiyor.
+- [2026-09-21] Faz 3 — Tek/çift zar modu, toplam sonucu, son 5 atış geçmişi ve dört temalı tema sistemi eklendi. Ücretsiz tema `classic`; premium temalar kilitli.
+- [2026-09-21] Faz 4 — AsyncStorage ile ayar kalıcılığı, ses/haptik anahtarları, ayarlar bottom-sheet'i, premium/restore UI'sı ve `dice_premium_unlock` için mock'lanabilir satın alma sınırı eklendi. Production Play Billing bağlantısı Play Console ürünü hazır olduğunda `usePurchase.ts` içine bağlanmalı.
+- [2026-09-21] Faz 5 — Android paket adı/sürüm bilgisi, `eas.json`, gizlilik politikası ve Play Store kontrol listesi eklendi. Bir sonraki adım gerçek cihazda preview APK testi, ses kayıtlarının eklenmesi ve Play Console/IAP production adapter bağlantısıdır.
+- [2026-09-21] Ses entegrasyonu — Kullanıcının sağladığı `arrow-whoosh.wav`, `dice-rolling.mp3`, `impact.wav` ve `sparkle.wav` dosyaları `src/assets/sounds` altına alındı. `expo-audio` ile atış başlangıcı, iniş ve kritik sonuç sesleri bağlandı; Android export dört ses varlığını başarıyla paketledi. Bu dosyaların kaynak/lisans kayıtları yayın öncesi doğrulanmalı.
+- [2026-09-21] Kapsam kararı — Billing, mağaza yayını, fiyatlandırma ve yayın hazırlığı son aşamaya bırakıldı. Mevcut oturumda öncelik yalnızca cihaz üzerinde çekirdek fonksiyonelliği test etmek; Expo LAN geliştirme sunucusu çalıştırıldı.
+- [2026-09-21] Performans düzeltmesi — Emülatördeki Expo Go ANR'si için ekran sarsıntısındaki yanlış Reanimated `modify` çağrısı `set` ile değiştirildi; çift eksenli 3D dönüş tek eksenli daha hafif dönüşe indirildi; aynı anda iki ses oynatıcı başlatılması kaldırıldı. TypeScript/lint kontrolleri geçti ve emülatör hot-reload edildi. Kullanıcı dokunma testi ile doğrulama bekleniyor.
+- [2026-09-21] Emülatör ANR teşhisi — Tek/çift zar animasyonları yerel gölgeyle emülatörde başarıyla test edildi. `expo-audio` ile her atışta dinamik player oluşturma, Expo Go Android'de ANR üretiyor; ses tetikleme geçici olarak devre dışı bırakıldı. Bir sonraki ses çalışmasında player'lar mount sırasında kalıcı oluşturulup gerçek cihaz/dev build üzerinde test edilmeli.
+- [2026-09-21] Görsel polish — Header/alt başlık, sonuç kartı, geçmiş chip'leri, safe-area kullanımı, buton gölgesi ve zarın pip tabanlı yüz tasarımı iyileştirildi. Reanimated animasyonu hafif tutuldu ve native gölge fallback'i korundu. TypeScript, ESLint, Prettier kontrolleri geçti; emülatörde tekli ve çiftli atış görsel olarak doğrulandı. Sıradaki adım: ANR oluşturmayan kalıcı ses player mimarisiyle ses efektlerini geri eklemek.
+- [2026-09-21] Sürümleme ve ürün yönü — Çalışan uygulama `0.1.0` alpha sürümü olarak tanımlandı; `main` kararlı sürümler, `develop` entegrasyon, `feature/*` kısa ömürlü geliştirme branch'leri olacak. Premium değer önerisi "kişisel zar deneyimi" olarak netleştirildi ve `PRODUCT_STRATEGY.md` içinde sürüm yol haritasına bağlandı. Sıradaki adım: `v0.2.0` için güvenli ses katmanı ve temel fonksiyonel polish.
+
+## 11. Açık kararlar / varsayımlar
+
+- V1 görsel yönü minimal/modern flat + gradient/glow; gerçekçi dokular premiumda değerlendirilecek.
+- Uygulama adı/marka kimliği netleşene kadar placeholder `Zar`.
+- Koyu tonlu, hafif gradient arka plan; zar öne çıkacak.
+- Mağazada ücretlendirme biçimi henüz kesin değil: mevcut teknik varsayım ücretsiz temel sürüm + tek seferlik Premium kilit açmadır. Baştan ücretli indirme alternatifi mağaza testi öncesinde ayrıca değerlendirilecek.
