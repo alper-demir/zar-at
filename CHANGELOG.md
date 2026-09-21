@@ -20,6 +20,13 @@ Bu proje semantik sürümleme kullanır.
 - Android emülatörde sonuç, paylaşım etiketi, geçmiş istatistiği ve yeni ayarlar.
 - Emülatör ivme olayı sonrası uygulama açık kaldı; temiz logcat'te ANR/fatal/React hatası yok.
 
+### Devam güncellemesi
+
+- Atış geçmişi AsyncStorage ile son 50 kayıt olarak kalıcılaştırıldı.
+- Premium geçmiş modalı, ücretsiz son 5 kayıt sınırı ve ortalama istatistiği eklendi.
+- Favori preset seçimi ve açılışta otomatik uygulanması eklendi.
+- Emülatör yeniden başlatma sonrasında geçmişin korunması doğrulandı.
+
 ## [0.4.0] - 2026-09-21
 
 ### Eklendi
