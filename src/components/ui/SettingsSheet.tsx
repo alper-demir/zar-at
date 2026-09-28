@@ -1,4 +1,13 @@
-import { Modal, Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
+import {
+  Linking,
+  Modal,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Switch,
+  Text,
+  View,
+} from 'react-native';
 import { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from './Button';
@@ -8,6 +17,8 @@ import { FeedbackPicker } from '../workshop/feedback-picker';
 import { DiceAppearance, HapticProfile, SoundProfile } from '../../lib/personalization';
 import { DiceTheme } from '../../store/settingsStore';
 import { LanguagePreference, useI18n } from '../../lib/i18n';
+
+const PRIVACY_POLICY_URL = 'https://roll-dice-privacy.netlify.app/';
 
 interface SettingsSheetProps {
   firstDiceAppearance: DiceAppearance;
@@ -191,6 +202,14 @@ export function SettingsSheet({
               </Pressable>
             </View>
             <Text style={styles.legal}>{t('legal')}</Text>
+            <Pressable
+              accessibilityLabel={t('privacyPolicy')}
+              accessibilityRole="link"
+              onPress={() => void Linking.openURL(PRIVACY_POLICY_URL)}
+              style={styles.privacyLink}
+            >
+              <Text style={styles.privacyLinkLabel}>{t('privacyPolicy')}</Text>
+            </Pressable>
           </ScrollView>
         </View>
       </SafeAreaView>
@@ -309,5 +328,16 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     marginTop: 22,
     textAlign: 'center',
+  },
+  privacyLink: {
+    alignItems: 'center',
+    paddingBottom: 6,
+    paddingTop: 14,
+  },
+  privacyLinkLabel: {
+    color: '#AEB8FF',
+    fontSize: 13,
+    fontWeight: '700',
+    textDecorationLine: 'underline',
   },
 });

@@ -98,6 +98,7 @@ const translations = {
     restore: 'Satın alımları geri yükle',
     legal:
       'Zar, kumar veya bahis uygulaması değildir; gerçek parayla oynanan bir oyun içermez. Kişisel veri toplamaz.',
+    privacyPolicy: 'Gizlilik politikası',
     announcementPair: 'Çift zar sonucu: {a} artı {b}, toplam {total}.',
     announcementSingle: 'Zar sonucu: {total}.',
     premiumLocked: 'premium',
@@ -195,6 +196,7 @@ const translations = {
     restore: 'Restore purchases',
     legal:
       'Dice At is not a gambling or betting app; it contains no real-money play. No personal data is collected.',
+    privacyPolicy: 'Privacy policy',
     announcementPair: 'Two dice result: {a} plus {b}, total {total}.',
     announcementSingle: 'Dice result: {total}.',
     premiumLocked: 'premium',

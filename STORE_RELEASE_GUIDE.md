@@ -7,21 +7,21 @@ yayın anında Console'un gösterdiği zorunlu alanlar esas alınmalıdır.
 
 ## 1. Mevcut durum
 
-| Konu | Durum |
-| --- | --- |
-| Paket adı | `com.zarat.app` sabit |
-| Uygulama adı | Türkçe `Zar At`; mağaza İngilizce adı `Roll Dice` olarak yerelleştirilebilir |
-| Temel uygulama | Hazır ve gerçek cihazda test edildi |
-| Türkçe/İngilizce uygulama içi dil | Hazır; otomatik + Ayarlar'dan manuel seçim |
-| Preview APK | Hazır; A52 güncelleme kurulumu test edildi |
-| Production AAB | Henüz alınmadı |
-| Play Console hesabı | Doğrulama bekliyor |
-| Premium kodu | Hazır; gerçek Play ürünüyle test bekliyor |
-| Play one-time product | `dice_premium_unlock` henüz Console'da oluşturulmalı |
-| Gizlilik politikası | `docs/privacy-policy.html` taslağı hazır; herkese açık HTTPS URL'ye taşınmalı |
-| Data Safety | Taslak hazır; son release ve SDK davranışına göre Console'da doldurulmalı |
-| Mağaza ekran görüntüleri | Emülatörden adaylar alındı; Expo/debug overlay olmadan son set hazırlanmalı |
-| Ses lisansı | `SOUND_LICENSES.md` içindeki eksik Envato item/lisans bilgileri tamamlanmalı |
+| Konu                              | Durum                                                                         |
+| --------------------------------- | ----------------------------------------------------------------------------- |
+| Paket adı                         | `com.zarat.app` sabit                                                         |
+| Uygulama adı                      | Türkçe `Zar At`; mağaza İngilizce adı `Roll Dice` olarak yerelleştirilebilir  |
+| Temel uygulama                    | Hazır ve gerçek cihazda test edildi                                           |
+| Türkçe/İngilizce uygulama içi dil | Hazır; otomatik + Ayarlar'dan manuel seçim                                    |
+| Preview APK                       | Hazır; A52 güncelleme kurulumu test edildi                                    |
+| Production AAB                    | Henüz alınmadı                                                                |
+| Play Console hesabı               | Doğrulama bekliyor                                                            |
+| Premium kodu                      | Hazır; gerçek Play ürünüyle test bekliyor                                     |
+| Play one-time product             | `dice_premium_unlock` henüz Console'da oluşturulmalı                          |
+| Gizlilik politikası               | `docs/privacy-policy.html` taslağı hazır; herkese açık HTTPS URL'ye taşınmalı |
+| Data Safety                       | Taslak hazır; son release ve SDK davranışına göre Console'da doldurulmalı     |
+| Mağaza ekran görüntüleri          | Emülatörden adaylar alındı; Expo/debug overlay olmadan son set hazırlanmalı   |
+| Ses lisansı                       | `SOUND_LICENSES.md` içindeki eksik Envato item/lisans bilgileri tamamlanmalı  |
 
 ## 2. Ürün ve politika çerçevesi
 
@@ -58,6 +58,7 @@ Uygulama sanal D6 zar atar; gerçek para, bahis, kumar, ödül veya şans oyunu
 > kendi tercihlerinize göre ayarlayın.
 >
 > Öne çıkanlar:
+>
 > - Tek zar ve çift zar modu
 > - Stilize 3D atış animasyonu
 > - Ses, haptik ve azaltılmış hareket seçenekleri
@@ -91,6 +92,7 @@ Uygulama sanal D6 zar atar; gerçek para, bahis, kumar, ödül veya şans oyunu
 > sound, and haptic feedback.
 >
 > Features:
+>
 > - Single-die and two-dice modes
 > - Stylized 3D rolling animation
 > - Sound, haptics, and reduced-motion options
