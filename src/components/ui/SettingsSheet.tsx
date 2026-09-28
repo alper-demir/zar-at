@@ -1,4 +1,5 @@
 import { Modal, Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
+import { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from './Button';
 import { ThemePicker } from './ThemePicker';
@@ -6,11 +7,13 @@ import { DiceWorkshop } from '../workshop/DiceWorkshop';
 import { FeedbackPicker } from '../workshop/feedback-picker';
 import { DiceAppearance, HapticProfile, SoundProfile } from '../../lib/personalization';
 import { DiceTheme } from '../../store/settingsStore';
+import { LanguagePreference, useI18n } from '../../lib/i18n';
 
 interface SettingsSheetProps {
   firstDiceAppearance: DiceAppearance;
   hapticProfile: HapticProfile;
   hapticsEnabled: boolean;
+  languagePreference: LanguagePreference;
   reducedMotionEnabled: boolean;
   shakeToRollEnabled: boolean;
   isEntitlementChecking: boolean;
@@ -24,6 +27,7 @@ interface SettingsSheetProps {
   onClose: () => void;
   onFirstDiceAppearanceChange: (appearance: Partial<DiceAppearance>) => void;
   onHapticProfileChange: (profile: HapticProfile) => void;
+  onLanguageChange: (preference: LanguagePreference) => void;
   onReducedMotionChange: (enabled: boolean) => void;
   onShakeToRollChange: (enabled: boolean) => void;
   onLockedCustomizationPress: () => void;
@@ -37,10 +41,30 @@ interface SettingsSheetProps {
   setSoundEnabled: (value: boolean) => void;
 }
 
+function TooltipRow({ label, hint }: { label: string; hint: string }) {
+  const [visible, setVisible] = useState(false);
+  return (
+    <View style={styles.tooltipWrap}>
+      <View style={styles.tooltipLabelRow}>
+        <Text style={styles.optionLabel}>{label}</Text>
+        <Pressable
+          accessibilityLabel={`${label}: ${hint}`}
+          onPress={() => setVisible((value) => !value)}
+          style={styles.infoButton}
+        >
+          <Text style={styles.infoText}>?</Text>
+        </Pressable>
+      </View>
+      {visible && <Text style={styles.tooltipText}>{hint}</Text>}
+    </View>
+  );
+}
+
 export function SettingsSheet({
   firstDiceAppearance,
   hapticProfile,
   hapticsEnabled,
+  languagePreference,
   reducedMotionEnabled,
   shakeToRollEnabled,
   isEntitlementChecking,
@@ -54,6 +78,7 @@ export function SettingsSheet({
   onClose,
   onFirstDiceAppearanceChange,
   onHapticProfileChange,
+  onLanguageChange,
   onReducedMotionChange,
   onShakeToRollChange,
   onLockedCustomizationPress,
@@ -66,32 +91,56 @@ export function SettingsSheet({
   setHapticsEnabled,
   setSoundEnabled,
 }: SettingsSheetProps) {
+  const { t } = useI18n();
   return (
     <Modal animationType="slide" transparent visible={isVisible} onRequestClose={onClose}>
       <SafeAreaView style={styles.overlay}>
         <View style={styles.sheet}>
           <View style={styles.header}>
-            <Text style={styles.title}>Ayarlar</Text>
-            <Pressable accessibilityLabel="Ayarları kapat" onPress={onClose}>
-              <Text style={styles.close}>Kapat</Text>
+            <Text style={styles.title}>{t('settings')}</Text>
+            <Pressable accessibilityLabel={t('close')} onPress={onClose}>
+              <Text style={styles.close}>{t('close')}</Text>
             </Pressable>
           </View>
           <ScrollView contentContainerStyle={styles.content}>
             <View style={styles.option}>
-              <Text style={styles.optionLabel}>Ses</Text>
+              <TooltipRow label={t('sound')} hint={t('soundHint')} />
               <Switch value={soundEnabled} onValueChange={setSoundEnabled} />
             </View>
             <View style={styles.option}>
-              <Text style={styles.optionLabel}>Haptik</Text>
+              <TooltipRow label={t('haptics')} hint={t('hapticsHint')} />
               <Switch value={hapticsEnabled} onValueChange={setHapticsEnabled} />
             </View>
             <View style={styles.option}>
-              <Text style={styles.optionLabel}>Telefonu sallayarak at</Text>
+              <TooltipRow label={t('shake')} hint={t('shakeHint')} />
               <Switch value={shakeToRollEnabled} onValueChange={onShakeToRollChange} />
             </View>
             <View style={styles.option}>
-              <Text style={styles.optionLabel}>Azaltılmış hareket</Text>
+              <TooltipRow label={t('reducedMotion')} hint={t('reducedMotionHint')} />
               <Switch value={reducedMotionEnabled} onValueChange={onReducedMotionChange} />
+            </View>
+            <View style={styles.languageSection}>
+              <TooltipRow label={t('language')} hint={t('languageHint')} />
+              <View style={styles.languageRow}>
+                {(['auto', 'tr', 'en'] as LanguagePreference[]).map((option) => (
+                  <Pressable
+                    key={option}
+                    onPress={() => onLanguageChange(option)}
+                    style={[
+                      styles.languageButton,
+                      languagePreference === option && styles.languageSelected,
+                    ]}
+                  >
+                    <Text style={styles.languageLabel}>
+                      {option === 'auto'
+                        ? t('auto')
+                        : option === 'tr'
+                          ? t('turkish')
+                          : t('english')}
+                    </Text>
+                  </Pressable>
+                ))}
+              </View>
             </View>
             <ThemePicker
               isPremium={premiumUnlocked}
@@ -116,20 +165,18 @@ export function SettingsSheet({
             />
             <View style={styles.premiumCard}>
               <Text style={styles.premiumTitle}>
-                {premiumUnlocked ? 'Premium açık' : 'Zar Premium'}
+                {premiumUnlocked ? t('premiumOpen') : t('premium')}
               </Text>
               <Text style={styles.premiumText}>
-                {premiumUnlocked
-                  ? 'Tüm temalar ve gelişmiş efektler kullanılabilir.'
-                  : 'Neon, gün batımı ve gece temalarının kilidini aç.'}
+                {premiumUnlocked ? t('premiumOpenHint') : t('premiumHint')}
               </Text>
               {isEntitlementChecking ? (
-                <Text style={styles.premiumText}>Premium durumu kontrol ediliyor…</Text>
+                <Text style={styles.premiumText}>{t('checking')}</Text>
               ) : (
                 !premiumUnlocked && (
                   <Button
                     disabled={isPurchasing}
-                    label={isPurchasing ? 'Kontrol ediliyor…' : 'Premium’u Satın Al'}
+                    label={isPurchasing ? t('checkingShort') : t('buyPremium')}
                     onPress={onPurchase}
                   />
                 )
@@ -140,13 +187,10 @@ export function SettingsSheet({
                 onPress={onRestore}
                 style={styles.restore}
               >
-                <Text style={styles.restoreLabel}>Satın alımları geri yükle</Text>
+                <Text style={styles.restoreLabel}>{t('restore')}</Text>
               </Pressable>
             </View>
-            <Text style={styles.legal}>
-              Zar, kumar veya bahis uygulaması değildir; gerçek parayla oynanan bir oyun içermez.
-              Kişisel veri toplamaz.
-            </Text>
+            <Text style={styles.legal}>{t('legal')}</Text>
           </ScrollView>
         </View>
       </SafeAreaView>
@@ -195,6 +239,29 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
     paddingTop: 20,
   },
+  infoButton: {
+    alignItems: 'center',
+    borderColor: '#6873B5',
+    borderRadius: 9,
+    borderWidth: 1,
+    height: 18,
+    justifyContent: 'center',
+    marginLeft: 8,
+    width: 18,
+  },
+  infoText: { color: '#AEB8FF', fontSize: 12, fontWeight: '800' },
+  languageButton: {
+    alignItems: 'center',
+    borderColor: '#3A4265',
+    borderRadius: 10,
+    borderWidth: 1,
+    flex: 1,
+    paddingVertical: 10,
+  },
+  languageLabel: { color: '#C4C9DD', fontSize: 12, fontWeight: '700' },
+  languageRow: { flexDirection: 'row', gap: 8, marginTop: 10 },
+  languageSection: { borderBottomColor: '#2A3150', borderBottomWidth: 1, paddingVertical: 14 },
+  languageSelected: { backgroundColor: '#303A70', borderColor: '#F4C95D' },
   option: {
     alignItems: 'center',
     borderBottomColor: '#2A3150',
@@ -207,6 +274,9 @@ const styles = StyleSheet.create({
     color: '#E4E7F4',
     fontSize: 16,
   },
+  tooltipLabelRow: { alignItems: 'center', flexDirection: 'row' },
+  tooltipText: { color: '#9FA8CC', fontSize: 11, lineHeight: 16, marginTop: 5, maxWidth: 250 },
+  tooltipWrap: { flex: 1 },
   premiumCard: {
     backgroundColor: '#232A49',
     borderRadius: 16,

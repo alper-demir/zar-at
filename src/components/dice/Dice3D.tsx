@@ -10,6 +10,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { ThemeDefinition } from '../../assets/themes/themes';
 import { DiceAppearance, getReadablePipColor } from '../../lib/personalization';
+import { useI18n } from '../../lib/i18n';
 import {
   DICE_FALL_DURATION_MS,
   DICE_LIFT_DURATION_MS,
@@ -81,6 +82,7 @@ export function Dice3D({
   theme,
   value,
 }: Dice3DProps) {
+  const { t } = useI18n();
   const rotationX = useSharedValue(0);
   const rotationY = useSharedValue(0);
   const rotationZ = useSharedValue(0);
@@ -345,7 +347,7 @@ export function Dice3D({
       <Animated.View style={[styles.motionLayer, { bottom: 20 }, animatedStyle]}>
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel={`Zar ${value}, tekrar atmak için dokun`}
+          accessibilityLabel={`${value}, ${t('roll')}`}
           disabled={disabled}
           onPress={onPress}
           style={({ pressed }) => [styles.dice, diceStyle, pressed && styles.pressed]}

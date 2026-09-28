@@ -5,7 +5,8 @@ module.exports = ({ config }) => ({
     process.env.ZAR_BUILD_ARM64_ONLY === '1'
       ? [
           ...(config.plugins ?? []),
+          'expo-localization',
           ['expo-build-properties', { android: { buildArchs: ['arm64-v8a'] } }],
         ]
-      : config.plugins,
+      : [...(config.plugins ?? []), 'expo-localization'],
 });

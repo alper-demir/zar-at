@@ -1,4 +1,5 @@
 import type { RollResult } from '../hooks/useDiceRoll';
+import type { Language } from './i18n';
 
 export function formatRollResult(result: RollResult): string {
   return result.dice.length === 2
@@ -6,10 +7,18 @@ export function formatRollResult(result: RollResult): string {
     : `${result.total}`;
 }
 
-export function formatRollAnnouncement(result: RollResult): string {
+export function formatRollAnnouncement(result: RollResult, language: Language = 'tr'): string {
+  const pair =
+    language === 'en'
+      ? 'Two dice result: {a} plus {b}, total {total}.'
+      : 'Çift zar sonucu: {a} artı {b}, toplam {total}.';
+  const single = language === 'en' ? 'Dice result: {total}.' : 'Zar sonucu: {total}.';
   return result.dice.length === 2
-    ? `Çift zar sonucu: ${result.dice[0]} artı ${result.dice[1]}, toplam ${result.total}.`
-    : `Zar sonucu: ${result.total}.`;
+    ? pair
+        .replace('{a}', String(result.dice[0]))
+        .replace('{b}', String(result.dice[1]))
+        .replace('{total}', String(result.total))
+    : single.replace('{total}', String(result.total));
 }
 
 export function isCriticalRoll(result: RollResult): boolean {

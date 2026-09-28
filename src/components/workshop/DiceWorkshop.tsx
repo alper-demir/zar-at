@@ -7,6 +7,7 @@ import {
   DICE_PIP_OPTIONS,
   DiceAppearance,
 } from '../../lib/personalization';
+import { useI18n } from '../../lib/i18n';
 
 interface DiceWorkshopProps {
   firstDice: DiceAppearance;
@@ -27,6 +28,26 @@ export function DiceWorkshop({
   onSecondChange,
   secondDice,
 }: DiceWorkshopProps) {
+  const { t } = useI18n();
+  const optionLabel = (label: string) =>
+    ({
+      Klasik: t('classic'),
+      Fildişi: t('ivory'),
+      Neon: t('neon'),
+      Mercan: t('coral'),
+      Buz: t('ice'),
+      Beyaz: t('white'),
+      Gece: t('night'),
+      Mint: t('mint'),
+      Altın: t('gold'),
+      Mat: t('matte'),
+      Parlak: t('glossy'),
+      'Neon glow': t('neonGlow'),
+      Düz: t('solid'),
+      Ahşap: t('wood'),
+      Mermer: t('marble'),
+      Cam: t('glass'),
+    })[label] ?? label;
   const [target, setTarget] = useState<DiceTarget>('first');
   const selected = target === 'first' ? firstDice : secondDice;
   const update = target === 'first' ? onFirstChange : onSecondChange;
@@ -41,8 +62,8 @@ export function DiceWorkshop({
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Zar atölyesi</Text>
-      <Text style={styles.subtitle}>Kendi zarını oluştur, görünüm cihazında saklansın.</Text>
+      <Text style={styles.title}>{t('workshop')}</Text>
+      <Text style={styles.subtitle}>{t('workshopSubtitle')}</Text>
       <View style={styles.targetRow}>
         {(['first', 'second'] as DiceTarget[]).map((item) => (
           <Pressable
@@ -52,74 +73,74 @@ export function DiceWorkshop({
             onPress={() => setTarget(item)}
             style={[styles.target, target === item && styles.targetSelected]}
           >
-            <Text style={styles.targetLabel}>{item === 'first' ? 'Zar 1' : 'Zar 2'}</Text>
+            <Text style={styles.targetLabel}>{item === 'first' ? t('die1') : t('die2')}</Text>
           </Pressable>
         ))}
       </View>
 
-      <Text style={styles.sectionLabel}>Gövde rengi</Text>
+      <Text style={styles.sectionLabel}>{t('bodyColor')}</Text>
       <View style={styles.optionRow}>
         {DICE_BODY_OPTIONS.map((option) => (
           <Pressable
-            accessibilityLabel={`${option.label}${option.premium && !isPremium ? ', premium' : ''}`}
+            accessibilityLabel={`${optionLabel(option.label)}${option.premium && !isPremium ? `, ${t('premiumLocked')}` : ''}`}
             key={option.color}
             onPress={() => select(option.premium, { bodyColor: option.color })}
             style={[styles.swatchButton, selected.bodyColor === option.color && styles.selected]}
           >
             <View style={[styles.swatch, { backgroundColor: option.color }]} />
             <Text style={styles.optionLabel}>
-              {option.premium && !isPremium ? '🔒' : option.label}
+              {option.premium && !isPremium ? '🔒' : optionLabel(option.label)}
             </Text>
           </Pressable>
         ))}
       </View>
 
-      <Text style={styles.sectionLabel}>Pip rengi</Text>
+      <Text style={styles.sectionLabel}>{t('pipColor')}</Text>
       <View style={styles.optionRow}>
         {DICE_PIP_OPTIONS.map((option) => (
           <Pressable
-            accessibilityLabel={`${option.label}${option.premium && !isPremium ? ', premium' : ''}`}
+            accessibilityLabel={`${optionLabel(option.label)}${option.premium && !isPremium ? `, ${t('premiumLocked')}` : ''}`}
             key={option.color}
             onPress={() => select(option.premium, { pipColor: option.color })}
             style={[styles.swatchButton, selected.pipColor === option.color && styles.selected]}
           >
             <View style={[styles.swatch, { backgroundColor: option.color }]} />
             <Text style={styles.optionLabel}>
-              {option.premium && !isPremium ? '🔒' : option.label}
+              {option.premium && !isPremium ? '🔒' : optionLabel(option.label)}
             </Text>
           </Pressable>
         ))}
       </View>
 
-      <Text style={styles.sectionLabel}>Yüzey</Text>
+      <Text style={styles.sectionLabel}>{t('finish')}</Text>
       <View style={styles.finishRow}>
         {DICE_FINISH_OPTIONS.map((option) => (
           <Pressable
-            accessibilityLabel={`${option.label}${option.premium && !isPremium ? ', premium' : ''}`}
+            accessibilityLabel={`${optionLabel(option.label)}${option.premium && !isPremium ? `, ${t('premiumLocked')}` : ''}`}
             key={option.id}
             onPress={() => select(option.premium, { finish: option.id })}
             style={[styles.finish, selected.finish === option.id && styles.selected]}
           >
             <Text style={styles.optionLabel}>
               {option.premium && !isPremium ? '🔒 ' : ''}
-              {option.label}
+              {optionLabel(option.label)}
             </Text>
           </Pressable>
         ))}
       </View>
 
-      <Text style={styles.sectionLabel}>Malzeme</Text>
+      <Text style={styles.sectionLabel}>{t('material')}</Text>
       <View style={styles.finishRow}>
         {DICE_MATERIAL_OPTIONS.map((option) => (
           <Pressable
-            accessibilityLabel={`${option.label}${option.premium && !isPremium ? ', premium' : ''}`}
+            accessibilityLabel={`${optionLabel(option.label)}${option.premium && !isPremium ? `, ${t('premiumLocked')}` : ''}`}
             key={option.id}
             onPress={() => select(option.premium, { material: option.id })}
             style={[styles.finish, selected.material === option.id && styles.selected]}
           >
             <Text style={styles.optionLabel}>
               {option.premium && !isPremium ? '🔒 ' : ''}
-              {option.label}
+              {optionLabel(option.label)}
             </Text>
           </Pressable>
         ))}

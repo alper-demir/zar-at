@@ -9,6 +9,7 @@ import {
   SoundProfile,
   TableAppearance,
 } from '../lib/personalization';
+import { LanguagePreference } from '../lib/i18n';
 
 export type DiceTheme = 'classic' | 'neon' | 'sunset' | 'midnight';
 export type EntitlementStatus = 'checking' | 'free' | 'premium';
@@ -20,6 +21,7 @@ export interface SettingsState {
   entitlementStatus: EntitlementStatus;
   hapticProfile: HapticProfile;
   hapticsEnabled: boolean;
+  languagePreference: LanguagePreference;
   reducedMotionEnabled: boolean;
   shakeToRollEnabled: boolean;
   premiumUnlocked: boolean;
@@ -38,6 +40,7 @@ interface SettingsActions {
   setTableAppearance: (appearance: TableAppearance) => void;
   setEntitlementStatus: (status: EntitlementStatus) => void;
   setHapticsEnabled: (enabled: boolean) => void;
+  setLanguagePreference: (preference: LanguagePreference) => void;
   setReducedMotionEnabled: (enabled: boolean) => void;
   setShakeToRollEnabled: (enabled: boolean) => void;
   setPremiumUnlocked: (unlocked: boolean) => void;
@@ -53,6 +56,7 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
       entitlementStatus: 'checking',
       hapticProfile: 'standard',
       hapticsEnabled: true,
+      languagePreference: 'auto',
       reducedMotionEnabled: false,
       shakeToRollEnabled: false,
       premiumUnlocked: false,
@@ -83,6 +87,7 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
       setTableAppearance: (tableAppearance) => set({ tableAppearance }),
       setEntitlementStatus: (entitlementStatus) => set({ entitlementStatus }),
       setHapticsEnabled: (hapticsEnabled) => set({ hapticsEnabled }),
+      setLanguagePreference: (languagePreference) => set({ languagePreference }),
       setReducedMotionEnabled: (reducedMotionEnabled) => set({ reducedMotionEnabled }),
       setShakeToRollEnabled: (shakeToRollEnabled) => set({ shakeToRollEnabled }),
       setPremiumUnlocked: (premiumUnlocked) =>
@@ -113,6 +118,7 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
           ...state,
           firstDiceAppearance: normalizeDiceAppearance(state.firstDiceAppearance),
           hapticProfile: state.hapticProfile ?? 'standard',
+          languagePreference: state.languagePreference ?? 'auto',
           reducedMotionEnabled: state.reducedMotionEnabled ?? false,
           shakeToRollEnabled: state.shakeToRollEnabled ?? false,
           secondDiceAppearance: normalizeDiceAppearance(state.secondDiceAppearance),
@@ -128,6 +134,7 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
         firstDiceAppearance: state.firstDiceAppearance,
         hapticProfile: state.hapticProfile,
         hapticsEnabled: state.hapticsEnabled,
+        languagePreference: state.languagePreference,
         reducedMotionEnabled: state.reducedMotionEnabled,
         shakeToRollEnabled: state.shakeToRollEnabled,
         premiumUnlocked: state.premiumUnlocked,

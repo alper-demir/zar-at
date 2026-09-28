@@ -1,12 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { isOwnedPremiumPurchase, PREMIUM_PRODUCT_ID } from '../lib/purchaseEntitlement';
 import { useSettingsStore } from '../store/settingsStore';
+import { useI18n } from '../lib/i18n';
 
 type IapModule = typeof import('expo-iap');
 
-function getPurchaseErrorMessage(error: unknown): string {
+function getPurchaseErrorMessage(error: unknown, language: 'tr' | 'en'): string {
   if (error instanceof Error && error.message) return error.message;
-  return 'Satın alma şu anda tamamlanamadı. Lütfen tekrar deneyin.';
+  return language === 'en'
+    ? 'The purchase could not be completed. Please try again.'
+    : 'Satın alma şu anda tamamlanamadı. Lütfen tekrar deneyin.';
 }
 
 /**
@@ -22,6 +25,7 @@ export function usePurchase(): {
   purchasePremium: () => Promise<void>;
   restorePurchases: () => Promise<void>;
 } {
+  const { language } = useI18n();
   const [isPurchasing, setIsPurchasing] = useState(false);
   const [purchaseError, setPurchaseError] = useState<string | null>(null);
   const iapModuleRef = useRef<Promise<IapModule> | null>(null);
@@ -60,7 +64,7 @@ export function usePurchase(): {
         setEntitlementStatus('checking');
         purchaseSubscription = iap.purchaseUpdatedListener((purchase) => {
           void grantPurchase(iap as IapModule, purchase).catch((error: unknown) => {
-            if (!cancelled) setPurchaseError(getPurchaseErrorMessage(error));
+            if (!cancelled) setPurchaseError(getPurchaseErrorMessage(error, language));
           });
         });
         await iap.initConnection();
@@ -74,7 +78,7 @@ export function usePurchase(): {
         if (!cancelled) {
           setPremiumUnlocked(false);
           setEntitlementStatus('free');
-          setPurchaseError(getPurchaseErrorMessage(error));
+          setPurchaseError(getPurchaseErrorMessage(error, language));
         }
       }
     };
@@ -85,7 +89,7 @@ export function usePurchase(): {
       purchaseSubscription?.remove();
       if (iap) void iap.endConnection().catch(() => undefined);
     };
-  }, [grantPurchase, loadIap, setEntitlementStatus, setPremiumUnlocked]);
+  }, [grantPurchase, language, loadIap, setEntitlementStatus, setPremiumUnlocked]);
 
   const purchasePremium = useCallback(async () => {
     setIsPurchasing(true);
@@ -105,7 +109,11 @@ export function usePurchase(): {
         type: 'in-app',
       });
       if (!products?.length) {
-        throw new Error('Premium ürünü Google Play üzerinde henüz bulunamadı.');
+        throw new Error(
+          language === 'en'
+            ? 'The Premium product is not available on Google Play yet.'
+            : 'Premium ürünü Google Play üzerinde henüz bulunamadı.',
+        );
       }
       await iap.requestPurchase({
         request: {
@@ -115,11 +123,11 @@ export function usePurchase(): {
         type: 'in-app',
       });
     } catch (error) {
-      setPurchaseError(getPurchaseErrorMessage(error));
+      setPurchaseError(getPurchaseErrorMessage(error, language));
     } finally {
       setIsPurchasing(false);
     }
-  }, [loadIap, setEntitlementStatus, setPremiumUnlocked]);
+  }, [language, loadIap, setEntitlementStatus, setPremiumUnlocked]);
 
   const restorePurchases = useCallback(async () => {
     setIsPurchasing(true);
@@ -141,11 +149,11 @@ export function usePurchase(): {
         setEntitlementStatus('free');
       }
     } catch (error) {
-      setPurchaseError(getPurchaseErrorMessage(error));
+      setPurchaseError(getPurchaseErrorMessage(error, language));
     } finally {
       setIsPurchasing(false);
     }
-  }, [grantPurchase, loadIap, setEntitlementStatus, setPremiumUnlocked]);
+  }, [grantPurchase, language, loadIap, setEntitlementStatus, setPremiumUnlocked]);
 
   return { isPurchasing, purchaseError, purchasePremium, restorePurchases };
 }

@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { StyleSheet, Text } from 'react-native';
+import { useI18n } from '../../lib/i18n';
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -14,6 +15,7 @@ interface CriticalHeroEffectProps {
 }
 
 export function CriticalHeroEffect({ accentColor, visible }: CriticalHeroEffectProps) {
+  const { t } = useI18n();
   const opacity = useSharedValue(0);
   const scale = useSharedValue(0.7);
 
@@ -36,8 +38,8 @@ export function CriticalHeroEffect({ accentColor, visible }: CriticalHeroEffectP
 
   return (
     <Animated.View pointerEvents="none" style={[styles.container, animatedStyle]}>
-      <Text style={[styles.label, { color: accentColor }]}>✦ ÇİFT ALTI ✦</Text>
-      <Text style={styles.subtitle}>Şans senden yana</Text>
+      <Text style={[styles.label, { color: accentColor }]}>{t('criticalTitle')}</Text>
+      <Text style={styles.subtitle}>{t('criticalSubtitle')}</Text>
     </Animated.View>
   );
 }

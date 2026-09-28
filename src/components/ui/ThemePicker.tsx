@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { themes } from '../../assets/themes/themes';
 import { DiceTheme } from '../../store/settingsStore';
+import { useI18n } from '../../lib/i18n';
 
 interface ThemePickerProps {
   isPremium: boolean;
@@ -9,15 +10,22 @@ interface ThemePickerProps {
 }
 
 export function ThemePicker({ isPremium, onSelect, selectedTheme }: ThemePickerProps) {
+  const { t } = useI18n();
+  const labels: Record<DiceTheme, string> = {
+    classic: t('classic'),
+    neon: t('neon'),
+    sunset: t('sunset'),
+    midnight: t('midnight'),
+  };
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tema</Text>
+      <Text style={styles.title}>{t('theme')}</Text>
       <View style={styles.row}>
         {themes.map((theme) => {
           const locked = theme.premium && !isPremium;
           return (
             <Pressable
-              accessibilityLabel={`${theme.label}${locked ? ', premium' : ''}`}
+              accessibilityLabel={`${labels[theme.id]}${locked ? `, ${t('premiumLocked')}` : ''}`}
               key={theme.id}
               onPress={() => !locked && onSelect(theme.id)}
               style={[
@@ -27,7 +35,7 @@ export function ThemePicker({ isPremium, onSelect, selectedTheme }: ThemePickerP
               ]}
             >
               <View style={[styles.swatch, { backgroundColor: theme.face }]} />
-              <Text style={styles.label}>{locked ? '🔒' : theme.label}</Text>
+              <Text style={styles.label}>{locked ? '🔒' : labels[theme.id]}</Text>
             </Pressable>
           );
         })}

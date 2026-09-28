@@ -139,6 +139,7 @@ Her faz kendi otomatik kontrolleri ve Android emülatör/cihaz kabul testleri ge
 - [2026-09-28] Azaltılmış hareket sonuç senkronizasyonu — Emülatörde sonuç kartının bir atış geriden gelmesi yeniden üretildi. Animasyon 180 ms sürerken `useDiceRoll` sonucunun 120 ms'de tamamlanıp hedef yüz ref'ini erken temizlediği tespit edildi; süreler `REDUCED_MOTION_DURATION_MS` sabitinde birleştirildi. TypeScript, lint, format ve 22 test geçti; emülatörde ardışık tekli atışlarda zar yüzü, sonuç kartı ve geçmiş aynı değeri gösterdi. A52 preview APK'sı için yeni build gerekiyor.
 - [2026-09-28] Kritik sonuç metni düzeltmesi — Tek zar 6 sonucunun yanlışlıkla “Çift altı” olarak gösterilmesi düzeltildi. Kritik sonuç artık yalnızca iki zarın da 6 gelmesiyle oluşuyor; buna bağlı haptik ve sparkle efekti de aynı kurala bağlandı. `isCriticalRoll` için tekli/çiftli test eklendi; toplam 23 test, TypeScript, lint ve format kontrolleri geçti. A52 preview APK'sı için yeni build gerekiyor.
 - [2026-09-28] Son düzeltmeler preview build'i — `90c3c13` commit'i `preview-a52` profiliyle EAS'a gönderildi: `e2f90175-1a9a-4723-bd38-5136e9fc8ffc`. Build kuyruğa alındı; tamamlanınca A52'de mevcut uygulamanın üzerine güncelleme kurulumu denenmeli. Kullanıcıya uygulamayı şimdilik silmemesi söylendi; ayar/geçmiş korunarak güncelleme hedefleniyor.
+- [2026-09-28] Türkçe/İngilizce yerelleştirme — `expo-localization` eklendi; uygulama telefon dilini otomatik algılıyor ve Ayarlar içinden Otomatik/Türkçe/English seçimi yapılabiliyor. Ana ekran, geçmiş, atölye, ses/haptik, Premium, erişilebilirlik duyuruları ve ayar açıklamaları çeviri anahtarlarına taşındı. Ayar anahtarlarına dokunulabilir `?` açıklama ipuçları eklendi. Dil tercihi AsyncStorage içinde saklanıyor; backend yok. TypeScript, ESLint, Prettier, Expo Doctor 21/21, Android bundle export ve 25 Jest testi geçti. EAS build başlatılmadı; sonraki adım Expo Go/dev build üzerinde iki dil ve tooltip manuel kabul testi, ardından gerekiyorsa yeni preview build.
 
 ## 11. Açık kararlar / varsayımlar
 
@@ -146,4 +147,5 @@ Her faz kendi otomatik kontrolleri ve Android emülatör/cihaz kabul testleri ge
 - Uygulama adı/marka kimliği netleşene kadar placeholder `Zar`.
 - Koyu tonlu, hafif gradient arka plan; zar öne çıkacak.
 - Ücretsiz temel sürüm + tek seferlik Lifetime Premium kararı kesinleşti. Abonelik ve uygulama verileri için özel bulut/backend kullanılmayacak.
+
 - A52 için ARM64 test APK'sı hedefleniyor; fiziksel cihaz ABI'si şu an bağlı olmadığı için doğrulanamadı. `preview-a52` profili yalnızca ARM64 cihazlarda çalışır; x86 emülatör ve diğer cihazlar için standart `preview`, mağaza için `production` kullanılacak.

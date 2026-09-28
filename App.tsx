@@ -22,10 +22,21 @@ import {
 import { calculateRollStats } from './src/lib/rollStats';
 import { useSettingsStore } from './src/store/settingsStore';
 import { useHistoryStore } from './src/store/historyStore';
+import { I18nProvider, useI18n } from './src/lib/i18n';
 
 const INITIAL_DICE = [1, 1];
 
 export default function App() {
+  const languagePreference = useSettingsStore((state) => state.languagePreference);
+  return (
+    <I18nProvider preference={languagePreference}>
+      <AppContent />
+    </I18nProvider>
+  );
+}
+
+function AppContent() {
+  const { t, language } = useI18n();
   const [mode, setMode] = useState<DiceMode>('single');
   const [isSettingsVisible, setSettingsVisible] = useState(false);
   const [isHistoryVisible, setHistoryVisible] = useState(false);
@@ -42,8 +53,10 @@ export default function App() {
   const selectedTheme = useSettingsStore((state) => state.theme);
   const soundEnabled = useSettingsStore((state) => state.soundEnabled);
   const soundProfile = useSettingsStore((state) => state.soundProfile);
+  const languagePreference = useSettingsStore((state) => state.languagePreference);
   const setHapticsEnabled = useSettingsStore((state) => state.setHapticsEnabled);
   const setSoundEnabled = useSettingsStore((state) => state.setSoundEnabled);
+  const setLanguagePreference = useSettingsStore((state) => state.setLanguagePreference);
   const setTheme = useSettingsStore((state) => state.setTheme);
   const setFirstDiceAppearance = useSettingsStore((state) => state.setFirstDiceAppearance);
   const setHapticProfile = useSettingsStore((state) => state.setHapticProfile);
@@ -89,9 +102,9 @@ export default function App() {
     if (result) {
       setLastSettled(result);
       addRoll(result);
-      AccessibilityInfo.announceForAccessibility(formatRollAnnouncement(result));
+      AccessibilityInfo.announceForAccessibility(formatRollAnnouncement(result, language));
     }
-  }, [addRoll, isRolling, mode, roll]);
+  }, [addRoll, isRolling, language, mode, roll]);
 
   useShakeToRoll(shakeToRollEnabled, () => void handleRoll());
 
@@ -113,14 +126,14 @@ export default function App() {
   };
 
   const statusText = isRolling
-    ? 'Zarlar dönüyor…'
+    ? t('rolling')
     : isCritical
-      ? 'Çift altı! Şans senden yana.'
+      ? t('criticalStatus')
       : total
         ? mode === 'pair'
-          ? `Toplam ${total}`
-          : `Sonuç ${total}`
-        : 'Zar atmaya hazır';
+          ? `${t('total')} ${total}`
+          : `${t('result')} ${total}`
+        : t('ready');
 
   return (
     <SafeAreaProvider>
@@ -129,11 +142,11 @@ export default function App() {
         <View style={styles.container}>
           <View style={styles.header}>
             <View style={styles.brandBlock}>
-              <Text style={[styles.title, { color: theme.text }]}>Zar At</Text>
-              <Text style={styles.subtitle}>Tek veya çift zar seç.</Text>
+              <Text style={[styles.title, { color: theme.text }]}>{t('roll')}</Text>
+              <Text style={styles.subtitle}>{t('subtitle')}</Text>
             </View>
             <Pressable
-              accessibilityLabel="Ayarları aç"
+              accessibilityLabel={t('openSettings')}
               onPress={() => setSettingsVisible(true)}
               style={styles.settingsButton}
             >
@@ -151,7 +164,7 @@ export default function App() {
                 style={[styles.mode, mode === item && { backgroundColor: theme.face }]}
               >
                 <Text style={[styles.modeLabel, mode === item && styles.selectedModeLabel]}>
-                  {item === 'single' ? 'Tek zar' : 'Çift zar'}
+                  {item === 'single' ? t('singleDie') : t('doubleDice')}
                 </Text>
               </Pressable>
             ))}
@@ -189,7 +202,7 @@ export default function App() {
 
           <View style={styles.resultCard}>
             <Text style={[styles.resultLabel, { color: theme.accent }]}>
-              {isRolling ? 'ATIŞ SÜRÜYOR' : total ? 'SONUÇ' : 'HAZIR'}
+              {isRolling ? t('rollingLabel') : total ? t('result') : t('readyLabel')}
             </Text>
             <Text
               accessibilityLiveRegion="polite"
@@ -198,20 +211,18 @@ export default function App() {
             >
               {statusText}
             </Text>
-            {mode === 'pair' && (
-              <Text style={styles.helper}>İki zarın toplamı burada gösterilir</Text>
-            )}
+            {mode === 'pair' && <Text style={styles.helper}>{t('pairHelper')}</Text>}
           </View>
 
           <Button
             disabled={isRolling}
-            label={isRolling ? 'Atılıyor…' : 'Zar At'}
+            label={isRolling ? t('rollingButton') : t('roll')}
             onPress={() => void handleRoll()}
             style={styles.rollButton}
           />
 
           <View style={styles.history}>
-            <Text style={styles.historyTitle}>Son atışlar</Text>
+            <Text style={styles.historyTitle}>{t('recentRolls')}</Text>
             {history.length ? (
               <View style={styles.historyRow}>
                 {history.slice(0, 5).map((item) => (
@@ -221,14 +232,21 @@ export default function App() {
                 ))}
               </View>
             ) : (
-              <Text style={styles.historyValues}>Henüz kayıt yok</Text>
+              <Text style={styles.historyValues}>{t('noHistory')}</Text>
             )}
             {history.length > 0 && (
               <View style={styles.statsRow}>
-                <Text style={styles.statsText}>{stats.totalRolls} atış</Text>
-                <Text style={styles.statsText}>Ort. {stats.average.toFixed(1)}</Text>
-                <Pressable accessibilityLabel="Geçmişi aç" onPress={() => setHistoryVisible(true)}>
-                  <Text style={styles.clearLabel}>Tümünü aç</Text>
+                <Text style={styles.statsText}>
+                  {stats.totalRolls} {t('rolls')}
+                </Text>
+                <Text style={styles.statsText}>
+                  {t('average')} {stats.average.toFixed(1)}
+                </Text>
+                <Pressable
+                  accessibilityLabel={t('openHistory')}
+                  onPress={() => setHistoryVisible(true)}
+                >
+                  <Text style={styles.clearLabel}>{t('openHistory')}</Text>
                 </Pressable>
               </View>
             )}
@@ -237,6 +255,7 @@ export default function App() {
 
         <SettingsSheet
           hapticsEnabled={hapticsEnabled}
+          languagePreference={languagePreference}
           reducedMotionEnabled={reducedMotionEnabled}
           shakeToRollEnabled={shakeToRollEnabled}
           firstDiceAppearance={firstDiceAppearance}
@@ -248,6 +267,7 @@ export default function App() {
           onClose={() => setSettingsVisible(false)}
           onFirstDiceAppearanceChange={setFirstDiceAppearance}
           onHapticProfileChange={setHapticProfile}
+          onLanguageChange={setLanguagePreference}
           onReducedMotionChange={setReducedMotionEnabled}
           onShakeToRollChange={setShakeToRollEnabled}
           onLockedCustomizationPress={() => void purchasePremium()}

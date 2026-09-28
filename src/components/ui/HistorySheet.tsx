@@ -3,6 +3,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import type { RollResult } from '../../hooks/useDiceRoll';
 import { formatRollResult } from '../../lib/rollPresentation';
 import { calculateRollStats } from '../../lib/rollStats';
+import { useI18n } from '../../lib/i18n';
 
 interface HistorySheetProps {
   history: RollResult[];
@@ -19,6 +20,7 @@ export function HistorySheet({
   onClear,
   onClose,
 }: HistorySheetProps) {
+  const { t } = useI18n();
   const visibleHistory = isPremium ? history : history.slice(0, 5);
   const stats = calculateRollStats(visibleHistory);
 
@@ -28,18 +30,20 @@ export function HistorySheet({
         <View style={styles.sheet}>
           <View style={styles.header}>
             <View>
-              <Text style={styles.title}>Atış geçmişi</Text>
-              <Text style={styles.subtitle}>
-                {isPremium ? 'Son 20 atış cihazında saklanır.' : 'Ücretsiz sürümde son 5 atış.'}
-              </Text>
+              <Text style={styles.title}>{t('history')}</Text>
+              <Text style={styles.subtitle}>{isPremium ? t('last20') : t('last5')}</Text>
             </View>
-            <Pressable accessibilityLabel="Geçmişi kapat" onPress={onClose}>
-              <Text style={styles.close}>Kapat</Text>
+            <Pressable accessibilityLabel={t('historyClose')} onPress={onClose}>
+              <Text style={styles.close}>{t('close')}</Text>
             </Pressable>
           </View>
           <View style={styles.statsRow}>
-            <Text style={styles.stat}>Atış {stats.totalRolls}</Text>
-            <Text style={styles.stat}>Ortalama {stats.average.toFixed(1)}</Text>
+            <Text style={styles.stat}>
+              {t('count')} {stats.totalRolls}
+            </Text>
+            <Text style={styles.stat}>
+              {t('avg')} {stats.average.toFixed(1)}
+            </Text>
           </View>
           <ScrollView contentContainerStyle={styles.list}>
             {visibleHistory.map((roll) => (
@@ -48,14 +52,10 @@ export function HistorySheet({
                 <Text style={styles.values}>{roll.dice.join(' • ')}</Text>
               </View>
             ))}
-            {!visibleHistory.length && <Text style={styles.empty}>Henüz atış yok.</Text>}
+            {!visibleHistory.length && <Text style={styles.empty}>{t('noRolls')}</Text>}
           </ScrollView>
-          <Pressable
-            accessibilityLabel="Tüm geçmişi temizle"
-            onPress={onClear}
-            style={styles.clear}
-          >
-            <Text style={styles.clearLabel}>Geçmişi temizle</Text>
+          <Pressable accessibilityLabel={t('clearHistory')} onPress={onClear} style={styles.clear}>
+            <Text style={styles.clearLabel}>{t('clearHistory')}</Text>
           </Pressable>
         </View>
       </SafeAreaView>

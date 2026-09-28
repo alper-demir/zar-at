@@ -1,5 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { HapticProfile, SoundProfile } from '../../lib/personalization';
+import { useI18n } from '../../lib/i18n';
 
 interface FeedbackPickerProps {
   hapticProfile: HapticProfile;
@@ -18,6 +19,7 @@ export function FeedbackPicker({
   onSoundChange,
   soundProfile,
 }: FeedbackPickerProps) {
+  const { t } = useI18n();
   const choose = (premium: boolean, callback: () => void) => {
     if (premium && !isPremium) {
       onLockedPress();
@@ -28,39 +30,46 @@ export function FeedbackPicker({
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Ses ve his profili</Text>
-      <Text style={styles.subtitle}>Atışın ritmini ve titreşim gücünü seç.</Text>
-      <Text style={styles.label}>Ses karakteri</Text>
+      <Text style={styles.title}>{t('feedback')}</Text>
+      <Text style={styles.subtitle}>{t('feedbackHint')}</Text>
+      <Text style={styles.label}>{t('soundCharacter')}</Text>
       <View style={styles.row}>
         <Pressable
-          accessibilityLabel="Sinematik ses"
+          accessibilityLabel={t('cinematic')}
           onPress={() => onSoundChange('cinematic')}
           style={[styles.option, soundProfile === 'cinematic' && styles.selected]}
         >
-          <Text style={styles.optionText}>Sinematik</Text>
+          <Text style={styles.optionText}>{t('cinematic')}</Text>
         </Pressable>
         <Pressable
-          accessibilityLabel="Minimal ses, premium"
+          accessibilityLabel={`${t('minimal')}, ${t('premiumLocked')}`}
           onPress={() => choose(true, () => onSoundChange('minimal'))}
           style={[styles.option, soundProfile === 'minimal' && styles.selected]}
         >
-          <Text style={styles.optionText}>{!isPremium ? '🔒 ' : ''}Minimal</Text>
+          <Text style={styles.optionText}>
+            {!isPremium ? '🔒 ' : ''}
+            {t('minimal')}
+          </Text>
         </Pressable>
       </View>
-      <Text style={styles.label}>Haptik gücü</Text>
+      <Text style={styles.label}>{t('hapticStrength')}</Text>
       <View style={styles.row}>
         {(['soft', 'standard', 'strong'] as HapticProfile[]).map((profile) => {
           const premium = profile === 'strong';
           return (
             <Pressable
-              accessibilityLabel={`${profile}${premium && !isPremium ? ', premium' : ''}`}
+              accessibilityLabel={`${profile}${premium && !isPremium ? `, ${t('premiumLocked')}` : ''}`}
               key={profile}
               onPress={() => choose(premium, () => onHapticChange(profile))}
               style={[styles.option, hapticProfile === profile && styles.selected]}
             >
               <Text style={styles.optionText}>
                 {premium && !isPremium ? '🔒 ' : ''}
-                {profile === 'soft' ? 'Yumuşak' : profile === 'standard' ? 'Standart' : 'Güçlü'}
+                {profile === 'soft'
+                  ? t('soft')
+                  : profile === 'standard'
+                    ? t('standard')
+                    : t('strong')}
               </Text>
             </Pressable>
           );
