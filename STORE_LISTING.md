@@ -20,7 +20,7 @@ Zar At, tek veya çift D6 zarını hızlı ve keyifli biçimde atmanızı sağla
 - Akıcı, stilize 3D atış animasyonu
 - Atışa eşlik eden ses ve haptik geri bildirim
 - Kişisel zar görünümü ve masa temaları
-- Kaydedilebilir görünüm presetleri
+- Cihazda saklanan kişiselleştirilmiş zar görünümü
 - Shake-to-roll ile telefonu sallayarak atış
 - Son atışlar ve temel istatistikler
 - Azaltılmış hareket seçeneği

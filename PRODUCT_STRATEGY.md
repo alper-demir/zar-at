@@ -31,7 +31,6 @@ Temel zar atma ücretsiz alternatiflerde zaten kolayca bulunuyor. Ücretli değe
 
 - Minimal, keçe, ahşap, neon ve gece masa temaları.
 - Sistem fotoğraf seçicisiyle yalnızca cihazda kalan özel arka plan.
-- Zar, masa ve efekt kombinasyonlarını isim vererek preset olarak kaydetme.
 
 ### Kişisel his
 
@@ -43,7 +42,6 @@ Temel zar atma ücretsiz alternatiflerde zaten kolayca bulunuyor. Ücretli değe
 ### Faydalı ama sade ekstralar
 
 - Geniş geçmiş ve temel dağılım istatistiği.
-- Favori mod ve preset ile doğrudan açılma.
 - Sonucu görsel kart olarak paylaşma; kullanıcı verisi sunucuya gönderilmez.
 
 ## Ürün sınırları
@@ -65,7 +63,7 @@ Temel zar atma ücretsiz alternatiflerde zaten kolayca bulunuyor. Ücretli değe
 
 - Zar gövdesi/pip rengi seçici.
 - Çift zarda ayrı renk seçimi.
-- Masa arka planı ve yerel preset saklama.
+- Masa arka planı ve cihazda saklanan görünüm ayarları.
 
 ### v0.4.0 — Premium deneyim
 
@@ -87,4 +85,4 @@ Temel zar atma ücretsiz alternatiflerde zaten kolayca bulunuyor. Ücretli değe
 
 Uygulama ücretsiz çalışan temel deneyim + tek seferlik non-consumable Lifetime Premium kilidiyle sunulacaktır. Abonelik kullanılmayacaktır. Kullanıcı kaliteyi satın almadan deneyebilir; ödeme, kişiselleştirme ve uzun vadeli kullanım içindir.
 
-Ayarlar, presetler ve geçmiş cihazda saklanır. Uygulama verileri için hesap veya özel bulut/backend kurulmaz. Satın alma hakkının doğrulanması ve geri yüklenmesi Google Play altyapısı üzerinden yapılır.
+Ayarlar ve geçmiş cihazda saklanır. Uygulama verileri için hesap veya özel bulut/backend kurulmaz. Satın alma hakkının doğrulanması ve geri yüklenmesi Google Play altyapısı üzerinden yapılır.

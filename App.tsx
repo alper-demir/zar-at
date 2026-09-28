@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { AccessibilityInfo, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { getTheme } from './src/assets/themes/themes';
@@ -15,7 +15,6 @@ import { useShakeToRoll } from './src/hooks/useShakeToRoll';
 import { usePurchase } from './src/hooks/usePurchase';
 import { DICE_PAIR_STAGGER_MS } from './src/lib/rollAnimation';
 import { formatRollAnnouncement, formatRollResult } from './src/lib/rollPresentation';
-import { DicePreset } from './src/lib/personalization';
 import { calculateRollStats } from './src/lib/rollStats';
 import { useSettingsStore } from './src/store/settingsStore';
 import { useHistoryStore } from './src/store/historyStore';
@@ -28,26 +27,20 @@ export default function App() {
   const [isHistoryVisible, setHistoryVisible] = useState(false);
   const [rollId, setRollId] = useState(0);
   const [lastSettled, setLastSettled] = useState<RollResult | null>(null);
-  const appliedFavoriteRef = useRef(false);
 
   const hapticsEnabled = useSettingsStore((state) => state.hapticsEnabled);
-  const favoritePresetId = useSettingsStore((state) => state.favoritePresetId);
   const firstDiceAppearance = useSettingsStore((state) => state.firstDiceAppearance);
   const hapticProfile = useSettingsStore((state) => state.hapticProfile);
   const reducedMotionEnabled = useSettingsStore((state) => state.reducedMotionEnabled);
   const shakeToRollEnabled = useSettingsStore((state) => state.shakeToRollEnabled);
   const secondDiceAppearance = useSettingsStore((state) => state.secondDiceAppearance);
-  const presets = useSettingsStore((state) => state.presets);
   const tableAppearance = useSettingsStore((state) => state.tableAppearance);
   const selectedTheme = useSettingsStore((state) => state.theme);
   const soundEnabled = useSettingsStore((state) => state.soundEnabled);
   const soundProfile = useSettingsStore((state) => state.soundProfile);
   const setHapticsEnabled = useSettingsStore((state) => state.setHapticsEnabled);
-  const setFavoritePreset = useSettingsStore((state) => state.setFavoritePreset);
   const setSoundEnabled = useSettingsStore((state) => state.setSoundEnabled);
   const setTheme = useSettingsStore((state) => state.setTheme);
-  const addPreset = useSettingsStore((state) => state.addPreset);
-  const deletePreset = useSettingsStore((state) => state.deletePreset);
   const setFirstDiceAppearance = useSettingsStore((state) => state.setFirstDiceAppearance);
   const setHapticProfile = useSettingsStore((state) => state.setHapticProfile);
   const setReducedMotionEnabled = useSettingsStore((state) => state.setReducedMotionEnabled);
@@ -78,22 +71,6 @@ export default function App() {
   const total = lastSettled?.total ?? null;
   const isCritical = lastSettled?.dice.every((die) => die === 6) ?? false;
   const stats = calculateRollStats(history);
-
-  useEffect(() => {
-    if (appliedFavoriteRef.current || !favoritePresetId) return;
-    const favorite = presets.find((preset) => preset.id === favoritePresetId);
-    if (!favorite) return;
-    setFirstDiceAppearance(favorite.firstDice);
-    setSecondDiceAppearance(favorite.secondDice);
-    setTableAppearance(favorite.table);
-    appliedFavoriteRef.current = true;
-  }, [
-    favoritePresetId,
-    presets,
-    setFirstDiceAppearance,
-    setSecondDiceAppearance,
-    setTableAppearance,
-  ]);
 
   useEffect(() => {
     if (!isPremium || !isCritical || !lastSettled) return;
@@ -129,23 +106,6 @@ export default function App() {
       accentColor: nextThemeDefinition.accent,
       backgroundColor: nextThemeDefinition.background,
     });
-  };
-
-  const handleSavePreset = (name: string) => {
-    const preset: DicePreset = {
-      firstDice: firstDiceAppearance,
-      id: `${Date.now()}`,
-      name,
-      secondDice: secondDiceAppearance,
-      table: tableAppearance,
-    };
-    addPreset(preset);
-  };
-
-  const handleLoadPreset = (preset: DicePreset) => {
-    setFirstDiceAppearance(preset.firstDice);
-    setSecondDiceAppearance(preset.secondDice);
-    setTableAppearance(preset.table);
   };
 
   const statusText = isRolling
@@ -273,7 +233,6 @@ export default function App() {
 
         <SettingsSheet
           hapticsEnabled={hapticsEnabled}
-          favoritePresetId={favoritePresetId}
           reducedMotionEnabled={reducedMotionEnabled}
           shakeToRollEnabled={shakeToRollEnabled}
           firstDiceAppearance={firstDiceAppearance}
@@ -283,22 +242,17 @@ export default function App() {
           isEntitlementChecking={entitlementStatus === 'checking'}
           isVisible={isSettingsVisible}
           onClose={() => setSettingsVisible(false)}
-          onDeletePreset={deletePreset}
           onFirstDiceAppearanceChange={setFirstDiceAppearance}
           onHapticProfileChange={setHapticProfile}
           onReducedMotionChange={setReducedMotionEnabled}
           onShakeToRollChange={setShakeToRollEnabled}
-          onLoadPreset={handleLoadPreset}
           onLockedCustomizationPress={() => void purchasePremium()}
           onPurchase={() => void purchasePremium()}
           onRestore={() => void restorePurchases()}
-          onSavePreset={handleSavePreset}
-          onSetFavoritePreset={setFavoritePreset}
           onSecondDiceAppearanceChange={setSecondDiceAppearance}
           onSoundProfileChange={setSoundProfile}
           onSelectTheme={handleThemeChange}
           premiumUnlocked={isPremium}
-          presets={presets}
           selectedTheme={selectedTheme}
           secondDiceAppearance={secondDiceAppearance}
           soundProfile={soundProfile}

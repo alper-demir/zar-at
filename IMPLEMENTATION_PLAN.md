@@ -67,12 +67,11 @@ Premium değerinin çekirdeği olan kişiselleştirilebilir zar modelini kurmak.
 
 ### İşler
 
-- `DiceAppearance`, `TableAppearance` ve `DicePreset` veri modelleri.
+- `DiceAppearance` ve `TableAppearance` veri modelleri.
 - Zar gövdesi ve pip rengi seçimi.
 - Çift zar için ayrı görünüm seçimi.
 - Mat, parlak ve neon başlangıç stilleri.
 - Masa/arka plan seçimi.
-- Yerel preset oluşturma, adlandırma, seçme ve silme.
 - Persist edilen ayarlar için şema sürümü ve migration.
 - Ücretsiz/Premium özellik matrisi.
 
@@ -86,7 +85,7 @@ Premium değerinin çekirdeği olan kişiselleştirilebilir zar modelini kurmak.
 
 ### Faz sonu testleri
 
-- Store migration ve preset CRUD testleri.
+- Store migration ve kişiselleştirme testleri.
 - Entitlement matrisi testleri.
 - Küçük/orta/büyük Android ekranlarında görsel kontrol.
 - Açık/koyu renk kombinasyonlarında okunabilirlik kontrolü.
@@ -103,7 +102,7 @@ Kişiselleştirmeyi tek seferlik ödeme için ikna edici, hissedilir bir pakete 
 - Cam, mermer, ahşap gibi performans dostu zar stilleri.
 - Ses ve haptik profilleri.
 - Kritik sonuç hero efektleri.
-- Ek masa temaları ve preset önizlemeleri.
+- Ek masa temaları ve görünüm önizlemeleri.
 - Premium ekranında özelliklerin canlı önizlemesi.
 - Ses dosyalarının kaynak/lisans kayıtları.
 
@@ -132,7 +131,6 @@ Uygulamayı günlük kullanımda daha doğal ve erişilebilir hale getirmek.
 - Shake-to-roll ve yanlışlıkla tetiklemeyi önleyen eşik/cooldown.
 - Geçmiş temizleme ve geniş Premium geçmiş görünümü.
 - Basit dağılım istatistikleri.
-- Favori preset/mod ile açılma.
 - Paylaşılabilir sonuç kartı; veri cihazdan sunucuya gönderilmez.
 - Ekran okuyucu, büyük yazı ve reduced-motion desteği.
 

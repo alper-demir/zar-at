@@ -15,14 +15,6 @@ export interface TableAppearance {
   accentColor: string;
 }
 
-export interface DicePreset {
-  firstDice: DiceAppearance;
-  id: string;
-  name: string;
-  secondDice: DiceAppearance;
-  table: TableAppearance;
-}
-
 export const DEFAULT_DICE_APPEARANCE: DiceAppearance = {
   bodyColor: '#6978FF',
   finish: 'glossy',

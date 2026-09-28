@@ -31,9 +31,9 @@ Ana ekranda ortada zar/zarlar, üstte tek/çift modu, zar veya büyük butonla a
 
 Karar: uygulama ücretsiz temel sürüm + tek seferlik, non-consumable "Lifetime Premium" kilidiyle sunulacak. Abonelik kullanılmayacak. Ücretsiz sürüm tam temel işlev + 1 tema içerir ve reklamsızdır. Premium; ek temalar, gelişmiş kritik sonuç efektleri ve opsiyonel geçmiş/istatistik açar. Ürün ID placeholder: `dice_premium_unlock`.
 
-Ürün yönü "kişisel zar deneyimi" olarak netleştirildi. Premium değeri temel zar atma işlevini kısıtlamak yerine kullanıcının kendi zarını ve masasını oluşturmasına dayanacak: özel renk paletleri, iki zar için ayrı stiller, masa/arka plan temaları, ses-haptik profilleri, atış efektleri ve kaydedilebilir görünüm presetleri. Hesap veya bulut zorunluluğu olmayacak; kişiselleştirme cihazda saklanacak.
+Ürün yönü "kişisel zar deneyimi" olarak netleştirildi. Premium değeri temel zar atma işlevini kısıtlamak yerine kullanıcının kendi zarını ve masasını oluşturmasına dayanacak: özel renk paletleri, iki zar için ayrı stiller, masa/arka plan temaları, ses-haptik profilleri ve atış efektleri. Hesap veya bulut zorunluluğu olmayacak; kişiselleştirme cihazda saklanacak.
 
-Uygulama ayarları, presetler, geçmiş ve kişiselleştirme verileri için özel backend/bulut kurulmayacak. Satın alma doğrulama ve geri yükleme işlemleri mağaza altyapısı üzerinden yürütülecek; bu karar uygulama verisini buluta taşıma gerektirmez.
+Uygulama ayarları, geçmiş ve kişiselleştirme verileri için özel backend/bulut kurulmayacak. Satın alma doğrulama ve geri yükleme işlemleri mağaza altyapısı üzerinden yürütülecek; bu karar uygulama verisini buluta taşıma gerektirmez.
 
 ## 6. Klasör yapısı
 
@@ -64,7 +64,7 @@ Detaylı uygulama sırası, kabul kriterleri ve faz sonu test kapıları `IMPLEM
 
 0. `v0.1.0` — Çalışan alpha temel (tamamlandı).
 1. `v0.2.0` — Güvenilir ses, zamanlama, entitlement temeli ve test altyapısı.
-2. `v0.3.0` — Zar Atölyesi, kişiselleştirme modeli ve yerel presetler.
+2. `v0.3.0` — Zar Atölyesi ve kişiselleştirme modeli.
 3. `v0.4.0` — Premium malzemeler, ses/haptik profilleri ve hero efektleri.
 4. `v0.5.0` — Shake-to-roll, geçmiş/istatistik ve erişilebilirlik.
 5. `v0.9.0` — Client-only Play Billing ve mağaza adayı.
@@ -122,6 +122,7 @@ Her faz kendi otomatik kontrolleri ve Android emülatör/cihaz kabul testleri ge
 - [2026-09-28] EAS preview başlatıldı — Expo hesabı `alemd...` altında `@alemdem/zar-at` EAS projesi oluşturuldu, Android keystore üretildi ve `717d6480-2eb1-4e06-b75c-2abd857dab2e` build'i preview kuyruğuna gönderildi. EAS bağlantısı `app.json` içine yazıldı ve ses playback için gereken Android izinleri config'e yansıdı. Sıradaki adım build tamamlanınca APK'yı A52'ye kurup native ikon/splash ve release davranışını doğrulamak.
 - [2026-09-28] İniş yönü düzeltmesi — Zarın havadaki X/Y/Z taklası korunurken settle fazının tüm eksenleri `0°` dinlenme açısına indirmesi sağlandı; reduced-motion akışı da rotasyonu sıfırlıyor. Emülatörde tekli/çiftli atış sonrası zarların düz konumda kaldığı, toplam/geçmişin doğru olduğu ve logcat'te ANR/crash/React hatası bulunmadığı doğrulandı. Bu değişiklik için yeni preview build gerekiyor.
 - [2026-09-28] Preview build güncellendi — İniş yönü düzeltmesini içeren güncel commit için `7410294e-10e9-420a-b1be-8c2b069404fb` EAS preview build'i kuyruğa gönderildi. Build tamamlanınca APK'nın A52'ye kurulması ve native ikon/splash ile release animasyonunun kontrol edilmesi bekleniyor.
+- [2026-09-28] Preset kapsam kararı — Kullanıcı ayarlardaki preset kaydetme/uygulama/favorileme/silme akışını gereksiz bulduğu için kaldırdı. Zar Atölyesi canlı görünüm ayarları ve iki zarın bağımsız görünümü korundu; store şeması v5'e yükseltilerek eski preset verileri migration sırasında temizleniyor. Sıradaki adım: kalite kapısı ve ayarlar ekranı regresyonu.
 
 ## 11. Açık kararlar / varsayımlar
 
