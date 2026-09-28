@@ -1,5 +1,9 @@
 # Play Store yayın kontrol listesi
 
+## 2026-09-28 durum notu
+
+Google Play Console geliştirici hesabı oluşturuldu ve doğrulama bekleniyor. Hesap doğrulanana kadar mağaza listeleme taslağı `STORE_LISTING.md`, Data Safety taslağı `DATA_SAFETY_DRAFT.md` ve release kontrolü hazırlanabilir. Play Console'da uygulama oluşturma, ürün açma ve test grubu başlatma hesabın doğrulanmasından sonra yapılacak.
+
 - [ ] Play Console uygulaması oluşturulmalı ve `com.zarat.app` paket adı rezerve edilmeli.
 - [ ] `dice_premium_unlock` non-consumable ürünü oluşturulmalı.
 - [x] IAP sağlayıcısının production adapter'ı `src/hooks/usePurchase.ts` içine bağlandı; gerçek Play Store ürünüyle test bekliyor.
