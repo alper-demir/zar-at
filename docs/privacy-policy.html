@@ -3,83 +3,395 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Zar At uygulamasının gizlilik politikası: veri toplama, cihazda saklama ve Google Play satın alma bilgileri."
+    />
     <title>Zar At — Gizlilik Politikası</title>
     <style>
       :root {
         color-scheme: dark;
+        --background: #0d1120;
+        --surface: #171d34;
+        --surface-soft: #202743;
+        --border: #303a61;
+        --text: #f7f8ff;
+        --muted: #aeb8d8;
+        --accent: #f4c95d;
+        --link: #aeb8ff;
+        --success: #75e0bf;
+      }
+      * {
+        box-sizing: border-box;
       }
       body {
         margin: 0;
-        background: #101426;
-        color: #f4f3ef;
+        background:
+          radial-gradient(circle at 80% -10%, #2d376c 0, transparent 34%), var(--background);
+        color: var(--text);
         font:
-          16px/1.65 system-ui,
+          16px/1.7 Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
           sans-serif;
       }
-      main {
-        box-sizing: border-box;
-        max-width: 720px;
+      a {
+        color: var(--link);
+      }
+      .shell {
+        max-width: 860px;
         margin: 0 auto;
-        padding: 48px 22px 64px;
+        padding: 28px 18px 64px;
+      }
+      header {
+        background: linear-gradient(145deg, rgba(35, 43, 73, 0.96), rgba(23, 29, 52, 0.96));
+        border: 1px solid var(--border);
+        border-radius: 28px;
+        box-shadow: 0 22px 70px rgba(0, 0, 0, 0.25);
+        padding: 30px 28px;
+      }
+      .brand {
+        align-items: center;
+        display: flex;
+        gap: 14px;
+      }
+      .brand-mark {
+        align-items: center;
+        background: linear-gradient(145deg, #7c8aff, #5263ef);
+        border-radius: 17px;
+        box-shadow: 0 10px 24px rgba(105, 120, 255, 0.28);
+        display: flex;
+        font-size: 24px;
+        font-weight: 900;
+        height: 58px;
+        justify-content: center;
+        width: 58px;
       }
       h1 {
-        margin-bottom: 8px;
-        color: #f4c95d;
+        font-size: clamp(28px, 5vw, 44px);
+        letter-spacing: -0.04em;
+        line-height: 1.1;
+        margin: 0;
       }
       h2 {
-        margin-top: 32px;
-        color: #bca8ff;
+        color: var(--accent);
+        font-size: 21px;
+        letter-spacing: -0.02em;
+        margin: 34px 0 10px;
       }
-      .muted {
-        color: #a9afc4;
+      h3 {
+        font-size: 17px;
+        margin: 24px 0 6px;
       }
-      a {
-        color: #f4c95d;
+      p {
+        margin: 10px 0;
+      }
+      ul {
+        margin: 10px 0;
+        padding-left: 22px;
+      }
+      li + li {
+        margin-top: 6px;
+      }
+      .eyebrow {
+        color: var(--accent);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+        margin: 0 0 8px;
+        text-transform: uppercase;
+      }
+      .muted,
+      .meta {
+        color: var(--muted);
+      }
+      .meta {
+        font-size: 14px;
+        margin: 16px 0 0;
+      }
+      .language-nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 9px;
+        margin-top: 22px;
+      }
+      .language-nav a {
+        background: var(--surface-soft);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 6px 13px;
+        text-decoration: none;
+      }
+      main {
+        background: rgba(23, 29, 52, 0.72);
+        border: 1px solid rgba(48, 58, 97, 0.75);
+        border-radius: 24px;
+        margin-top: 18px;
+        padding: 8px 28px 30px;
+      }
+      .notice {
+        background: rgba(117, 224, 191, 0.08);
+        border: 1px solid rgba(117, 224, 191, 0.32);
+        border-radius: 16px;
+        color: #d8fff2;
+        margin-top: 22px;
+        padding: 14px 16px;
+      }
+      .card-grid {
+        display: grid;
+        gap: 12px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        margin-top: 16px;
+      }
+      .card {
+        background: var(--surface-soft);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 15px 16px;
+      }
+      .card strong {
+        color: var(--accent);
+        display: block;
+        margin-bottom: 3px;
+      }
+      hr {
+        border: 0;
+        border-top: 1px solid var(--border);
+        margin: 44px 0 30px;
+      }
+      footer {
+        color: var(--muted);
+        font-size: 13px;
+        padding: 24px 4px 0;
+        text-align: center;
+      }
+      @media (max-width: 620px) {
+        .shell {
+          padding: 14px 12px 40px;
+        }
+        header {
+          border-radius: 22px;
+          padding: 24px 20px;
+        }
+        main {
+          border-radius: 20px;
+          padding: 4px 19px 25px;
+        }
+        .card-grid {
+          grid-template-columns: 1fr;
+        }
       }
     </style>
   </head>
   <body>
-    <main>
-      <h1>Zar At — Gizlilik Politikası</h1>
-      <p class="muted">Son güncelleme: 28 Eylül 2026</p>
+    <div class="shell">
+      <header>
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">Z</div>
+          <div>
+            <p class="eyebrow">Zar At</p>
+            <h1>Gizlilik Politikası</h1>
+          </div>
+        </div>
+        <p class="meta">
+          Son güncelleme: 28 Eylül 2026 · Uygulama paketi: <code>com.zarat.app</code>
+        </p>
+        <nav class="language-nav" aria-label="Dil seçimi">
+          <a href="#turkce">Türkçe</a><a href="#english">English</a>
+        </nav>
+      </header>
 
-      <h2>Genel bilgi</h2>
-      <p>
-        Zar At kişisel veri toplamaz, satmaz veya üçüncü taraflarla paylaşmaz. Uygulama hesabı,
-        reklam, analitik ve özel çevrimiçi profil kullanmaz.
-      </p>
+      <main id="turkce">
+        <div class="notice">
+          <strong>Kısa özet:</strong> Zar At hesap, reklam, analitik veya özel sunucu kullanmaz.
+          Ayarlar ve atış geçmişi cihazda tutulur. Ödeme bilgileri uygulama tarafından alınmaz;
+          Premium işlemleri Google Play üzerinden yürütülür.
+        </div>
+        <h2>1. Bu politika neyi kapsar?</h2>
+        <p>
+          Bu Gizlilik Politikası, Zar At mobil uygulamasının hangi bilgilere eriştiğini, hangi
+          bilgileri cihazda sakladığını ve Google Play satın alma akışıyla ilişkisini açıklar. Zar
+          At, sanal tek veya çift D6 zar atma uygulamasıdır; gerçek para, bahis veya kumar içermez.
+        </p>
+        <h2>2. Geliştirici ve iletişim</h2>
+        <p>
+          Uygulama adı <strong>Zar At</strong>'tır ve Google Play'de bu uygulama adıyla listelenir.
+          Gizlilik soruları için uygulamanın Google Play mağaza sayfasında yayınlanan geliştirici
+          iletişim kanalını kullanabilirsiniz.
+        </p>
+        <h2>3. Toplanan veya paylaşılan veriler</h2>
+        <p>Zar At geliştirici tarafından aşağıdaki verileri toplamaz, satmaz veya paylaşmaz:</p>
+        <div class="card-grid">
+          <div class="card">
+            <strong>Hesap bilgileri</strong>Uygulama hesabı, giriş ve profil sistemi yoktur.
+          </div>
+          <div class="card">
+            <strong>Kişisel bilgiler</strong>Ad, e-posta, telefon, konum veya rehber bilgisi
+            toplanmaz.
+          </div>
+          <div class="card">
+            <strong>Reklam ve analiz</strong>Reklam SDK'sı, analitik, izleme profili veya özel
+            backend yoktur.
+          </div>
+          <div class="card">
+            <strong>İçerik ve dosyalar</strong>Fotoğraf, kamera, mikrofon kaydı veya kişisel
+            dosyalar okunmaz.
+          </div>
+        </div>
+        <h2>4. Cihazda saklanan bilgiler</h2>
+        <p>
+          Uygulama deneyimini korumak için bazı tercihler yalnızca cihazın yerel depolamasında
+          tutulur:
+        </p>
+        <ul>
+          <li>Dil, tema, zar renkleri, malzeme ve görünüm tercihleri</li>
+          <li>Ses, haptik, azaltılmış hareket ve telefonu sallayarak atma tercihleri</li>
+          <li>Uygulamanın gösterdiği sınırlı atış geçmişi ve temel istatistikler</li>
+        </ul>
+        <p>
+          Bu bilgiler Zar At geliştiricisinin sunucularına gönderilmez. Uygulamanın depolama alanını
+          Android ayarlarından temizlemek veya uygulamayı kaldırmak yerel ayarları ve geçmişi siler.
+          Uygulama içindeki geçmiş temizleme seçeneği yalnızca atış geçmişini siler.
+        </p>
+        <h2>5. Sensör, ses ve haptik kullanımı</h2>
+        <p>
+          “Telefonu sallayarak at” seçeneği açık olduğunda cihazın hareket sensörü yalnızca sallama
+          hareketini algılayıp yerel olarak zar atmayı tetiklemek için kullanılır. Sensör verisi
+          kaydedilmez, profil oluşturmak için kullanılmaz ve dışarı aktarılmaz. Ses efektleri ve
+          haptik geri bildirim cihaz üzerinde çalışır; mikrofon kaydı yapılmaz.
+        </p>
+        <h2>6. Premium ve Google Play satın alımları</h2>
+        <p>
+          Zar Premium, tek seferlik ve otomatik yenilenmeyen bir dijital üründür. Satın alma ve geri
+          yükleme Google Play'in ödeme altyapısı üzerinden gerçekleştirilir. Zar At, kart numarası,
+          banka bilgisi veya Google ödeme hesabı bilgilerini görmez ve saklamaz.
+        </p>
+        <p>
+          Uygulama, Premium sahipliğini Google Play satın alma durumundan kontrol eder. Satın alma
+          işlemleri, iadeler ve ilgili ödeme kayıtları Google Play'in kendi koşullarına ve gizlilik
+          politikasına tabidir. Uygulama Premium özellikleri için özel hesap veya bulut veritabanı
+          kullanmaz.
+        </p>
+        <h2>7. Veri güvenliği ve saklama süresi</h2>
+        <p>
+          Zar At'ın geliştiriciye ait uzak bir veri sunucusu yoktur; bu nedenle geliştirici
+          tarafında kullanıcı verisi tutulmaz. Yerel tercihler ve geçmiş, kullanıcı uygulama
+          verilerini temizleyene veya uygulamayı kaldırana kadar cihazda kalabilir. Google Play
+          satın alma kayıtları Google'ın kendi hizmet şartları ve saklama politikalarına göre
+          yönetilir.
+        </p>
+        <h2>8. Hesap silme ve veri silme</h2>
+        <p>
+          Zar At'ta hesap oluşturma özelliği olmadığı için silinecek bir uygulama hesabı yoktur.
+          Cihazdaki yerel ayar ve geçmişi silmek için Android uygulama verilerini temizleyebilir,
+          uygulama içindeki geçmişi temizleyebilir veya uygulamayı kaldırabilirsiniz.
+        </p>
+        <h2>9. Çocuklar ve kumar</h2>
+        <p>
+          Zar At gerçek para, bahis, kumar, ödül veya para kazanma mekanizması içermez. Uygulamadaki
+          zarlar yalnızca sanal D6 sonuçları üretir. Uygulama mağaza içerik derecelendirmesi gerçek
+          uygulama davranışına göre doldurulmalıdır.
+        </p>
+        <h2>10. Politika değişiklikleri</h2>
+        <p>
+          Uygulama davranışı, kullanılan SDK'lar veya yasal gereklilikler değişirse bu sayfa
+          güncellenir. Güncel sürüm ve son güncelleme tarihi bu sayfanın üst kısmında gösterilir.
+        </p>
+        <h2>11. Harici kaynaklar</h2>
+        <p>
+          <a href="https://policies.google.com/privacy">Google Gizlilik Politikası</a> ve
+          <a href="https://play.google.com/about/play-terms/">Google Play Hizmet Şartları</a>,
+          Google'ın kendi hizmetleri ve satın alma işlemleri için geçerlidir.
+        </p>
 
-      <h2>Cihazda tutulan bilgiler</h2>
-      <p>
-        Ses, haptik, tema, görünüm presetleri, shake-to-roll tercihi ve uygulama geçmişi gibi
-        ayarlar yalnızca kullanıcının cihazında yerel olarak tutulur. Bu bilgiler geliştiricinin
-        sunucularına gönderilmez.
-      </p>
-
-      <h2>Sensörler ve medya</h2>
-      <p>
-        Shake-to-roll özelliği, telefonu sallama hareketini algılamak için cihaz sensörünü yerel
-        olarak kullanır. Sensör verisi kaydedilmez veya dışarı aktarılmaz. Ses efektleri ve haptik
-        geri bildirim cihaz üzerinde çalışır.
-      </p>
-
-      <h2>Premium satın alma</h2>
-      <p>
-        Premium satın alma ve geri yükleme Google Play altyapısı üzerinden yürütülür. Ödeme
-        bilgileri Zar At tarafından toplanmaz veya saklanmaz. Satın alma sahipliği Google Play
-        hesabı ve mağaza işlemleriyle kontrol edilir.
-      </p>
-
-      <h2>Çocuklar ve kumar</h2>
-      <p>
-        Zar At gerçek para, bahis veya kumar içermez. Uygulama yalnızca sanal D6 zarları üretir.
-      </p>
-
-      <h2>İletişim</h2>
-      <p>
-        Gizlilikle ilgili sorular için uygulamanın Google Play mağaza sayfasında belirtilen
-        geliştirici iletişim adresini kullanabilirsiniz.
-      </p>
-    </main>
+        <hr />
+        <section id="english" lang="en">
+          <p class="eyebrow">Roll Dice</p>
+          <h1>Privacy Policy</h1>
+          <p class="meta">
+            Last updated: September 28, 2026 · App package: <code>com.zarat.app</code>
+          </p>
+          <div class="notice">
+            <strong>Summary:</strong> Roll Dice does not use accounts, ads, analytics, or a private
+            backend. Settings and roll history stay on the device. Payments are handled by Google
+            Play.
+          </div>
+          <h2>1. What this policy covers</h2>
+          <p>
+            This Privacy Policy explains how the Roll Dice mobile app accesses information, stores
+            local preferences, and interacts with Google Play purchases. Roll Dice is a virtual one-
+            or two-dice D6 roller; it does not provide real-money play, betting, or gambling.
+          </p>
+          <h2>2. Developer and contact</h2>
+          <p>
+            The app is named <strong>Roll Dice</strong> in English and <strong>Zar At</strong> in
+            Turkish. For privacy questions, use the developer contact method shown on the app's
+            Google Play store listing.
+          </p>
+          <h2>3. Data collected or shared</h2>
+          <p>
+            The developer does not collect, sell, or share account details, names, email addresses,
+            phone numbers, location, contacts, photos, microphone recordings, advertising profiles,
+            analytics events, or roll data. The app has no account system, ads, analytics SDK, or
+            private server.
+          </p>
+          <h2>4. Data stored on the device</h2>
+          <p>
+            Language, theme, dice appearance, sound, haptic, reduced-motion, shake-to-roll settings,
+            limited roll history, and simple statistics are stored only in local app storage. They
+            are not sent to the developer. Clearing Android app data or uninstalling the app removes
+            local settings and history; the in-app clear action removes roll history.
+          </p>
+          <h2>5. Sensors, audio, and haptics</h2>
+          <p>
+            When shake-to-roll is enabled, the device motion sensor is used locally to detect a
+            shake and trigger a roll. Sensor data is not recorded, profiled, or exported. Sound
+            effects and haptic feedback run on the device; the microphone is not recorded.
+          </p>
+          <h2>6. Premium and Google Play purchases</h2>
+          <p>
+            Dice Premium is a one-time, non-renewing digital product. Purchases and restores use
+            Google Play's billing system. Roll Dice does not see or store card numbers, bank
+            details, or Google payment account details. Purchase records, refunds, and payment
+            processing are handled under Google's terms and privacy policy. The app does not use an
+            account or private cloud database for Premium features.
+          </p>
+          <h2>7. Security and retention</h2>
+          <p>
+            The developer has no remote user-data server, so no user data is retained by the
+            developer. Local preferences and history can remain on the device until the user clears
+            app data or uninstalls the app. Google Play purchase records are managed under Google's
+            own policies.
+          </p>
+          <h2>8. Account and data deletion</h2>
+          <p>
+            Roll Dice does not allow users to create an account, so there is no app account to
+            delete. Users can clear local history in the app, clear Android app data, or uninstall
+            the app.
+          </p>
+          <h2>9. Children and gambling</h2>
+          <p>
+            Roll Dice contains no real-money play, betting, gambling, rewards, or money-making
+            mechanism. It generates virtual D6 results only. Play Console content declarations must
+            match the app's actual behavior.
+          </p>
+          <h2>10. Changes to this policy</h2>
+          <p>
+            This page may be updated if the app behavior, SDKs, or legal requirements change. The
+            current revision date is shown at the top of this page.
+          </p>
+          <h2>11. External resources</h2>
+          <p>
+            <a href="https://policies.google.com/privacy">Google Privacy Policy</a> and
+            <a href="https://play.google.com/about/play-terms/">Google Play Terms of Service</a>
+            apply to Google's services and purchase processing.
+          </p>
+        </section>
+      </main>
+      <footer>Zar At · Roll Dice · No account, ads, or private cloud data</footer>
+    </div>
   </body>
 </html>

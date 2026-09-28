@@ -206,6 +206,7 @@ yüksek olmalıdır. Kullanıcının Play Store sürümü bu şartlarla otomatik
 
 - Play Console hesabı doğrulaması.
 - Herkese açık HTTPS gizlilik politikası URL'si.
+- Uygulama Ayarları içine aynı gizlilik politikası URL'sinin bağlantısı.
 - Final Data Safety ve içerik derecelendirme beyanları.
 - `dice_premium_unlock` ürününün aktif edilmesi.
 - Production AAB ve Internal Testing kurulumu.
