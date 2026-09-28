@@ -107,6 +107,9 @@ export function Dice3D({
     previousRollId.current = rollId;
 
     if (reducedMotion) {
+      rotationX.value = withTiming(0, { duration: 65 });
+      rotationY.value = withTiming(0, { duration: 65 });
+      rotationZ.value = withTiming(0, { duration: 65 });
       lift.value = withSequence(withTiming(-4, { duration: 55 }), withTiming(0, { duration: 65 }));
       scale.value = withSequence(
         withTiming(0.97, { duration: 55 }),
@@ -135,8 +138,12 @@ export function Dice3D({
           easing: fallEase,
         }),
         withTiming(startX + profile.rotationX + profile.landingTiltX, {
-          duration: DICE_SETTLE_DURATION_MS,
-          easing: Easing.out(Easing.back(1.15)),
+          duration: 70,
+          easing: Easing.out(Easing.quad),
+        }),
+        withTiming(0, {
+          duration: DICE_SETTLE_DURATION_MS - 70,
+          easing: Easing.out(Easing.cubic),
         }),
       ),
     );
@@ -153,8 +160,12 @@ export function Dice3D({
           easing: fallEase,
         }),
         withTiming(startY + profile.rotationY + profile.landingTiltY, {
-          duration: DICE_SETTLE_DURATION_MS,
-          easing: Easing.out(Easing.back(1.15)),
+          duration: 70,
+          easing: Easing.out(Easing.quad),
+        }),
+        withTiming(0, {
+          duration: DICE_SETTLE_DURATION_MS - 70,
+          easing: Easing.out(Easing.cubic),
         }),
       ),
     );
@@ -170,7 +181,10 @@ export function Dice3D({
           duration: DICE_FALL_DURATION_MS,
           easing: fallEase,
         }),
-        withTiming(startZ + profile.rotationZ, { duration: DICE_SETTLE_DURATION_MS }),
+        withTiming(0, {
+          duration: DICE_SETTLE_DURATION_MS,
+          easing: Easing.out(Easing.cubic),
+        }),
       ),
     );
     lift.value = withDelay(
