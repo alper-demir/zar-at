@@ -11,3 +11,7 @@ export function formatRollAnnouncement(result: RollResult): string {
     ? `Çift zar sonucu: ${result.dice[0]} artı ${result.dice[1]}, toplam ${result.total}.`
     : `Zar sonucu: ${result.total}.`;
 }
+
+export function isCriticalRoll(result: RollResult): boolean {
+  return result.dice.length === 2 && result.dice.every((die) => die === 6);
+}

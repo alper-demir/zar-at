@@ -14,7 +14,11 @@ import { useSoundEffects } from './src/hooks/useSoundEffects';
 import { useShakeToRoll } from './src/hooks/useShakeToRoll';
 import { usePurchase } from './src/hooks/usePurchase';
 import { DICE_PAIR_STAGGER_MS } from './src/lib/rollAnimation';
-import { formatRollAnnouncement, formatRollResult } from './src/lib/rollPresentation';
+import {
+  formatRollAnnouncement,
+  formatRollResult,
+  isCriticalRoll,
+} from './src/lib/rollPresentation';
 import { calculateRollStats } from './src/lib/rollStats';
 import { useSettingsStore } from './src/store/settingsStore';
 import { useHistoryStore } from './src/store/historyStore';
@@ -69,7 +73,7 @@ export default function App() {
 
   const displayedDice = lastSettled?.dice ?? INITIAL_DICE.slice(0, mode === 'pair' ? 2 : 1);
   const total = lastSettled?.total ?? null;
-  const isCritical = lastSettled?.dice.every((die) => die === 6) ?? false;
+  const isCritical = lastSettled ? isCriticalRoll(lastSettled) : false;
   const stats = calculateRollStats(history);
 
   useEffect(() => {

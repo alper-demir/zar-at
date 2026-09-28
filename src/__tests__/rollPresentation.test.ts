@@ -1,4 +1,4 @@
-import { formatRollAnnouncement, formatRollResult } from '../lib/rollPresentation';
+import { formatRollAnnouncement, formatRollResult, isCriticalRoll } from '../lib/rollPresentation';
 import { getReadablePipColor } from '../lib/personalization';
 import { isSoundAllowed } from '../lib/sounds';
 
@@ -15,6 +15,11 @@ describe('roll presentation', () => {
 
     expect(formatRollResult(result)).toBe('5');
     expect(formatRollAnnouncement(result)).toBe('Zar sonucu: 5.');
+  });
+
+  it('only treats double six as a critical roll', () => {
+    expect(isCriticalRoll({ dice: [6], id: 3, total: 6 })).toBe(false);
+    expect(isCriticalRoll({ dice: [6, 6], id: 4, total: 12 })).toBe(true);
   });
 
   it('keeps pips readable when body and pip colors are too similar', () => {

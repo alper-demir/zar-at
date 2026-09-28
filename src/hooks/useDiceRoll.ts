@@ -4,6 +4,7 @@ import { rollD6 } from '../lib/rng';
 import { getRollDurationMs, REDUCED_MOTION_DURATION_MS } from '../lib/rollAnimation';
 import { SoundEffect } from '../lib/sounds';
 import { HapticProfile } from '../lib/personalization';
+import { isCriticalRoll } from '../lib/rollPresentation';
 
 export type DiceMode = 'single' | 'pair';
 
@@ -53,13 +54,9 @@ export function useDiceRoll(
         await new Promise<void>((resolve) => setTimeout(resolve, rollDurationMs));
 
         setLastRoll(result);
-        void playRollSettle(
-          hapticsEnabled,
-          dice.every((die) => die === 6),
-          hapticProfile,
-        );
+        void playRollSettle(hapticsEnabled, isCriticalRoll(result), hapticProfile);
         playSound('impact');
-        if (dice.every((die) => die === 6)) {
+        if (isCriticalRoll(result)) {
           setTimeout(() => playSound('sparkle'), 140);
         }
         return result;
