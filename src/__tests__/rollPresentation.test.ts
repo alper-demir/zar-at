@@ -22,6 +22,14 @@ describe('roll presentation', () => {
     expect(getReadablePipColor('#6978FF', '#FFFFFF')).toBe('#FFFFFF');
   });
 
+  it('keeps a visible gold pip on the default blue die', () => {
+    expect(getReadablePipColor('#6978FF', '#FFD166')).toBe('#FFD166');
+  });
+
+  it('keeps a visible gold pip on the ice die', () => {
+    expect(getReadablePipColor('#27B7D8', '#FFD166')).toBe('#FFD166');
+  });
+
   it('keeps minimal feedback from triggering premium cinematic sounds', () => {
     expect(isSoundAllowed('minimal', 'roll')).toBe(true);
     expect(isSoundAllowed('minimal', 'sparkle')).toBe(false);

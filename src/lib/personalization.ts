@@ -86,6 +86,9 @@ export function getReadablePipColor(bodyColor: string, pipColor: string): string
   const contrast =
     (Math.max(bodyLuminance, pipLuminance) + 0.05) / (Math.min(bodyLuminance, pipLuminance) + 0.05);
 
-  if (contrast >= 3) return pipColor;
+  // Pips are small decorative marks rather than body text. A 1.5 ratio keeps
+  // intentional accent colors such as gold visible on the cyan die while
+  // still avoiding combinations that completely disappear into the body.
+  if (contrast >= 1.5) return pipColor;
   return bodyLuminance > 0.5 ? '#101426' : '#FFFFFF';
 }
