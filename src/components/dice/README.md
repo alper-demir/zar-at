@@ -1,3 +1,3 @@
 # Dice components
 
-Phase 1 will add `Dice3D`, `DiceShadow`, and `DicePair` here.
+`Dice3D` and `DicePair` render the dice. `Dice3D` draws its animated shadow with a native view.

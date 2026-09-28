@@ -14,14 +14,14 @@ Tek amaçlı, reklamsız bir mobil uygulama: kullanıcı tek dokunuşla 1 veya 2
 - TypeScript strict; ilk hedef Android, kod platform bağımsız kalmalı.
 - Tek ekran yeterli; gerekirse hafif modal/bottom-sheet.
 - Zustand state yönetimi.
-- Reanimated 3+ animasyon; Skia görsel efektler için.
+- Reanimated 3+ animasyon; mevcut dinamik zar gölgesi hafif yerel View ile çizilir. Skia yalnızca ileride somut bir ihtiyaç doğarsa yeniden değerlendirilecek.
 - Expo'nun güncel önerisiyle uyumlu ses API'si ve `expo-haptics`.
 - IAP non-consumable tek seferlik ürün olarak soyutlanmalı ve mock'lanabilir olmalı.
 - Yerel ayarlar için SecureStore veya AsyncStorage; satın alma durumu yalnızca yerelde tutulmamalı.
 
 ## 3. Animasyon ve adalet kararı
 
-V1'de gerçek 3D fizik motoru kullanılmayacak. Stilize sahte-3D yaklaşım: Reanimated perspective/rotateX/Y/Z, üç fazlı wind-up/flight/settle, küçük bounce ve screen shake. Skia ile dinamik gölge kullanılacak. Rastgelelik Faz 1'den itibaren kriptografik RNG (`expo-crypto` `getRandomBytesAsync`) ile yapılacak. Çift zar staggered oynayacak. Gerçek fizik için `expo-gl` + R3F/Rapier yolu yalnızca v2 değerlendirmesidir.
+V1'de gerçek 3D fizik motoru kullanılmayacak. Stilize sahte-3D yaklaşım: Reanimated perspective/rotateX/Y/Z, üç fazlı wind-up/flight/settle, küçük bounce ve screen shake. Dinamik gölge mevcut Reanimated View ile çizilir; kullanılmayan Skia V1 bağımlılıklarından çıkarıldı. Rastgelelik Faz 1'den itibaren kriptografik RNG (`expo-crypto` `getRandomBytesAsync`) ile yapılacak. Çift zar staggered oynayacak. Gerçek fizik için `expo-gl` + R3F/Rapier yolu yalnızca v2 değerlendirmesidir.
 
 ## 4. Ekran akışı
 
@@ -39,7 +39,7 @@ Uygulama ayarları, geçmiş ve kişiselleştirme verileri için özel backend/b
 
 ```text
 /app veya /src
-  /components/dice -> Dice3D.tsx, DiceShadow.tsx, DicePair.tsx
+  /components/dice -> Dice3D.tsx, DicePair.tsx (gölge Dice3D içinde)
   /components/ui -> Button.tsx, SettingsSheet.tsx, ThemePicker.tsx
   /hooks -> useDiceRoll.ts, usePurchase.ts, useSettings.ts
   /store -> settingsStore.ts
@@ -128,6 +128,8 @@ Her faz kendi otomatik kontrolleri ve Android emülatör/cihaz kabul testleri ge
 - [2026-09-28] Pip rengi preview build'i — Son altın pip görünürlük düzeltmesini içeren `fa56f0eb-99b8-4dc4-bcb5-ca96edc97cbd` EAS preview build'i kuyruğa gönderildi. APK tamamlandığında A52 üzerinde renk, ikon/splash ve release animasyonu doğrulanacak.
 - [2026-09-28] Preview APK hazır — `fa56f0eb-99b8-4dc4-bcb5-ca96edc97cbd` build'i `0.5.2 (1)` olarak başarıyla tamamlandı. APK; preset kaldırma, düz iniş, görünür altın pip, yeni ikon/splash ve güncel Expo yapılandırmasını içeriyor. Sıradaki adım APK'yı A52'ye kurup release kabul testini yapmak.
 - [2026-09-28] Preset kapsam kararı — Kullanıcı ayarlardaki preset kaydetme/uygulama/favorileme/silme akışını gereksiz bulduğu için kaldırdı. Zar Atölyesi canlı görünüm ayarları ve iki zarın bağımsız görünümü korundu; store şeması v5'e yükseltilerek eski preset verileri migration sırasında temizleniyor. Sıradaki adım: kalite kapısı ve ayarlar ekranı regresyonu.
+- [2026-09-28] APK boyut incelemesi — Kullanıcının 131 MB sorusu için tamamlanan preview APK indirildi ve arşiv içeriği ölçüldü: dosya 125,6 MiB; dört CPU mimarisinin yerel kütüphaneleri toplam 105,8 MiB, bunun en büyük tek bileşeni her mimaride bulunan Skia. Ses ve diğer assets yaklaşık 2,1 MiB. Bu APK doğrudan kurulum içindir; Play production AAB cihaz mimarisine göre paket sunar. Boyut optimizasyonu istenirse önce gerçek Play indirme boyutu ölçülecek.
+- [2026-09-28] APK boyut optimizasyonu — Kullanılmayan `DiceShadow`/Skia bağımlılığı kaldırıldı; etkin Reanimated View gölgesi ve zar animasyonu korundu. `preview-a52` profili yalnızca ARM64 test APK'sı oluşturacak şekilde eklendi; normal preview ve production mimarileri değişmedi. TypeScript, lint, format, 22 Jest testi ve Expo Doctor 21/21 geçti; production/özel preview config ayrımı doğrulandı. Sıradaki adım ARM64 EAS APK build'inin gerçek boyutunu ölçmek ve A52'de kurulum/atış/ses testini yapmak.
 
 ## 11. Açık kararlar / varsayımlar
 
@@ -135,3 +137,4 @@ Her faz kendi otomatik kontrolleri ve Android emülatör/cihaz kabul testleri ge
 - Uygulama adı/marka kimliği netleşene kadar placeholder `Zar`.
 - Koyu tonlu, hafif gradient arka plan; zar öne çıkacak.
 - Ücretsiz temel sürüm + tek seferlik Lifetime Premium kararı kesinleşti. Abonelik ve uygulama verileri için özel bulut/backend kullanılmayacak.
+- A52 için ARM64 test APK'sı hedefleniyor; fiziksel cihaz ABI'si şu an bağlı olmadığı için doğrulanamadı. `preview-a52` profili yalnızca ARM64 cihazlarda çalışır; x86 emülatör ve diğer cihazlar için standart `preview`, mağaza için `production` kullanılacak.
