@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useState } from 'react';
 import {
   DICE_BODY_OPTIONS,
@@ -6,21 +6,14 @@ import {
   DICE_MATERIAL_OPTIONS,
   DICE_PIP_OPTIONS,
   DiceAppearance,
-  DicePreset,
 } from '../../lib/personalization';
 
 interface DiceWorkshopProps {
   firstDice: DiceAppearance;
   isPremium: boolean;
-  favoritePresetId: string | null;
-  onDeletePreset: (id: string) => void;
   onFirstChange: (appearance: Partial<DiceAppearance>) => void;
-  onLoadPreset: (preset: DicePreset) => void;
   onLockedPress: () => void;
-  onSavePreset: (name: string) => void;
-  onSetFavoritePreset: (id: string | null) => void;
   onSecondChange: (appearance: Partial<DiceAppearance>) => void;
-  presets: DicePreset[];
   secondDice: DiceAppearance;
 }
 
@@ -29,19 +22,12 @@ type DiceTarget = 'first' | 'second';
 export function DiceWorkshop({
   firstDice,
   isPremium,
-  favoritePresetId,
-  onDeletePreset,
   onFirstChange,
-  onLoadPreset,
   onLockedPress,
-  onSavePreset,
-  onSetFavoritePreset,
   onSecondChange,
-  presets,
   secondDice,
 }: DiceWorkshopProps) {
   const [target, setTarget] = useState<DiceTarget>('first');
-  const [presetName, setPresetName] = useState('');
   const selected = target === 'first' ? firstDice : secondDice;
   const update = target === 'first' ? onFirstChange : onSecondChange;
 
@@ -138,59 +124,12 @@ export function DiceWorkshop({
           </Pressable>
         ))}
       </View>
-
-      <Text style={styles.sectionLabel}>Presetler</Text>
-      <View style={styles.saveRow}>
-        <TextInput
-          accessibilityLabel="Preset adı"
-          onChangeText={setPresetName}
-          placeholder="Örn. Oyun gecesi"
-          placeholderTextColor="#777F9E"
-          style={styles.input}
-          value={presetName}
-        />
-        <Pressable
-          accessibilityLabel="Preset kaydet"
-          disabled={!presetName.trim()}
-          onPress={() => {
-            onSavePreset(presetName.trim());
-            setPresetName('');
-          }}
-          style={[styles.saveButton, !presetName.trim() && styles.disabled]}
-        >
-          <Text style={styles.saveLabel}>Kaydet</Text>
-        </Pressable>
-      </View>
-      {presets.map((preset) => (
-        <View key={preset.id} style={styles.presetRow}>
-          <Pressable
-            accessibilityLabel={`${preset.name} presetini uygula`}
-            onPress={() => onLoadPreset(preset)}
-          >
-            <Text style={styles.presetName}>{preset.name}</Text>
-          </Pressable>
-          <Pressable
-            accessibilityLabel={`${preset.name} presetini ${favoritePresetId === preset.id ? 'favoriden çıkar' : 'favori yap'}`}
-            onPress={() => onSetFavoritePreset(favoritePresetId === preset.id ? null : preset.id)}
-          >
-            <Text style={styles.favorite}>{favoritePresetId === preset.id ? '★' : '☆'}</Text>
-          </Pressable>
-          <Pressable
-            accessibilityLabel={`${preset.name} presetini sil`}
-            onPress={() => onDeletePreset(preset.id)}
-          >
-            <Text style={styles.delete}>Sil</Text>
-          </Pressable>
-        </View>
-      ))}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: { marginBottom: 20 },
-  delete: { color: '#FF9D9D', fontSize: 12, fontWeight: '700' },
-  disabled: { opacity: 0.4 },
   finish: {
     alignItems: 'center',
     borderColor: '#3A4265',
@@ -199,38 +138,9 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 10,
   },
-  favorite: { color: '#F4C95D', fontSize: 18, marginHorizontal: 12 },
   finishRow: { flexDirection: 'row', gap: 8 },
-  input: {
-    backgroundColor: '#101426',
-    borderColor: '#3A4265',
-    borderRadius: 10,
-    borderWidth: 1,
-    color: '#F7F8FF',
-    flex: 1,
-    paddingHorizontal: 12,
-    paddingVertical: 9,
-  },
   optionLabel: { color: '#C4C9DD', fontSize: 10, textAlign: 'center' },
   optionRow: { flexDirection: 'row', gap: 7 },
-  presetName: { color: '#E4E7F4', fontSize: 13, fontWeight: '700' },
-  presetRow: {
-    alignItems: 'center',
-    borderBottomColor: '#2A3150',
-    borderBottomWidth: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 10,
-  },
-  saveButton: {
-    alignItems: 'center',
-    backgroundColor: '#6978FF',
-    borderRadius: 10,
-    justifyContent: 'center',
-    paddingHorizontal: 14,
-  },
-  saveLabel: { color: '#FFFFFF', fontSize: 12, fontWeight: '800' },
-  saveRow: { flexDirection: 'row', gap: 8 },
   sectionLabel: {
     color: '#AEB8FF',
     fontSize: 12,

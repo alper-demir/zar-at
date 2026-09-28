@@ -4,12 +4,11 @@ import { Button } from './Button';
 import { ThemePicker } from './ThemePicker';
 import { DiceWorkshop } from '../workshop/DiceWorkshop';
 import { FeedbackPicker } from '../workshop/feedback-picker';
-import { DiceAppearance, DicePreset, HapticProfile, SoundProfile } from '../../lib/personalization';
+import { DiceAppearance, HapticProfile, SoundProfile } from '../../lib/personalization';
 import { DiceTheme } from '../../store/settingsStore';
 
 interface SettingsSheetProps {
   firstDiceAppearance: DiceAppearance;
-  favoritePresetId: string | null;
   hapticProfile: HapticProfile;
   hapticsEnabled: boolean;
   reducedMotionEnabled: boolean;
@@ -23,21 +22,16 @@ interface SettingsSheetProps {
   soundEnabled: boolean;
   soundProfile: SoundProfile;
   onClose: () => void;
-  onDeletePreset: (id: string) => void;
   onFirstDiceAppearanceChange: (appearance: Partial<DiceAppearance>) => void;
   onHapticProfileChange: (profile: HapticProfile) => void;
   onReducedMotionChange: (enabled: boolean) => void;
   onShakeToRollChange: (enabled: boolean) => void;
-  onLoadPreset: (preset: DicePreset) => void;
   onLockedCustomizationPress: () => void;
   onPurchase: () => void;
   onRestore: () => void;
-  onSavePreset: (name: string) => void;
-  onSetFavoritePreset: (id: string | null) => void;
   onSecondDiceAppearanceChange: (appearance: Partial<DiceAppearance>) => void;
   onSoundProfileChange: (profile: SoundProfile) => void;
   onSelectTheme: (theme: DiceTheme) => void;
-  presets: DicePreset[];
   secondDiceAppearance: DiceAppearance;
   setHapticsEnabled: (value: boolean) => void;
   setSoundEnabled: (value: boolean) => void;
@@ -45,7 +39,6 @@ interface SettingsSheetProps {
 
 export function SettingsSheet({
   firstDiceAppearance,
-  favoritePresetId,
   hapticProfile,
   hapticsEnabled,
   reducedMotionEnabled,
@@ -59,21 +52,16 @@ export function SettingsSheet({
   soundEnabled,
   soundProfile,
   onClose,
-  onDeletePreset,
   onFirstDiceAppearanceChange,
   onHapticProfileChange,
   onReducedMotionChange,
   onShakeToRollChange,
-  onLoadPreset,
   onLockedCustomizationPress,
   onPurchase,
   onRestore,
-  onSavePreset,
-  onSetFavoritePreset,
   onSecondDiceAppearanceChange,
   onSoundProfileChange,
   onSelectTheme,
-  presets,
   secondDiceAppearance,
   setHapticsEnabled,
   setSoundEnabled,
@@ -112,16 +100,10 @@ export function SettingsSheet({
             />
             <DiceWorkshop
               firstDice={firstDiceAppearance}
-              favoritePresetId={favoritePresetId}
               isPremium={premiumUnlocked}
-              onDeletePreset={onDeletePreset}
               onFirstChange={onFirstDiceAppearanceChange}
-              onLoadPreset={onLoadPreset}
               onLockedPress={onLockedCustomizationPress}
-              onSavePreset={onSavePreset}
-              onSetFavoritePreset={onSetFavoritePreset}
               onSecondChange={onSecondDiceAppearanceChange}
-              presets={presets}
               secondDice={secondDiceAppearance}
             />
             <FeedbackPicker
