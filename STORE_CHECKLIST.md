@@ -1,5 +1,8 @@
 # Play Store yayın kontrol listesi
 
+Detaylı metinler, politika notları, ekran görüntüsü planı ve build akışı için
+[`STORE_RELEASE_GUIDE.md`](STORE_RELEASE_GUIDE.md) dosyasına bakılmalıdır.
+
 ## 2026-09-28 durum notu
 
 Google Play Console geliştirici hesabı oluşturuldu ve doğrulama bekleniyor. Hesap doğrulanana kadar mağaza listeleme taslağı `STORE_LISTING.md`, Data Safety taslağı `DATA_SAFETY_DRAFT.md` ve release kontrolü hazırlanabilir. Play Console'da uygulama oluşturma, ürün açma ve test grubu başlatma hesabın doğrulanmasından sonra yapılacak.
