@@ -7,6 +7,7 @@ export const DICE_FLIGHT_DURATION_MS =
 export const DICE_LIFT_DURATION_MS = DICE_WIND_UP_DURATION_MS + DICE_FLIGHT_DURATION_MS;
 export const DICE_SCALE_DURATION_MS = DICE_LIFT_DURATION_MS;
 export const DICE_PAIR_STAGGER_MS = 90;
+export const REDUCED_MOTION_DURATION_MS = 180;
 
 export interface DiceMotionProfile {
   driftX: number;

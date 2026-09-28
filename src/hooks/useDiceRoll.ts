@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from 'react';
 import { playRollSettle, playRollStart } from '../lib/haptics';
 import { rollD6 } from '../lib/rng';
-import { getRollDurationMs } from '../lib/rollAnimation';
+import { getRollDurationMs, REDUCED_MOTION_DURATION_MS } from '../lib/rollAnimation';
 import { SoundEffect } from '../lib/sounds';
 import { HapticProfile } from '../lib/personalization';
 
@@ -48,7 +48,7 @@ export function useDiceRoll(
         setPendingDice(dice);
 
         const rollDurationMs = reducedMotionEnabled
-          ? 120
+          ? REDUCED_MOTION_DURATION_MS
           : getRollDurationMs(mode === 'pair' ? 2 : 1);
         await new Promise<void>((resolve) => setTimeout(resolve, rollDurationMs));
 

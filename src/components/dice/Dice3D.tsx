@@ -16,6 +16,7 @@ import {
   DICE_SETTLE_DURATION_MS,
   DICE_TAKEOFF_DURATION_MS,
   DICE_WIND_UP_DURATION_MS,
+  REDUCED_MOTION_DURATION_MS,
   getDiceMotionProfile,
 } from '../../lib/rollAnimation';
 
@@ -107,33 +108,32 @@ export function Dice3D({
     previousRollId.current = rollId;
 
     if (reducedMotion) {
-      const reducedMotionDurationMs = 180;
       const reducedMotionStartFaceTimer = setTimeout(() => {
         setRollingFace(((value + rollId + diceIndex) % 6) + 1);
       }, 0);
       const reducedMotionFaceTimer = setTimeout(() => {
         setRollingFace(targetValueRef.current ?? value);
-      }, reducedMotionDurationMs - 30);
+      }, REDUCED_MOTION_DURATION_MS - 30);
 
       rotationX.value = withSequence(
         withTiming(4, { duration: 70 }),
-        withTiming(0, { duration: reducedMotionDurationMs - 70 }),
+        withTiming(0, { duration: REDUCED_MOTION_DURATION_MS - 70 }),
       );
       rotationY.value = withSequence(
         withTiming(-5, { duration: 70 }),
-        withTiming(0, { duration: reducedMotionDurationMs - 70 }),
+        withTiming(0, { duration: REDUCED_MOTION_DURATION_MS - 70 }),
       );
       rotationZ.value = withSequence(
         withTiming(12, { duration: 70 }),
-        withTiming(0, { duration: reducedMotionDurationMs - 70 }),
+        withTiming(0, { duration: REDUCED_MOTION_DURATION_MS - 70 }),
       );
       lift.value = withSequence(
         withTiming(-12, { duration: 80 }),
-        withTiming(0, { duration: reducedMotionDurationMs - 80 }),
+        withTiming(0, { duration: REDUCED_MOTION_DURATION_MS - 80 }),
       );
       scale.value = withSequence(
         withTiming(0.97, { duration: 70 }),
-        withTiming(1, { duration: reducedMotionDurationMs - 70 }),
+        withTiming(1, { duration: REDUCED_MOTION_DURATION_MS - 70 }),
       );
       return () => {
         clearTimeout(reducedMotionStartFaceTimer);
