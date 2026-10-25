@@ -157,6 +157,7 @@ Her faz kendi otomatik kontrolleri ve Android emülatör/cihaz kabul testleri ge
 - [2026-09-30] Production AAB — Android izin temizliği ve EAS Update yapılandırmasını içeren `0.5.2` üretim derlemesi EAS Cloud'da başarıyla tamamlandı. Build ID `a331ec08-ccc9-470a-b8e0-0e82b92694ff`, otomatik versionCode `4`, production kanalı ve mağaza dağıtımı kullanıldı. AAB Play Console'a yüklenmeye hazır.
 - [2026-10-25] GitHub hazırlığı — Yerel depo GitHub remote'u olmadan bulundu. EAS Update/Android izin değişiklikleri ve Play Store varlıkları ayrı commitlere alındı; depo README'si ve APK/AAB ile geçici Android çıktıları için ignore kuralları hazırlandı. Sıradaki adım özel GitHub deposu oluşturup branch ve etiketleri pushlamak.
 - [2026-10-25] GitHub aktarımı — Özel `alper-demir/zar-at` deposu oluşturuldu; tüm 13 yerel branch ve altı sürüm etiketi pushlandı. `codex/apk-size-optimization` için upstream bağlandı. AAB ve geçici Android ekran/XML dökümleri depoya alınmadı.
+- [2026-10-25] GitHub README — Onaylanan README Türkçe/İngilizce ürün tanıtımı ve iki uygulama ekranı içeriyor; repo ana sayfasında görünmesi için `main` ve aktif çalışma branch’ine eklendi.
 
 ## 11. Açık kararlar / varsayımlar
 
