@@ -42,3 +42,13 @@ yarn-error.*
 
 # local emulator captures
 /emulator-*.png
+
+# local release binaries
+*.apk
+*.aab
+
+# temporary Android UI inspection captures
+/devmenu*.png
+/dm*.xml
+/ui*.xml
+/store-*.png
